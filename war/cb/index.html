@@ -1,0 +1,354 @@
+<!-- <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> -->
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>Cloud Balance</title>
+	<link href="/css/ph_core.css" rel="stylesheet" type="text/css" />
+	<link href="/css/codesite.pack.04102009.css" rel="stylesheet" type="text/css" />
+	<link href="/css/cloudbalance.css" rel="stylesheet" type="text/css" />
+	<link rel="stylesheet" href="https://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+    <link href="/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+</head>
+<body style="margin:0;">
+
+
+	<div class="headerBar">
+		<div id="gc-userinformation" style="float: right;line-height:20px; padding: 15px; height:50px;  margin-right:5px"></div>
+
+		<div id="gc-accountName" style="font-size: 18px;  line-height:20px; padding: 15px; height:50px; ">Cloud Balance</div>
+	</div>
+	
+		<div id="dialog-confirm" title="Confirm" style="display: none">
+				<p>
+  					<span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>Item will be permanently deleted and cannot be recovered. Are you sure?
+  				</p>
+		</div>
+				
+     
+      <div id="loading" class="pleaseWait">
+      	Please wait...
+      </div>
+      
+     <div id="errors" style="float: left;  margin-left: auto ;  margin-right: auto ; 
+       red; padding: 0px; font-family: sans-serif;">
+      </div>
+     
+     
+	 <!-- RECOMMENDED if your web app will not function without JavaScript enabled -->
+    <noscript>
+      <div style="width: 22em; position: absolute; left: 50%; margin-left: -11em; color: red; background-color: white; border: 1px solid red; padding: 4px; font-family: sans-serif">
+        Your web browser must have JavaScript enabled
+        in order for this application to display correctly.
+      </div>
+    </noscript>
+	
+	
+	
+	<div id="shell" style="padding: 30px; width:1000px; margin: 0 auto;">
+
+	<!-- tabs -->
+	<div id="tabs" class="gtb tableHeaderColor" style="background:none;">
+		<a id="transaction" href="#transaction" class="tab" style="text-decoration:none; color: #404040;"><i class="fa fa-money"></i>&nbspTransactions</a>
+		<a id="payee" href="#payee" class="tab no-text-decoration" style="text-decoration:none; color: #404040;"><i class="fa fa-user"></i>&nbspPayees</a> 
+		<a id="charts" href="#charts" class="tab" style="text-decoration:none; color: #404040;"><i class="fa fa-bar-chart-o"></i>&nbspCharts</a>
+		<a id="maps" href="#maps" class="tab" style="text-decoration:none; color: #404040;"><i class="fa fa-building-o"></i>&nbspMoney Maps</a>
+		<a id="administer" href="#administer" class="tab" style="text-decoration:none; color: #404040;"><i class="fa fa-cog"></i>&nbspAdminister</a>
+        <div id="currentBalance" class="formatedNumber" style="float:right; padding: 5px 0px 0px 0px "></div>
+		<div class="gtbc"></div>
+	
+	</div>
+
+	
+	<!-- CHARTS CONTENT -->
+	<div class="g-unit" id="charts-tab">
+		<div class="gsc-search-box" id="charts-search-ctr">
+		 <div id="areaChartBalanceHistory_div" style="margin-left:auto;margin-right:auto; height: 400px;"></div>
+		 
+		</div>
+	</div>
+	<!-- MONEY MAPS CONTENT -->
+	<div class="g-unit" id="maps-tab">
+		<div class="gsc-search-box" id="maps-search-ctr">
+	    	<form name="maps-form" id="maps-form">
+			   <div id="monthlyMoneyMap_div" style="margin-left:auto;margin-right:auto; width: 1000px; height: 500px;"></div>
+			   <div id="moneyMap_div" style="margin-left:auto;margin-right:auto; width: 1000px; height: 500px;"></div>
+		   </form>
+		</div>
+	</div>
+
+		
+	<!-- PAYEE CONTENT -->
+	<div class="g-unit" id="payee-tab">
+			<div class="message" id="payee-show-message" style="display: none"></div>
+			<!-- search container -->
+			<div class="gsc-search-box" id="payee-search-ctr" style="display: none">
+				<form name="payee-search-form" id="payee-search-form">
+					&nbsp;<input type="button" value="Compose" onclick="add('payee')"
+						class="google-style-button red"  /> 
+				</form>
+				
+			</div>
+			
+			<!-- list container -->
+			<div class="results" id="payee-list-ctr" style="display: none">
+				<table style="width: 100%; border-collapse: collapse;">
+					<thead>
+						<tr>
+						    <th scope="col">Name</th>
+						    <th scope="col">Bucket</th>
+							<th scope="col" style="text-align: right; padding-right:5px;">Last</th>
+							<th scope="col" style="text-align: right; padding-right:5px;">Current Month</th>
+							<th scope="col" style="text-align: right; padding-right:5px;">Last Month</th>
+						    <th scope="col" style="text-align: right; padding-right:5px;">Total</th>
+					        <th scope="col" style="text-align: right; padding-right:5px;">Action</th>
+						
+						</tr>
+					</thead>
+					<tbody id="payee-list-tbody"></tbody>
+					<tfoot>
+						<tr>
+							<td colspan="8">
+							   <div id="payee-list-number-of-records" style="float:left; margin-left: 0em; font-weight:bold;"></div>
+							   <div id="payee-list-pagination" style="float:right; margin-left: 0em; font-weight:bold;"></div>
+							</td>
+						</tr>
+					</tfoot>
+					
+					
+				</table>
+			</div>
+
+			<!-- create container -->
+			<div class="create-ctr" id="payee-create-ctr" style="display: none; ">
+				<form name="payee-create-form" id="payee-create-form">
+					<table style="width:20%; border-collapse: collapse;">
+						<thead>
+							<tr>
+			    				<th scope="col" colspan="2" class="tableHeaderColor"><i class="fa fa-user"></i>&nbsp&nbspPayee</th>
+							</tr>
+						</thead>
+
+						<tbody>
+						
+						<tr>
+								<td>Name</td>
+								<td><span class="readonly"><input type="text"
+										style="width: 185px;" autocomplete="off" class="gsc-input"
+										maxlength="2048" name="name" id="name" /></span></td>
+							</tr>
+							
+						<tr>
+                             <td>Bucket</td>
+                             <td>
+                             <fieldset>
+                               <input type="radio" name="type" id="type-i" value="i" />
+                               <label for="type-i" class="legend payee-type-i" style="float:left;">I</label>Income
+                               <br>
+                             <input type="radio" name="type" id="type-s" value="s" />
+                               <label for="type-i" class="legend payee-type-s" style="float:left;">S</label>Static
+                               <br>
+                             <input type="radio" name="type" id="type-d" value="d" />
+                               <label for="type-i" class="legend payee-type-d " style="float:left;">D</label>Discretionary
+                                <br>
+                           <input type="radio" name="type" id="type-f" value="f" />
+                               <label for="type-i" class="legend payee-type-f" style="float:left;">F</label>Future
+                           <br>
+                           <input type="radio" name="type" id="type-none" value="o" />
+                               <label for="type-none" class="legend payee-type-o" style="float:left;">O</label>Other
+                           <br>
+    						</fieldset>
+                              		
+                             </td>
+                        </tr>
+							
+							<tr>
+								<td>Description</td>
+								
+								<td><textarea wrap="hard" rows="4" cols="20" style="width: 185px;"
+									autocomplete="off" class="gsc-input" maxlength="2048"
+									name="description" id="description"></textarea></td>
+							</tr>
+							<tr>
+								<td>&nbsp;</td>
+								<td><input type="button" class="google-style-button blue" title="Save"
+									value="Save" onclick="formValidate('payee')" /> 
+									<input
+									type="button" class="google-style-button blue" title="Cancel" value="Cancel"
+									onclick="cancel('payee')" /> <input type="reset"
+									id="payee-reset" class="cancel" title="Reset" value="Reset"
+									style="visibility: hidden" /></td>
+							</tr>
+						</tbody>
+					</table>
+				</form>
+			</div>
+
+		</div>
+		<!-- ******************************************* transaction ******************************************* -->
+		<div class="g-unit" id="transaction-tab">
+			
+			<div class="message" id="transaction-show-message" style="display: none"></div>
+			
+	        		
+			<!-- search container -->
+			<div class="gsc-search-box" id="transaction-search-ctr" style="display: none;">
+				
+				<form name="transaction-search-form" id="transaction-search-form">
+    				<input type="button" value="Compose" onclick="add('transaction')" class="google-style-button red"  />
+   
+    
+    				<!-- Search
+    				<select
+						id="by" name="transaction-searchby" class="gsc-input">
+						<option value="memo">Memo</option>
+						<option value="payee">Payee</option>
+					</select> 
+					 
+					for
+					<input type="text" name="q" id="q" class="gsc-input" />
+					<input type="button" value="Search" onclick="search('transaction')" class="gsc-search-button" /> 
+					<input	type="reset" id="transaction-search-reset" class="cancel" title="Reset"	value="Reset" style="visibility: hidden" />
+					 -->
+				</form>
+			</div>
+
+
+			<!-- list container -->
+			<div class="results" style="border: 0;" id="transaction-list-ctr" style="display: none">
+				<table style="width:100%; 'border-collapse: collapse;">
+					<thead>
+						<tr>
+						    <th scope="col" style="border-left:0; width:15px"></th>
+							<th scope="col">Date</th>
+							<th scope="col">Payee</th>
+							<th scope="col" style="text-align: right; padding-right:5px;">Amount</th>
+							<th scope="col" style="text-align: right; padding-right:5px;">Balance</th>
+							<th scope="col">Action</th>
+						</tr>
+					</thead>
+					<tbody id="transaction-list-tbody"></tbody>
+				</table>
+				
+			</div>
+
+			<!-- transaction create container -->
+			<div class="create-ctr" id="transaction-create-ctr" style="display: none">
+				<form name="transaction-create-form" id="transaction-create-form">
+					<table style="width:200px; border-collapse: collapse;">
+						<thead>
+							<tr>
+								<th scope="col" colspan="2" class="tableHeaderColor"><i class="fa fa-money"></i>&nbsp&nbspTransaction</th>
+							</tr>
+						</thead>
+						<tr>
+                             <td>Type</td>
+                             <td>
+                               <input type="radio" name="transaction-type" id="transaction-type" value="w" checked="true">Withdrawal
+                               <input type="radio" name="transaction-type" id="transaction-type" value="d">Deposit
+                             </td>
+                        </tr>
+                     
+						<tr>
+							<td>Payee</td>
+							<td><select id="item-payee-list" name="payee"></select></td>
+						</tr>
+						<tr>
+							<td>Date</td>
+							<td><input type="text" style="width: 185px;"
+								autocomplete="off" class="gsc-input" name="date" id="datepicker" />
+							</td>
+						</tr>
+						
+						<tr>
+							<td>Amount</td>
+							<td><input type="text" style="width: 185px;"
+								autocomplete="off" class="gsc-input formatedNumber" maxlength="2048"
+								name="amount" id="amount" /></td>
+						</tr>
+						
+						<tr>
+							<td>Memo</td>
+							<td><textarea wrap="hard"   rows="4" cols="20"	 style="width: 185px;" 
+								autocomplete="off" class="gsc-input" maxlength="2048"
+								name="memo" id="memo" ></textarea></td>
+						</tr>
+						<tr>
+							<td>&nbsp;</td>
+							<td><input 
+								type="button" 
+								class="google-style-button blue" 
+								title="Save"
+								value="Save" 
+								onclick="formValidate('transaction')" /> 
+								<input
+								type="button" 
+								class="google-style-button blue" 
+								title="Cancel" 
+								value="Cancel"
+								onclick="cancel('transaction')" /> 
+								<input type="reset" id="transaction-reset"
+								class="cancel" title="Reset" value="Reset"
+								style="visibility: hidden" /></td>
+						</tr>
+					</table>
+					<input type="hidden" class="gsc-input" name="name" id="name" />
+				</form>
+			</div>
+			<!-- create conatiner ends here -->
+		</div>
+
+
+		<div class="g-unit" id="administer-tab" style="display: none">
+			
+			<div class="message" id="administer-show-message" style="display: none"></div>
+			
+			<form name="administer-create-form" id="administer-create-form">
+			
+				<table style="width:200px; border-collapse: collapse;">
+					<thead>
+						<tr>
+							<th scope="col" colspan="2" class="tableHeaderColor">Settings</th>
+						</tr>
+					</thead>
+					<tr>
+							<td>Account Name</td>
+							<td><input type="text" style="width: 185px;" 
+								autocomplete="off" class="gsc-input" maxlength="2048"
+								name="accountName" id="accountName" /></td>
+						</tr>
+						<tr>
+							<td>&nbsp;</td>
+							<td><input 
+								type="button" 
+								class="google-style-button blue" 
+								title="Save"
+								value="Save" 
+								onclick="formValidate('administer')" /> 
+							</td>
+						</tr>
+					
+				</table>
+			</form>
+	
+		</div>
+
+</div> 
+	
+<script type="text/javascript" src="../script/jquery-1.7.1.min.js"></script>
+<script language="javascript" src="../script/jquery-ui.min.js"></script>
+<script language="javascript" src='../script/accounting.min.js'></script>
+
+<script language="javascript" src="../script/jquery.formatCurrency-1.4.0.js"></script>
+<script language="javascript" src='../script/cloudbalance.js'></script>
+<script language="javascript" src='../script/moment.min.js'></script>
+
+
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type='text/javascript'>
+	google.load('visualization', '1', {packages:['corechart','treemap']});
+	$(window).load(function () {
+		mycloudbalance.appspot.init();
+	});
+</script>
+</body>
+</html>
