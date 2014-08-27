@@ -2,6 +2,28 @@
 
 
 
+.callout {
+  text-align: center;
+  font-size: 36px;
+  font-weight: 200;
+  font-family: "Segoe WP", "Segoe UI Light", "Segoe UI", "Helvetica Neue", "Arial", sans-serif;
+  line-height: normal;
+  margin: 0 auto 24px;
+  max-width: 840px;
+}
+
+
+.callout-detail {
+  text-align: center;
+  font-size: 18px;
+  font-weight: 200;
+  font-family: "Segoe WP", "Segoe UI Light", "Segoe UI", "Helvetica Neue", "Arial", sans-serif;
+  line-height: normal;
+  margin: 0 auto 24px;
+  max-width: 840px;
+}
+
+
 .list-icon{
 	float: right;  margin-left: auto ;  margin-right: auto ;
 	background:#4987a1 center center no-repeat;
