@@ -1,5 +1,12 @@
 @CHARSET "ISO-8859-1";
 
+.error {
+    color: #D8000C;
+}
+
+span.error {
+    background-color: #FFBABA;
+}
 
 
 .callout {

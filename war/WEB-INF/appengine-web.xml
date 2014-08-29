@@ -8,13 +8,13 @@
 		<property name="java.util.logging.config.file" value="WEB-INF/logging.properties" />
 	</system-properties>
 
-<!-- 
 
-     https://developers.google.com/appengine/docs/java/config/appconfig#Java_appengine_web_xml_Custom_error_responses
-	
 	<static-error-handlers>
-		<handler file="default_error.html" />
-		<handler file="over_quota.html" error-code="over_quota" />
-	</static-error-handlers>
- -->
+        <handler file="/html/error.html"/>
+        <handler file="/html/over_quota.html" error-code="over_quota"/>
+        <handler file="/html/dos_api_denial.html" error-code="dos_api_denial"/>
+        <handler file="/html/timeout.html" error-code="timeout"/>
+    </static-error-handlers>
+	
+
 </appengine-web-app>
