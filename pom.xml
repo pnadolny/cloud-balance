@@ -2,18 +2,41 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-
-	<!-- https://github.com/maven-gae-plugin/maven-gae-plugin -->
-	
-	<!-- The Basics -->
 	<groupId>com.appspot.mycloudbalance</groupId>
 	<artifactId>mycloudbalance</artifactId>
 	<version>1.0-SNAPSHOT</version>
 	<packaging>war</packaging>
-
 	<name>mycloudbalance</name>
 
-
+	<developers>
+        <developer>
+            <id>pnadolny</id>
+            <name>Paul Nadolny</name>
+            <email>psnadolny@gmail.com</email>
+        </developer>
+    </developers>
+	
+	<properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <gae.version>1.9.7</gae.version>
+        <gae.runtime>1.9.7</gae.runtime>
+        <gae.home>${settings.localRepository}/com/google/appengine/appengine-java-sdk/${gae.version}/appengine-java-sdk-${gae.version}</gae.home>
+        <maven.gae.plugin.version>0.9.2</maven.gae.plugin.version>
+        <datanucleus.version>1.1.5</datanucleus.version>
+        <springframework.version>3.1.0.RELEASE</springframework.version>
+        <springframework.security.version>3.1.0.RELEASE</springframework.security.version>
+        <slf4j.version>1.6.4</slf4j.version>
+    </properties>
+	
+	<repositories>
+        <repository>
+            <id>jboss-repo</id>
+            <name>jboss repository</name>
+            <url>https://repository.jboss.org/nexus/content/groups/public</url>
+        </repository>
+    </repositories>
+	
 	<pluginRepositories>
 		<pluginRepository>
 			<id>sonatype.snapshots</id>
@@ -22,110 +45,67 @@
 	</pluginRepositories>
 
 	<dependencies>
-
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
 			<version>2.2.4</version>
 		</dependency>
-		<!-- Google App Engine meta-package -->
 		<dependency>
 			<groupId>net.kindleit</groupId>
 			<artifactId>gae-runtime</artifactId>
 			<version>${gae.version}</version>
 			<type>pom</type>
 		</dependency>
-
 		<dependency>
 			<groupId>org.datanucleus</groupId>
 			<artifactId>datanucleus-core</artifactId>
 			<version>${datanucleus.version}</version>
 			<scope>runtime</scope>
 		</dependency>
-
 		<dependency>
 			<groupId>javax.transaction</groupId>
 			<artifactId>jta</artifactId>
 			<version>1.1</version>
 		</dependency>
-
-		<!-- J2EE Servlet API. We need it to compile IndexServlet class. You can 
-			probably remove it, if you don't explicitly use Servlets -->
 		<dependency>
 			<groupId>org.apache.geronimo.specs</groupId>
 			<artifactId>geronimo-servlet_2.5_spec</artifactId>
 			<version>1.2</version>
 			<scope>provided</scope>
 		</dependency>
-
-		<!-- Make use of JSP tags. Remove, if you don't use JSPs -->
-		<dependency>
-			<artifactId>standard</artifactId>
-			<groupId>taglibs</groupId>
-			<version>1.1.2</version>
-			<type>jar</type>
-			<scope>runtime</scope>
-		</dependency>
-
-		<!-- These dependencies are here just for enabling logging -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 			<version>1.6.1</version>
 		</dependency>
-
-		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-classic</artifactId>
-			<version>0.9.24</version>
-		</dependency>
-
-		<!-- Test scope -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.5</version>
 			<scope>test</scope>
 		</dependency>
-
-		<!-- GAE libraries for local testing as described here: http://code.google.com/appengine/docs/java/howto/unittesting.html -->
 		<dependency>
 			<groupId>com.google.appengine</groupId>
 			<artifactId>appengine-api-labs</artifactId>
 			<version>${gae.version}</version>
 			<scope>test</scope>
 		</dependency>
-
 		<dependency>
 			<groupId>com.google.appengine</groupId>
 			<artifactId>appengine-api-stubs</artifactId>
 			<version>${gae.version}</version>
 			<scope>test</scope>
 		</dependency>
-
 		<dependency>
 			<groupId>com.google.appengine</groupId>
 			<artifactId>appengine-testing</artifactId>
 			<version>${gae.version}</version>
 			<scope>test</scope>
 		</dependency>
-
-		<dependency>
-			<groupId>javax.jdo</groupId>
-			<artifactId>jdo2-api</artifactId>
-			<version>2.3-eb</version>
-			<exclusions>
-				<exclusion>
-					<groupId>javax.transaction</groupId>
-					<artifactId>transaction-api</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
 	</dependencies>
 
 	<build>
 		<plugins>
-
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
@@ -173,33 +153,6 @@
 		</plugins>
 	</build>
 
-	<!-- Specify hard-coded project properties here -->
-	<properties>
-
-		<!-- Sets the project's default encoding. http://docs.codehaus.org/display/MAVENUSER/POM+Element+for+Source+File+Encoding -->
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
-		<!-- This is just for "eclipse:eclipse" goal to always attempt downloading 
-			sources -->
-		<downloadSources>true</downloadSources>
-
-
-
-
-		<!-- Specify AppEngine version for your project. It should match SDK version 
-			pointed to by ${gae.home} property (Typically, one used by your Eclipse plug-in) 
-			// Check here... http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22net.kindleit%22%20AND%20a%3A%22gae-runtime%22 -->
-		<gae.version>1.8.8</gae.version>
-
-		<!-- Upload to http://test.latest.<applicationName>.appspot.com by default -->
-		<gae.application.version>test</gae.application.version>
-
-
-		<!-- <webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory> 
-			<gae.home>${settings.localRepository}/com/google/appengine/appengine-java-sdk/${gae.version}/appengine-java-sdk-${gae.version}</gae.home> -->
-
-		<datanucleus.version>1.1.5</datanucleus.version>
-	</properties>
 
 	<profiles>
 		<!-- We can configure our integration server to activate this profile and 
