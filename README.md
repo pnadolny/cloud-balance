@@ -1,7 +1,8 @@
 Cloud Balance
 =============
 
-An application to manage your cash flow using Angular JS and built to run on Google's App Engine
+An application to manage your cash and compute your cash flow.  Uses the bucket budgeting method. 
+
 
 ## Products
 - [App Engine][1]
@@ -9,7 +10,7 @@ An application to manage your cash flow using Angular JS and built to run on Goo
 ## Language
 - [Java][2]
 - [Angular JS][4]
-
+- [Bootstrap][5]
 
 
 ## Setup Instructions
@@ -31,3 +32,4 @@ An application to manage your cash flow using Angular JS and built to run on Goo
 [2]: http://java.com/en/
 [3]: https://localhost:8888/
 [4]: https://angularjs.org/
+[5]: http://getbootstrap.com/2.3.2/
