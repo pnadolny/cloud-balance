@@ -13,10 +13,6 @@
 		<servlet-class>com.appspot.cloudbalance.UserServlet</servlet-class>
 	</servlet>
 	<servlet>
-		<servlet-name>AdministerServlet</servlet-name>
-		<servlet-class>com.appspot.cloudbalance.AdministerServlet</servlet-class>
-	</servlet>
-    <servlet>
 		<servlet-name>ImportServlet</servlet-name>
 		<servlet-class>com.appspot.cloudbalance.ImportServlet</servlet-class>
 	</servlet>
@@ -52,10 +48,6 @@
 		<url-pattern>/cb/user</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
-		<servlet-name>AdministerServlet</servlet-name>
-		<url-pattern>/cb/administer</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
 		<servlet-name>ImportServlet</servlet-name>
 		<url-pattern>/cb/import</url-pattern>
 	</servlet-mapping>
@@ -80,18 +72,4 @@
 	</filter-mapping>
 
 
-
-
- <servlet>
-  <servlet-name>SystemServiceServlet</servlet-name>
-  <servlet-class>com.google.api.server.spi.SystemServiceServlet</servlet-class>
-  <init-param>
-   <param-name>services</param-name>
-   <param-value>com.appspot.cloudbalance.Service</param-value>
-  </init-param>
- </servlet>
- <servlet-mapping>
-  <servlet-name>SystemServiceServlet</servlet-name>
-  <url-pattern>/_ah/spi/*</url-pattern>
- </servlet-mapping>
 </web-app>
