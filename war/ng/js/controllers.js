@@ -42,11 +42,22 @@ var ModalInstanceCtrl = function ($scope, $modalInstance, transaction,PayeeServi
         	transaction.amount = transaction.amount * -1;
         } 
         
-//		if (!angular.isNumber(transaction.amount)) {
-//			$scope.alerts.push({type: 'danger', msg: 'Amount must be a number'});
-//			return;
-//		}
-//		
+        /*^ match beginning of string
+        -{0,1} optional negative sign
+        \d* optional digits
+        \.{0,1} optional decimal point
+        \d+ at least one digit
+        $/ match end of string
+        
+        
+        http://stackoverflow.com/questions/18082/validate-decimal-numbers-in-javascript-isnumeric
+        */
+        
+        if ( /^-{0,1}\d*\.{0,1}\d+$/.test(transaction.amount) == false) {
+    		$scope.alerts.push({type: 'danger', msg: 'Amount must be a number'});
+			return;
+		}
+		
 		if (angular.isUndefined(transaction.payee)) {
 			$scope.alerts.push({type: 'danger', msg: 'Payee is missing'});
 			return;
