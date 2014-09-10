@@ -10,10 +10,10 @@
 
 
 	<static-error-handlers>
-        <handler file="/html/error.html"/>
-        <handler file="/html/over_quota.html" error-code="over_quota"/>
-        <handler file="/html/dos_api_denial.html" error-code="dos_api_denial"/>
-        <handler file="/html/timeout.html" error-code="timeout"/>
+        <handler file="/error.html"/>
+        <handler file="/over_quota.html" error-code="over_quota"/>
+        <handler file="/dos_api_denial.html" error-code="dos_api_denial"/>
+        <handler file="/timeout.html" error-code="timeout"/>
     </static-error-handlers>
 	
 
