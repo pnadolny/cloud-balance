@@ -5,6 +5,7 @@
   <title>Cloud Balance</title>
   <link rel="stylesheet" href="css/default.css"/>
   <link rel="stylesheet" href="css/loading-bar.css"/>
+  <link rel="stylesheet" href="css/hotkeys.min.css"/>
   <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -41,6 +42,7 @@
 					
 					 <a style="float: right;" class="list-icon" ng-class="{active: layout == 'list'}" ng-click="layout = 'list'; "></a>
 					<a style="float: right;" class="grid-icon" ng-class="{active: layout == 'grid'}" ng-click="layout = 'grid'; computeCashFlow()"></a>
+    	  
 					<!--<div style="padding-top: 2px; padding-right: 10px; float: right; font-size:20px;color:#7d9098;'">{{currentBalance() | currency}}</div>-->
     	  
 				</div>
@@ -84,7 +86,7 @@
 					</tr>
 				</thead>
 			
-			<tr ng-class="{'danger' : t.balance <0;}" style="text-align: left;" ng-repeat="t in transactions  | addSortableDate | orderBy:'sortableDate':true | calcBalance | startFrom:currentPage*pageSize | limitTo:pageSize ">
+			<tr  style="text-align: left;" ng-repeat="t in transactions  | addSortableDate | orderBy:'sortableDate':true | calcBalance | startFrom:currentPage*pageSize | limitTo:pageSize ">
 					<td>{{t.date}}</td>
 					<td><div style="float: left; margin-right: 5px;" class="legend payee-type-{{t.type}}">{{t.type}} </div> 
 					
@@ -94,7 +96,6 @@
 					
 					<td><a ng-click="remove(t);">Delete</a> | <a ng-click="compose(t,true);">Copy</a></td>
 			</tr>
-				</tr>
 			
 	
 	
@@ -278,6 +279,7 @@ ng-options="p.name as p.name for p in payees | orderBy:name" ></select>
 <script src="js/loading-bar.js"></script>
 <script src="js/ui-bootstrap-tpls-0.10.0.min.js"></script>
 <script src='js/moment.min.js'></script>
+<script src='js/hotkeys.min.js'></script>
 
 </body>
 

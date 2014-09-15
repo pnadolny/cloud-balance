@@ -9,6 +9,7 @@ var ModalInstanceCtrl = function ($scope, $modalInstance, transaction,PayeeServi
 	  $scope.memento = angular.copy(transaction);
 	  $scope.alerts = [];
 	  
+	  
 	  if (transaction.amount <=0) {
 		  transaction.amount = transaction.amount * -1;
 	  } else {
@@ -129,6 +130,7 @@ cloudBalanceControllers.controller('PayeeController', ['$scope','$modal', '$log'
 
 	init();
 
+	
 	function init() {
 		$scope.currentPage = 0;
 	    $scope.pageSize = 25;
@@ -202,15 +204,19 @@ cloudBalanceControllers.controller('PayeeController', ['$scope','$modal', '$log'
 }]);
 
 
-cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$scope','$modal', '$log','Transactions','Payees',
-  function($scope,$modal, $log,Transactions,Payees) {
+cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$scope','$modal', '$log','Transactions','Payees','hotkeys',
+  function($scope,$modal, $log,Transactions,Payees,hotkeys) {
 
 	
+	 hotkeys.add({combo: 'b', description:'Show current balance in alert', callback: function(event,hotkey) {
+		  alert($scope.currentBalance());
+	  }});
+
+	 
 	 init();
 
 	function init() {
-		
-		
+
 		
 		$scope.currentPage = 0;
 	    $scope.pageSize = 30;
@@ -266,7 +272,8 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$sco
 				if (transactionDate.getMonth()  == today.getMonth()) {
 					if (transactionDate.getDate()  == today.getDate()) {
 						if (!currentBalance) {
-							currentBalance =trans[i].balance; 
+							currentBalance =trans[i].balance;
+							break;
 						}
 					}
 				}
