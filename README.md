@@ -11,7 +11,9 @@ An application to manage your cash and compute your cash flow.  Uses the bucket 
 - [Java][2]
 - [Angular JS][4]
 - [Bootstrap][5]
-
+- [UI Bootstrap][8]
+- [AngularHotkeys.js][6]
+- [Moment.js][7]
 
 ## Setup Instructions
 1. Import the project into Eclipse.
@@ -33,3 +35,6 @@ An application to manage your cash and compute your cash flow.  Uses the bucket 
 [3]: https://localhost:8888/
 [4]: https://angularjs.org/
 [5]: http://getbootstrap.com/2.3.2/
+[6]: http://chieffancypants.github.io/angular-hotkeys/
+[7]: http://momentjs.com/
+[8]: http://angular-ui.github.io/bootstrap/

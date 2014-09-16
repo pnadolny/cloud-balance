@@ -212,6 +212,11 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$sco
 		  alert($scope.currentBalance());
 	  }});
 
+
+	 hotkeys.add({combo: 'c', description:'Compose a transaction', callback: function(event,hotkey) {
+		  $scope.compose();
+	  }});
+
 	 
 	 init();
 
