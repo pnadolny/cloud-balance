@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<appengine-web-app xmlns="http://appengine.google.com/ns/1.0">
+	<application>mycloudbalance</application>
+	<version>1</version>
+	<threadsafe>true</threadsafe>
+	<!-- Configure java.util.logging -->
+	<system-properties>
+		<property name="java.util.logging.config.file" value="WEB-INF/logging.properties" />
+	</system-properties>
+
+
+	<static-error-handlers>
+        <handler file="/error.html"/>
+        <handler file="/over_quota.html" error-code="over_quota"/>
+        <handler file="/dos_api_denial.html" error-code="dos_api_denial"/>
+        <handler file="/timeout.html" error-code="timeout"/>
+    </static-error-handlers>
+	
+
+</appengine-web-app>
