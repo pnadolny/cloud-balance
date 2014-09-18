@@ -217,6 +217,18 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$sco
 		  $scope.compose();
 	  }});
 
+	 hotkeys.add({combo: 'l', description:'Switch to list view', callback: function(event,hotkey) {
+		 $scope.layout = 'list';
+		 
+	  }});
+
+	 hotkeys.add({combo: 'f', description:'Switch to grid view', callback: function(event,hotkey) {
+		 
+		 $scope.layout = 'grid';
+		 $scope.computeCashFlow();
+	  }});
+
+	 
 	 
 	 init();
 
@@ -277,6 +289,7 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$sco
 				if (transactionDate.getMonth()  == today.getMonth()) {
 					if (transactionDate.getDate()  == today.getDate()) {
 							currentBalance =trans[i].balance;
+							break;
 					}
 				}
 			}
