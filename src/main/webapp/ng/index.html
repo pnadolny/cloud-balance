@@ -34,22 +34,21 @@
 
 <tabset justified="true">
     <tab heading="Transactions">
+
 		<div ng-controller="SwitchableGridTransactionController">
+
 			   <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
 					
 				<div class="switchBar">
 					<button class="btn btn-default"  style="float: left" ng-click="compose();">Compose</button>
-					
 					 <a style="float: right;" class="list-icon" ng-class="{active: layout == 'list'}" ng-click="layout = 'list'; "></a>
 					<a style="float: right;" class="grid-icon" ng-class="{active: layout == 'grid'}" ng-click="layout = 'grid'; computeCashFlow()"></a>
-    	  
-					<!--<div style="padding-top: 2px; padding-right: 10px; float: right; font-size:20px;color:#7d9098;'">{{currentBalance() | currency}}</div>-->
     	  
 				</div>
 	
 	
-	       		<table class="table table-hover table-condensed" ng-show="layout == 'grid' " >
-	       		
+				<div ng-show="layout == 'grid' "> 
+	       		<table class="table table-hover table-condensed"  >
 	       		<thead>
 					<tr>
 						<th>Month</th>
@@ -61,8 +60,7 @@
 					    <th>Cash Flow</th>
 					</tr>
 				</thead>
-			
-	       		<tr style="text-align: left;" ng-repeat="t in cashFlow">
+	       		<tr style="text-align: left;" ng-repeat="t in cashFlow | limitTo:cashFlowPageSize">
 						<td>{{t.month}}</td>
 					    <td>{{t.income | currency}}</td>
 					    <td>{{t.static | currency}}</td>
@@ -71,9 +69,17 @@
 					    <td>{{t.other | currency}}</td>
 					    <td>{{t.cashFlow | currency}}</td>
 	       		</tr>
-				
 				</table>
+		
+				<div class="btn-group btn-group-justified">
+					<div class="btn-group">
+			    		<button ng-hide="cashFlow.length<=cashFlowPageSize"  class="btn btn-default" ng-click="cashFlowPageSize= cashFlowPageSize + 6">Show more CCCC </button>
+	  				</div>
+	  			</div>
 			
+				</div>
+		
+		
 			<div ng-show="layout == 'list' " >		
 			<table class="table table-hover table-condensed" ng-show="layout == 'list' " >
 				<thead>
@@ -101,12 +107,12 @@
 	
 			</tbody>
 			</table>
+			<div class="btn-group btn-group-justified">
+				<div class="btn-group">
+		    		<button ng-hide="transactions.length<=pageSize"  class="btn btn-default" ng-click="pageSize= pageSize + 25">Show more</button>
+  				</div>
+  			</div>
 			
-			<button class="btn btn-default" ng-disabled="currentPage == 0" ng-click="setPage(0);">&laquo;</button>
-			<button class="btn btn-default" ng-disabled="currentPage-1 < 0" ng-click="currentPage=currentPage-1">&lsaquo;</button>
-			{{currentPage+1}} / {{numberOfPages()}}
-		    <button class="btn btn-default" ng-disabled="currentPage >= numberOfPages()-1" ng-click="currentPage=currentPage+1">&rsaquo; </button>
-			<button class="btn btn-default" ng-disabled="currentPage == numberOfPages()-1" ng-click="setPage(numberOfPages()-1);">&raquo; </button>
 			 Press ? for shortcuts
 		        </div>
 		</div>
@@ -133,7 +139,7 @@
 						<th>Action</th>
 					</tr>
 				</thead>
-			<tr style="text-align: left;" ng-repeat="p in payees ">
+			<tr style="text-align: left;" ng-repeat="p in payees | limitTo:pageSize">
 					<td><div style="float: left; margin-right: 5px;" class="legend payee-type-{{p.type}}">{{p.type}} </div>
 					
 					<a ng-click="compose(p);">{{p.name}}</a></td>
@@ -147,6 +153,12 @@
 			 	</tbody>
 			</table>
 		
+		<div class="btn-group btn-group-justified">
+				<div class="btn-group">
+		    		<button ng-hide="payees.length<=pageSize"  class="btn btn-default" ng-click="pageSize= pageSize + 25">Show more</button>
+  				</div>
+  			</div>
+			
 	</div>
 	
 	</tab>

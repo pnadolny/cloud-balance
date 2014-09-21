@@ -130,24 +130,14 @@ cloudBalanceControllers.controller('PayeeController', ['$scope','$modal', '$log'
 
 	init();
 
-	
 	function init() {
-		$scope.currentPage = 0;
 	    $scope.pageSize = 25;
 	    $scope.payees =[];
 	    $scope.alerts = [];
-
 	    Payees.query(function(data){
 			$scope.payees = data;
 		});
-		
-		
 	}
-
-    $scope.numberOfPages=function(){
-        return Math.ceil($scope.payees.length/$scope.pageSize);                
-    }
-    
 
    	$scope.remove = function(index) {
    	 	var failFn=function(message){
@@ -194,12 +184,10 @@ cloudBalanceControllers.controller('PayeeController', ['$scope','$modal', '$log'
    			$scope.alerts.push({msg: message});
    		}
    		var successFn=function(data){
-   			// $scope.alerts.push({msg: data});
    			$scope.payees.push(payee);
    		}
 		Payees.save(payee,successFn,failFn);
 	}	
-	
 	
 }]);
 
@@ -233,10 +221,10 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$sco
 	 init();
 
 	function init() {
-
 		
-		$scope.currentPage = 0;
-	    $scope.pageSize = 30;
+		$scope.cashFlowPageSize = 6;
+	    
+	    $scope.pageSize = 25;
 	    $scope.layout = 'list';
 	    $scope.alerts = [];
 	    $scope.cashFlow = [];
@@ -250,8 +238,6 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$sco
 
 
 	$scope.currentBalance=function() {
-
-		
 		$log.log('Current Balance!');
 		
 		// Copy
@@ -303,14 +289,6 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$sco
 	}
 	
 
-    $scope.numberOfPages=function(){
-        return Math.ceil($scope.transactions.length/$scope.pageSize);                
-    }
-    
-    $scope.setPage = function (pageNo) {
-        $scope.currentPage = pageNo;
-      };
-  
     $scope.computeCashFlow = function() {
 
     	$scope.transactions.sort(function(a,b){
