@@ -11,6 +11,7 @@
     <properties>
         <appengine.app.version>1</appengine.app.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	<appengine.target.version>1.9.11</appengine.target.version>
     </properties>
 
     <prerequisites>
@@ -20,15 +21,15 @@
     <dependencies>
         <!-- Compile/runtime dependencies -->
 		
-		 <dependency>
-			<groupId>com.google.code.gson</groupId>
-			<artifactId>gson</artifactId>
-			<version>2.3</version>
-		</dependency>
+	 <dependency>
+		<groupId>com.google.code.gson</groupId>
+		<artifactId>gson</artifactId>
+		<version>2.3</version>
+	</dependency>
         <dependency>
             <groupId>com.google.appengine</groupId>
             <artifactId>appengine-api-1.0-sdk</artifactId>
-            <version>1.9.11</version>
+            <version>${appengine.target.version}</version>
         </dependency>
         <dependency>
             <groupId>javax.servlet</groupId>
@@ -46,13 +47,13 @@
         <dependency>
             <groupId>com.google.appengine</groupId>
             <artifactId>appengine-testing</artifactId>
-            <version>1.9.11</version>
+              <version>${appengine.target.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.google.appengine</groupId>
             <artifactId>appengine-api-stubs</artifactId>
-            <version>1.9.11</version>
+              <version>${appengine.target.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -104,7 +105,7 @@
             <plugin>
                 <groupId>com.google.appengine</groupId>
                 <artifactId>appengine-maven-plugin</artifactId>
-                <version>1.9.11</version>
+                <version>${appengine.target.version}</version>
                 <configuration>
                     <enableJarClasses>false</enableJarClasses>
                     <!-- Comment in the below snippet to bind to all IPs instead of just localhost -->
@@ -112,9 +113,9 @@
                     <port>8080</port -->
                     <!-- Comment in the below snippet to enable local debugging with a remove debugger
                          like those included with Eclipse or IntelliJ -->
-                    <!-- jvmFlags>
+                    <jvmFlags>
                       <jvmFlag>-agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=n</jvmFlag>
-                    </jvmFlags -->
+                    </jvmFlags>
                 </configuration>
             </plugin>
         </plugins>
