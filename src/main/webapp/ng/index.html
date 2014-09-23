@@ -2,6 +2,7 @@
 <html lang="en" xmlns:ng="https://angularjs.org" ng-app="cloudBalanceApp">
 <head>
   <meta charset="utf-8">
+
   <title>Cloud Balance</title>
   <link rel="stylesheet" href="css/default.css"/>
   <link rel="stylesheet" href="css/loading-bar.css"/>
@@ -121,7 +122,7 @@
 	<tab heading="Payees">
 	<div ng-controller="PayeeController">
 	
-			   <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
+	<alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
 		
 		<div style="margin: 10px auto 25px;">
 			<button class="btn btn-default"  style="float: left" ng-click="compose();">Compose</button>
@@ -216,6 +217,8 @@ ng-options="p.name as p.name for p in payees | orderBy:name" ></select>
             <button class="btn btn-success" ng-click="ok()">Save</button>
             <button class="btn btn-danger" ng-click="cancel()">Cancel</button>
         </div>
+
+		
  </script>
 
 

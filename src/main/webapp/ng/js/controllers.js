@@ -273,6 +273,7 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$sco
 			transactionDate = new Date(trans[i].date);
 			if (transactionDate.getFullYear()  == today.getFullYear()) {
 				if (transactionDate.getMonth()  == today.getMonth()) {
+		
 					if (transactionDate.getDate()  == today.getDate()) {
 							currentBalance =trans[i].balance;
 							break;
@@ -283,6 +284,10 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$sco
 				if (transactionDate.getTime()< today.getTime()) {
 					currentBalance =trans[i].balance;
 				}
+			}
+			if (!currentBalance) {
+				currentBalance =0;
+				
 			}
 		}
 		return currentBalance;
