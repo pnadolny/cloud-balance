@@ -17,7 +17,7 @@ An application to manage your cash and compute your cash flow.  Uses the bucket 
 - [Maven][9]
 
 
-## Setup Instructions
+## Setup Instructions (Eclipse)
 1. Import the project into Eclipse.
 1. Make sure the App Engine SDK jars are added to the `war/WEB-INF/lib`
    directory, either by adding them by hand, or having Eclipse do it. (An easy)
