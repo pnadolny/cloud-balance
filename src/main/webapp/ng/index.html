@@ -1,177 +1,190 @@
 <!doctype html>
 <html lang="en" xmlns:ng="https://angularjs.org" ng-app="cloudBalanceApp">
-<head>
-  <meta charset="utf-8">
 
-  <title>Cloud Balance</title>
-  <link rel="stylesheet" href="css/default.css"/>
-  <link rel="stylesheet" href="css/loading-bar.css"/>
-  <link rel="stylesheet" href="css/hotkeys.min.css"/>
-  <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+<head>
+    <meta charset="utf-8">
+
+    <title>Cloud Balance</title>
+    <link rel="stylesheet" href="css/default.css" />
+    <link rel="stylesheet" href="css/loading-bar.css" />
+    <link rel="stylesheet" href="css/hotkeys.min.css" />
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body style="margin:0;">
 
     <noscript>
-      <div style="width: 22em; position: absolute; left: 50%; margin-left: -11em; color: red; background-color: white; border: 1px solid red; padding: 4px; font-family: sans-serif">
-        Your web browser must have JavaScript enabled
-        in order for this application to display correctly.
-      </div>
+        <div style="width: 22em; position: absolute; left: 50%; margin-left: -11em; color: red; background-color: white; border: 1px solid red; padding: 4px; font-family: sans-serif">
+            Your web browser must have JavaScript enabled in order for this application to display correctly.
+        </div>
     </noscript>
 
 
-<div ng-controller="UserController">
-	<div class="headerBar">
-	
-		<div style="float: right;line-height:20px; padding: 15px; height:50px;  margin-right:5px" id="signout"></div>
-		<a style="float: right;line-height:20px; padding: 15px; height:50px;  margin-right:5px" title="Feedback" href="https://code.google.com/p/cloudbalance/issues/list">Feedback</a>
-		<div id="gc-userinformation" style="float: right;line-height:20px; padding: 15px; height:50px;  margin-right:5px">{{emailAddress}}	</div>
-		<div id="gc-accountName" style="float: left; font-size: 18px;  line-height:20px; padding: 15px; height:50px; "><div app-name></div></div>
-	</div>
-</div>
+    <div ng-controller="UserController">
+        <div class="headerBar">
 
-<div id="shell" style="padding: 30px; width:1000px; margin: 0 auto;">
+            <div style="float: right;line-height:20px; padding: 15px; height:50px;  margin-right:5px" id="signout"></div>
+            <a style="float: right;line-height:20px; padding: 15px; height:50px;  margin-right:5px" title="Feedback" href="https://code.google.com/p/cloudbalance/issues/list">Feedback</a>
+            <div id="gc-userinformation" style="float: right;line-height:20px; padding: 15px; height:50px;  margin-right:5px">{{emailAddress}}</div>
+            <div id="gc-accountName" style="float: left; font-size: 18px;  line-height:20px; padding: 15px; height:50px; ">
+                <div app-name></div>
+            </div>
+        </div>
+    </div>
 
-
-<tabset justified="true">
-    <tab heading="Transactions">
-
-		<div ng-controller="SwitchableGridTransactionController">
-
-			   <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
-					
-				<div class="switchBar">
-					<button class="btn btn-default"  style="float: left" ng-click="compose();">Compose</button>
-					 <a style="float: right;" class="list-icon" ng-class="{active: layout == 'list'}" ng-click="layout = 'list'; "></a>
-					<a style="float: right;" class="grid-icon" ng-class="{active: layout == 'grid'}" ng-click="layout = 'grid'; computeCashFlow()"></a>
-    	  
-				</div>
-	
-	
-				<div ng-show="layout == 'grid' "> 
-	       		<table class="table table-hover table-condensed"  >
-	       		<thead>
-					<tr>
-						<th>Month</th>
-						<th><div style="float: left; margin-right: 5px;" class="legend payee-type-i"> I</div>Income</th>
-						<th><div style="float: left; margin-right: 5px;" class="legend payee-type-s"> S</div>Static</th>
-						<th><div style="float: left; margin-right: 5px;" class="legend payee-type-d"> D</div>Discretionary</th>
-						<th><div style="float: left; margin-right: 5px;" class="legend payee-type-f"> F</div>Future</th>
-						<th><div style="float: left; margin-right: 5px;" class="legend payee-type-o"> O</div>Other</th>
-					    <th>Cash Flow</th>
-					</tr>
-				</thead>
-	       		<tr style="text-align: left;" ng-repeat="t in cashFlow | limitTo:cashFlowPageSize">
-						<td>{{t.month}}</td>
-					    <td>{{t.income | currency}}</td>
-					    <td>{{t.static | currency}}</td>
-					    <td>{{t.discretionary | currency}}</td>
-					    <td>{{t.future | currency}}</td>
-					    <td>{{t.other | currency}}</td>
-					    <td>{{t.cashFlow | currency}}</td>
-	       		</tr>
-				</table>
-		
-				<div class="btn-group btn-group-justified">
-					<div class="btn-group">
-			    		<button ng-hide="cashFlow.length<=cashFlowPageSize"  class="btn btn-default" ng-click="cashFlowPageSize= cashFlowPageSize + 6">Show more</button>
-	  				</div>
-	  			</div>
-			
-				</div>
-		
-		
-			<div ng-show="layout == 'list' " >		
-			<table class="table table-hover table-condensed" ng-show="layout == 'list' " >
-				<thead>
-					<tr>
-						<th>Date</th>
-						<th>Payee</th>
-						<th>Amount</th>
-						<th>Balance</th>
-						<th>Action</th>
-					</tr>
-				</thead>
-			
-			<tr  style="text-align: left;" ng-repeat="t in transactions  | addSortableDate | orderBy:'sortableDate':true | calcBalance | startFrom:currentPage*pageSize | limitTo:pageSize ">
-					<td>{{t.date}}</td>
-					<td><div style="float: left; margin-right: 5px;" class="legend payee-type-{{t.type}}">{{t.type}} </div> 
-					
-					<a ng-click="compose(t,false);">{{t.payee}}</a></td>
-					<td>{{t.amount | currency}}</td>
-					<td> {{t.balance | currency}}</td>
-					
-					<td><a ng-click="remove(t);">Delete</a> | <a ng-click="compose(t,true);">Copy...</a></td>
-			</tr>
-			
-	
-	
-			</tbody>
-			</table>
-			<div class="btn-group btn-group-justified">
-				<div class="btn-group">
-		    		<button ng-hide="transactions.length<=pageSize"  class="btn btn-default" ng-click="pageSize= pageSize + 25">Show more</button>
-  				</div>
-  			</div>
-			
-			 Press ? for shortcuts
-		        </div>
-		</div>
-	</tab>
-	
-	<tab heading="Payees">
-	<div ng-controller="PayeeController">
-	
-	<alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
-		
-		<div style="margin: 10px auto 25px;">
-			<button class="btn btn-default"  style="float: left" ng-click="compose();">Compose</button>
-		</div>
-	
-	
-		<table class="table table-hover table-condensed" >
-				<thead>
-					<tr>
-					    <th>Name</th>
-					    <th>Last</th>
-					    <th>This Month</th>
-						<th>Total</th>
-	
-						<th>Action</th>
-					</tr>
-				</thead>
-			<tr style="text-align: left;" ng-repeat="p in payees | limitTo:pageSize">
-					<td><div style="float: left; margin-right: 5px;" class="legend payee-type-{{p.type}}">{{p.type}} </div>
-					
-					<a ng-click="compose(p);">{{p.name}}</a></td>
-					<td>{{p.lastAmount | currency}}</td>
-					<td>{{p.thisMonth | currency}}</td>
-					<td>{{p.total | currency}}</td>
-					
-					<td><a ng-click="remove($index);">Delete</a></td>
-			</tr>
-			
-			 	</tbody>
-			</table>
-		
-		<div class="btn-group btn-group-justified">
-				<div class="btn-group">
-		    		<button ng-hide="payees.length<=pageSize"  class="btn btn-default" ng-click="pageSize= pageSize + 25">Show more</button>
-  				</div>
-  			</div>
-			
-	</div>
-	
-	</tab>
-	
-</tabset>
+    <div id="shell" style="padding: 30px; width:1000px; margin: 0 auto;">
 
 
-</div>
+        <tabset justified="true">
+            <tab heading="Transactions">
+
+                <div ng-controller="SwitchableGridTransactionController">
+
+                    <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
+
+                    <div class="switchBar">
+                        <button class="btn btn-default" style="float: left" ng-click="compose();">Compose</button>
+                        <a style="float: right;" class="list-icon" ng-class="{active: layout == 'list'}" ng-click="layout = 'list'; "></a>
+                        <a style="float: right;" class="grid-icon" ng-class="{active: layout == 'grid'}" ng-click="layout = 'grid'; computeCashFlow()"></a>
+
+                    </div>
+
+
+                    <div ng-show="layout == 'grid' ">
+                        <table class="table table-hover table-condensed">
+                            <thead>
+                                <tr>
+                                    <th>Month</th>
+                                    <th>
+                                        <div style="float: left; margin-right: 5px;" class="legend payee-type-i">I</div>Income</th>
+                                    <th>
+                                        <div style="float: left; margin-right: 5px;" class="legend payee-type-s">S</div>Static</th>
+                                    <th>
+                                        <div style="float: left; margin-right: 5px;" class="legend payee-type-d">D</div>Discretionary</th>
+                                    <th>
+                                        <div style="float: left; margin-right: 5px;" class="legend payee-type-f">F</div>Future</th>
+                                    <th>
+                                        <div style="float: left; margin-right: 5px;" class="legend payee-type-o">O</div>Other</th>
+                                    <th>Cash Flow</th>
+                                </tr>
+                            </thead>
+                            <tr style="text-align: left;" ng-repeat="t in cashFlow | limitTo:cashFlowPageSize">
+                                <td>{{t.month}}</td>
+                                <td>{{t.income | currency}}</td>
+                                <td>{{t.static | currency}}</td>
+                                <td>{{t.discretionary | currency}}</td>
+                                <td>{{t.future | currency}}</td>
+                                <td>{{t.other | currency}}</td>
+                                <td>{{t.cashFlow | currency}}</td>
+                            </tr>
+                        </table>
+
+                        <div class="btn-group btn-group-justified">
+                            <div class="btn-group">
+                                <button ng-hide="cashFlow.length<=cashFlowPageSize" class="btn btn-default" ng-click="cashFlowPageSize= cashFlowPageSize + 6">Show more</button>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div ng-show="layout == 'list' ">
+                        <table class="table table-hover table-condensed" ng-show="layout == 'list' ">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Payee</th>
+                                    <th>Amount</th>
+                                    <th>Balance</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+
+                            <tr style="text-align: left;" ng-repeat="t in transactions  | addSortableDate | orderBy:'sortableDate':true | calcBalance | startFrom:currentPage*pageSize | limitTo:pageSize ">
+                                <td>{{t.date}}</td>
+                                <td>
+                                    <div style="float: left; margin-right: 5px;" class="legend payee-type-{{t.type}}">{{t.type}}</div>
+
+                                    <a ng-click="compose(t,false);">{{t.payee}}</a>
+                                </td>
+                                <td>{{t.amount | currency}}</td>
+                                <td>{{t.balance | currency}}</td>
+
+                                <td><a ng-click="remove(t);">Delete</a> | <a ng-click="compose(t,true);">Copy...</a>
+                                </td>
+                            </tr>
 
 
 
-<script type="text/ng-template" id="transaction.html">
+                            </tbody>
+                        </table>
+                        <div class="btn-group btn-group-justified">
+                            <div class="btn-group">
+                                <button ng-hide="transactions.length<=pageSize" class="btn btn-default" ng-click="pageSize= pageSize + 25">Show more</button>
+                            </div>
+                        </div>
+
+                        Press ? for shortcuts
+                    </div>
+                </div>
+            </tab>
+
+            <tab heading="Payees">
+                <div ng-controller="PayeeController">
+
+                    <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
+
+                    <div style="margin: 10px auto 25px;">
+                        <button class="btn btn-default" style="float: left" ng-click="compose();">Compose</button>
+                    </div>
+
+
+                    <table class="table table-hover table-condensed">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Last</th>
+                                <th>This Month</th>
+                                <th>Total</th>
+
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tr style="text-align: left;" ng-repeat="p in payees | limitTo:pageSize">
+                            <td>
+                                <div style="float: left; margin-right: 5px;" class="legend payee-type-{{p.type}}">{{p.type}}</div>
+
+                                <a ng-click="compose(p);">{{p.name}}</a>
+                            </td>
+                            <td>{{p.lastAmount | currency}}</td>
+                            <td>{{p.thisMonth | currency}}</td>
+                            <td>{{p.total | currency}}</td>
+
+                            <td><a ng-click="remove($index);">Delete</a>
+                            </td>
+                        </tr>
+
+                        </tbody>
+                    </table>
+
+                    <div class="btn-group btn-group-justified">
+                        <div class="btn-group">
+                            <button ng-hide="payees.length<=pageSize" class="btn btn-default" ng-click="pageSize= pageSize + 25">Show more</button>
+                        </div>
+                    </div>
+
+                </div>
+
+            </tab>
+
+        </tabset>
+
+
+    </div>
+
+
+
+    <script type="text/ng-template" id="transaction.html">
         <div class="modal-header">
             <h3>Transaction</h3>
         </div>
@@ -180,123 +193,122 @@
 
             <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
 
-			<div class="form-horizontal" role="form">
+            <div class="form-horizontal" role="form">
 
-			<div class="form-group">
-				<label class="col-sm-2 control-label">Deposit</label>
-				<div class="col-sm-10">
-					<input type="checkbox" ng-model="transaction.deposit">
-				</div>
-			</div>
-  				
-			
-
-			<div class="form-group">
-    				<label class="col-sm-2 control-label" for="amount">Amount</label>
- 					<div class="col-sm-10">
-					    <input id="amount" type="text" class="form-control"  ng-model="transaction.amount" autocomplete="off" name="amount" required placeholder="Amount" />
-    				</div>
-  				</div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Deposit</label>
+                    <div class="col-sm-10">
+                        <input type="checkbox" ng-model="transaction.deposit">
+                    </div>
+                </div>
 
 
 
-  				<div  class="form-group">
-    				<label class="col-sm-2 control-label" for="payee">Payee</label>
- 					<div class="col-sm-10">
- 						<select id="payee" class="form-control" ng-disabled="transaction.name!=null" required ng-model="transaction.payee" 
-ng-options="p.name as p.name for p in payees | orderBy:name" ></select>			
-    				</div>
-  				</div>
-
-<div class="form-group">
-           <div class="col-sm-offset-2 col-sm-9">
-			<datepicker id="date" ng-model="transaction.date" show-weeks="showWeeks"></datepicker>
-            </div>
-</div>
-        <div class="modal-footer">
-            <button class="btn btn-success" ng-click="ok()">Save</button>
-            <button class="btn btn-danger" ng-click="cancel()">Cancel</button>
-        </div>
-
-		
- </script>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" for="amount">Amount</label>
+                    <div class="col-sm-10">
+                        <input id="amount" type="text" class="form-control" ng-model="transaction.amount" autocomplete="off" name="amount" required placeholder="Amount" />
+                    </div>
+                </div>
 
 
-<script type="text/ng-template" id="payee.html">
-	<div class="modal-header">
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" for="payee">Payee</label>
+                    <div class="col-sm-10">
+                        <select id="payee" class="form-control" ng-disabled="transaction.name!=null" required ng-model="transaction.payee" ng-options="p.name as p.name for p in payees | orderBy:name"></select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-9">
+                        <datepicker id="date" ng-model="transaction.date" show-weeks="showWeeks"></datepicker>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-success" ng-click="ok()">Save</button>
+                    <button class="btn btn-danger" ng-click="cancel()">Cancel</button>
+                </div>
+
+
+    </script>
+
+
+    <script type="text/ng-template" id="payee.html">
+        <div class="modal-header">
             <h3>Payee</h3>
         </div>
-    
-<div class="modal-body">
 
-		<alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
-       <div class="form-horizontal" role="form">
-  				<div class="form-group">
-    				<label class="col-sm-2 control-label" for="payee">Payee</label>
- 					<div class="col-sm-10">
-						<input type="text" class="form-control"  ng-model="payee.name" autocomplete="off" name="name" required ng-readonly="isEditing" />
-    				</div>
-  				</div>
+        <div class="modal-body">
 
-
-  				<div class="form-group">
-    				<label class="col-sm-2 control-label" for="type">Type</label>
- 					<div class="col-sm-10">
-
-	<div class="row" style="text-align: left; padding-left: 10px; padding-top:10px" >
-			<fieldset>
-					<input ng-model="payee.type" type="radio" name="type" id="type-i" value="i"  />
-                    <label for="type-i" class="legend payee-type-i">I</label>Income                                
-            		<br>        
-				     <input ng-model="payee.type" type="radio" name="type" id="type-s" value="s" />
-                    <label for="type-i" class="legend payee-type-s" >S</label>Static
-                    <br>
-                     <input ng-model="payee.type" type="radio" name="type" id="type-d" value="d" />
-                     <label for="type-i" class="legend payee-type-d">D</label>Discretionary
-                     <br>
-                     <input ng-model="payee.type" type="radio" name="type" id="type-f" value="f" />
-                     <label for="type-i" class="legend payee-type-f">F</label>Future
-                     <br>
-	                 <input ng-model="payee.type" type="radio" name="type" id="type-none" value="o" />
-                     <label for="type-none" class="legend payee-type-o" >O</label>Other
-                     <br> 
-			</fieldset>
-                 
-        </div>    
+            <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
+            <div class="form-horizontal" role="form">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" for="payee">Payee</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" ng-model="payee.name" autocomplete="off" name="name" required ng-readonly="isEditing" />
+                    </div>
+                </div>
 
 
-    				</div>
-  				</div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" for="type">Type</label>
+                    <div class="col-sm-10">
 
-					
+                        <div class="row" style="text-align: left; padding-left: 10px; padding-top:10px">
+                            <fieldset>
+                                <input ng-model="payee.type" type="radio" name="type" id="type-i" value="i" />
+                                <label for="type-i" class="legend payee-type-i">I</label>Income
+                                <br>
+                                <input ng-model="payee.type" type="radio" name="type" id="type-s" value="s" />
+                                <label for="type-i" class="legend payee-type-s">S</label>Static
+                                <br>
+                                <input ng-model="payee.type" type="radio" name="type" id="type-d" value="d" />
+                                <label for="type-i" class="legend payee-type-d">D</label>Discretionary
+                                <br>
+                                <input ng-model="payee.type" type="radio" name="type" id="type-f" value="f" />
+                                <label for="type-i" class="legend payee-type-f">F</label>Future
+                                <br>
+                                <input ng-model="payee.type" type="radio" name="type" id="type-none" value="o" />
+                                <label for="type-none" class="legend payee-type-o">O</label>Other
+                                <br>
+                            </fieldset>
 
-</div>
-
-        <div class="modal-footer">
-			<button class="btn btn-success" ng-click="ok()">Save</button>
-            <button class="btn btn-danger" ng-click="cancel()">Cancel</button>
-        </div>
-
-    
-
- </script>
-
-    
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-rc.2/angular.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-rc.2/angular-resource.min.js"></script>
-
-            
+                        </div>
 
 
-<script src="js/app.js"></script>
-<script src="js/services.js"></script>
-<script src="js/controllers.js"></script>
-<script src="js/filters.js"></script>
-<script src="js/directives.js"></script>
-<script src="js/loading-bar.js"></script>
-<script src="js/ui-bootstrap-tpls-0.10.0.min.js"></script>
-<script src='js/moment.min.js'></script>
-<script src='js/hotkeys.min.js'></script>
+                    </div>
+                </div>
+
+
+
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-success" ng-click="ok()">Save</button>
+                <button class="btn btn-danger" ng-click="cancel()">Cancel</button>
+            </div>
+
+
+
+    </script>
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-rc.2/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-rc.2/angular-resource.min.js"></script>
+
+
+
+
+    <script src="js/app.js"></script>
+    <script src="js/services.js"></script>
+    <script src="js/controllers.js"></script>
+    <script src="js/filters.js"></script>
+    <script src="js/directives.js"></script>
+    <script src="js/loading-bar.js"></script>
+    <script src="js/ui-bootstrap-tpls-0.10.0.min.js"></script>
+    <script src='js/moment.min.js'></script>
+    <script src='js/hotkeys.min.js'></script>
 
 </body>
 
