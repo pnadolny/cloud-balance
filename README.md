@@ -13,6 +13,7 @@ with basic functionality, this may be the app for you.
 ## Language
 - [Java][2]
 - [Angular JS][4]
+  [UI Bootstrap][10]
 - [Bootstrap][5]
 - [UI Bootstrap][8]
 - [AngularHotkeys.js][6]
@@ -35,3 +36,4 @@ with basic functionality, this may be the app for you.
 [7]: http://momentjs.com/
 [8]: http://angular-ui.github.io/bootstrap/
 [9]: http://maven.apache.org/
+[10]: http://angular-ui.github.io/bootstrap/

@@ -231,15 +231,22 @@ cloudBalanceControllers.controller('PayeeController', ['$scope', '$modal', '$log
 ]);
 
 
-cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$scope', '$modal', '$log', 'Transactions', 'Payees', 'hotkeys',
-    function($scope, $modal, $log, Transactions, Payees, hotkeys) {
+cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$scope', '$modal', '$log', 'Transactions', 'Payees', 'hotkeys','$filter',
+    function($scope, $modal, $log, Transactions, Payees, hotkeys,$filter) {
 
-
-        hotkeys.add({
+	    
+	    hotkeys.add({
             combo: 'b',
             description: 'Show current balance in alert',
             callback: function(event, hotkey) {
-                alert($scope.currentBalance());
+            	
+            	$scope.alerts = [];
+            	$scope.alerts.push({
+                    type: 'success',
+                    msg: 'Your balance is '+$filter('currency')($scope.currentBalance(),'$')
+                });
+
+            	$scope.alerts.push();
             }
         });
 
