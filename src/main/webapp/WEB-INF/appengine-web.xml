@@ -8,7 +8,6 @@
 		<property name="java.util.logging.config.file" value="WEB-INF/logging.properties" />
 	</system-properties>
 
-
 	<static-error-handlers>
         <handler file="/error.html"/>
         <handler file="/over_quota.html" error-code="over_quota"/>
@@ -16,5 +15,14 @@
         <handler file="/timeout.html" error-code="timeout"/>
     </static-error-handlers>
 	
-
+	<static-files> 
+		<include path="/**.js" />
+		<include path="/**.css" />
+		<include path="/**.jpg" />
+    </static-files> 
+	 
+	 <admin-console>
+  		<page name="Cloub Balance Admin Page" url="/admin.html" />
+	</admin-console>
+	 
 </appengine-web-app>
