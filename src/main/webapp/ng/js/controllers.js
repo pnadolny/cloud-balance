@@ -300,61 +300,20 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$sco
 
 
         $scope.currentBalance = function() {
-            $log.log('Current Balance!');
-
-            // Copy
-            var trans = angular.copy($scope.transactions);
-
-            // Sort
-            trans.sort(function(a, b) {
+            var balance = 0;
+            var transactions = angular.copy($scope.transactions);
+            transactions.sort(function(a, b) {
                 return moment(b.date).valueOf() - moment(a.date).valueOf();
             });
-
-            // Compute Balance
-            var b = trans.length;
-            var balance = 0;
-            while (b--) {
-                balance = balance + Number(trans[b].amount);
-                trans[b].balance = balance;
-            }
-
-            // Sort
-            trans.sort(function(a, b) {
-                return moment(a.date).valueOf() - moment(b.date).valueOf();
-            });
-
-
-            // Find the current balance
-            var today = new Date(Date.now());
-            var transactionDate;
-            var currentBalance;
-            var i = trans.length;
+            var i = transactions.length;
             while (i--) {
-                $log.log('Finding balance...' + trans[i].date + ' ' + trans[i].balance);
-
-                transactionDate = new Date(trans[i].date);
-                if (transactionDate.getFullYear() == today.getFullYear()) {
-                    if (transactionDate.getMonth() == today.getMonth()) {
-
-                        if (transactionDate.getDate() == today.getDate()) {
-                            currentBalance = trans[i].balance;
-                            break;
-                        }
-                    }
+            	if (moment(transactions[i].date).isAfter(moment())) {
+                	return balance;
                 }
-                if (!currentBalance) {
-                    if (transactionDate.getTime() < today.getTime()) {
-                        currentBalance = trans[i].balance;
-                    }
-                }
-                if (!currentBalance) {
-                    currentBalance = 0;
-
-                }
+            	balance = balance + Number(transactions[i].amount);
             }
-            return currentBalance;
+            return balance;
         }
-
 
         $scope.computeCashFlow = function() {
 
