@@ -15,7 +15,9 @@
         <handler file="/timeout.html" error-code="timeout"/>
     </static-error-handlers>
 	
-	<static-files> 
+	<static-files>
+	    <include path="/*.html" />
+		 
 		<include path="/**.js" />
 		<include path="/**.css" />
 		<include path="/**.jpg" />

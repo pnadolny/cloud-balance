@@ -11,7 +11,7 @@
     <properties>
         <appengine.app.version>1</appengine.app.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	    <appengine.target.version>1.9.11</appengine.target.version>
+	    <appengine.target.version>1.9.12</appengine.target.version>
     </properties>
 
     <prerequisites>
@@ -131,4 +131,3 @@ manage a cash account and compute monthly cash flow.</description>
     	<developerConnection>Paul Nadolny</developerConnection>
     </scm>
 </project>
--
