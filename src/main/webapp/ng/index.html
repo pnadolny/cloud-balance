@@ -101,7 +101,7 @@
                                 </tr>
                             </thead>
 
-                            <tr style="text-align: left;" ng-repeat="t in transactions  | addSortableDate | orderBy:'sortableDate':true | calcBalance | startFrom:currentPage*pageSize | limitTo:pageSize ">
+                            <tr style="text-align: left;" ng-repeat="t in transactions  | addSortableDate | orderBy:'sortableDate':true | calcBalance | limitTo:pageSize ">
                                 <td>{{t.date}}</td>
                                 <td>
                                     <div style="float: left; margin-right: 5px;" class="legend payee-type-{{t.type}}">{{t.type}}</div>

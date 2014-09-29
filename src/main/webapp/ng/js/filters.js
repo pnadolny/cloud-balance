@@ -16,6 +16,7 @@ cloudBalanceFilters.filter('calcBalance', function() {
         var i = input.length;
         var balance = 0;
         while (i--) {
+        	
             balance = balance + Number(input[i].amount);
             input[i].balance = balance;
         }

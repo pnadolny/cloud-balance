@@ -19,6 +19,7 @@ with basic functionality, this may be the app for you.
 - [AngularHotkeys.js][6]
 - [Moment.js][7]
 - [Maven][9]
+- [Holder.js][11]
 
 
 ## Setup Instructions (Eclipse)
@@ -37,3 +38,4 @@ with basic functionality, this may be the app for you.
 [8]: http://angular-ui.github.io/bootstrap/
 [9]: http://maven.apache.org/
 [10]: http://angular-ui.github.io/bootstrap/
+[11]: http://imsky.github.io/holder

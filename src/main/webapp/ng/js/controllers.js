@@ -234,16 +234,32 @@ cloudBalanceControllers.controller('PayeeController', ['$scope', '$modal', '$log
 cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$scope', '$modal', '$log', 'Transactions', 'Payees', 'hotkeys','$filter',
     function($scope, $modal, $log, Transactions, Payees, hotkeys,$filter) {
 
-	    
+		init();
+	
+	    function init() {
+	        
+	    	$scope.cashFlowPageSize = 6;
+	        $scope.pageSize = 25;
+	        $scope.layout = 'list';
+	        $scope.alerts = [];
+	        $scope.cashFlow = [];
+	        $scope.transactions = [];
+	
+	        Transactions.fetchTransactions(function(data) {
+	            $scope.transactions = data;
+	        });
+	
+	    }
+
 	    hotkeys.add({
             combo: 'b',
-            description: 'Show current balance in alert',
+            description: 'Show current balance',
             callback: function(event, hotkey) {
             	
             	$scope.alerts = [];
             	$scope.alerts.push({
                     type: 'success',
-                    msg: 'Your balance is '+$filter('currency')($scope.currentBalance(),'$')
+                    msg: 'Your balance is '+$filter('currency')($scope.currentBalance(),'$') + ' and your available balance is '+$filter('currency')($scope.availableBalance(),'$') 
                 });
 
             	$scope.alerts.push();
@@ -278,27 +294,7 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$sco
             }
         });
 
-
-
-        init();
-
-        function init() {
-
-            $scope.cashFlowPageSize = 6;
-
-            $scope.pageSize = 25;
-            $scope.layout = 'list';
-            $scope.alerts = [];
-            $scope.cashFlow = [];
-
-            $scope.transactions = [];
-            Transactions.fetchTransactions(function(data) {
-                $scope.transactions = data;
-            });
-
-        }
-
-
+        
         $scope.currentBalance = function() {
             var balance = 0;
             var transactions = angular.copy($scope.transactions);
@@ -315,6 +311,24 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$sco
             return balance;
         }
 
+        $scope.availableBalance = function() {
+            var balance = 0;
+            var transactions = angular.copy($scope.transactions);
+            transactions.sort(function(a, b) {
+                return moment(b.date).valueOf() - moment(a.date).valueOf();
+            });
+            var i = transactions.length;
+            while (i--) {
+            	if (moment(transactions[i].date).isAfter(moment()) && transactions[i].type=='i') {
+                	return balance;
+                }
+            	
+            	balance = balance + Number(transactions[i].amount);
+            }
+            return balance;
+        }
+
+        
         $scope.computeCashFlow = function() {
 
             $scope.transactions.sort(function(a, b) {
