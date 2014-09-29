@@ -104,39 +104,6 @@ a:visited {
 	color: #404040;
 }
 
-.payee-type-i {
-	background-color: #3c0;
-}
-
-.payee-type-d {
-	background-color: #f90;
-}
-
-.payee-type-s {
-	background-color: #fd0;
-}
-
-.payee-type-f {
-	background-color: #09f;
-}
-
-.payee-type-o {
-	background-color: #00F5FF;
-}
-
-.legend {
-	display: block;
-	height: 1.2em;
-	line-height: 1.2;
-	width: 1.2em;
-	text-align: center;
-	text-transform: capitalize;
-	font-weight: bold;
-	border-radius: 2px;
-	-moz-border-radius: 2px;
-	-webkit-border-radius: 2px;
-	color: #F8F8FF;
-}
 
 canvas {
 	border: 1px solid black;
