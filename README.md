@@ -1,9 +1,7 @@
 Cloud Balance
 =============
 
-An application to manage your cash transactions and compute your cash flow.  The app uses the bucket budgeting method to
-group expenses to indicate where your money is going.  If your looking for a simplistic app to manage a cash account
-with basic functionality, this may be the app for you. 
+An application to manage a cash account, transactions, and compute your cash flow.  Designed as a single page web application, using RESTful API's.  
 
 
 
@@ -24,7 +22,7 @@ with basic functionality, this may be the app for you.
 
 ## Setup Instructions (Eclipse)
 
-1. The application is a Maven project built to run on Google's app engine. 
+1. The application is a Maven project built to run on Google's app engine.   
 
 
 
