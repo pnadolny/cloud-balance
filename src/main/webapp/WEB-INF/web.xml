@@ -30,19 +30,19 @@
 	
 	<servlet-mapping>
 		<servlet-name>TransactionServlet</servlet-name>
-		<url-pattern>/cb/transaction</url-pattern>
+		<url-pattern>/ng/transaction</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>PayeeServlet</servlet-name>
-		<url-pattern>/cb/payee</url-pattern>
+		<url-pattern>/ng/payee</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>UserServlet</servlet-name>
-		<url-pattern>/cb/user</url-pattern>
+		<url-pattern>/ng/user</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>ImportServlet</servlet-name>
-		<url-pattern>/cb/import</url-pattern>
+		<url-pattern>/ng/import</url-pattern>
 	</servlet-mapping>
 	
 	<welcome-file-list>

@@ -3,7 +3,7 @@
 var cloudBalanceServices = angular.module('cloudBalanceServices', ['ngResource']);
 
 cloudBalanceServices.factory('UserService', function($http) {
-    var URL = '/cb/user';
+    var URL = '/ng/user';
     var service = {};
     var params = {
         year: 2014
@@ -25,7 +25,7 @@ cloudBalanceServices.factory('UserService', function($http) {
 
 
 cloudBalanceServices.factory('Payees', function($http) {
-    var URL = '/cb/payee';
+    var URL = '/ng/payee';
     var service = {};
     var params = {
         year: 2014
@@ -88,7 +88,7 @@ cloudBalanceServices.factory('Payees', function($http) {
 cloudBalanceServices.factory('Transactions', function($http) {
 
     var service = {};
-    var URL = '/cb/transaction';
+    var URL = '/ng/transaction';
 
     service.fetchTransactions = function(callback) {
         $http.get(URL).
