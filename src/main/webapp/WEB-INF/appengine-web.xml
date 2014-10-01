@@ -24,7 +24,7 @@
     </static-files> 
 	 
 	 <admin-console>
-  		<page name="Cloub Balance Admin Page" url="/admin.html" />
+  		<page name="Cloud Balance Admin Page" url="/admin.html" />
 	</admin-console>
 	 
 </appengine-web-app>
