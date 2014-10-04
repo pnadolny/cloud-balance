@@ -19,7 +19,6 @@ cloudBalanceServices.factory('UserService', function($http) {
         });
     }
 
-
     return service;
 });
 
@@ -85,81 +84,18 @@ cloudBalanceServices.factory('Payees', function($http) {
     return service;
 });
 
-cloudBalanceServices.factory('Transactions', function($http) {
 
-    var service = {};
-    var URL = '/ng/transaction';
-
-    service.fetchTransactions = function(callback) {
-        $http.get(URL).
-        success(function(data, status, headers, config) {
-            callback(data.data);
-        }).
-        error(function(data, status, headers, config) {
-            alert(status);
-        });
-    }
-
-    service.saveTransaction = function(transaction, success, fail) {
-
-        $http({
-            method: 'POST',
-            url: URL,
-            params: transaction
-        }).
-        success(function(data, status, headers, config) {
-            success(data);
-        }).
-        error(function(data, status, headers, config) {
-            fail(status);
-        });
-
-    }
-
-
-    service.deleteTransaction = function(id, parentId) {
-
-        var params = {
-            action: 'DELETE',
-            parentid: parentId,
-            id: id
-        };
-
-        $http({
-            method: 'POST',
-            url: URL,
-            params: params
-        }).
-        success(function(data, status, headers, config) {}).
-        error(function(data, status, headers, config) {
-            alert('fail');
-        });
-    }
-
-
-    service.starTransaction = function(id, parentId) {
-
-        var params = {
-            action: 'STAR',
-            parentid: parentId,
-            id: id
-        };
-
-
-        $http({
-            method: 'POST',
-            url: URL,
-            params: params
-        }).
-        success(function(data, status, headers, config) {
-            alert('star....')
-        }).
-        error(function(data, status, headers, config) {
-            alert('fail');
-        });
-    }
-
-    return service;
-
-
+cloudBalanceServices.factory('Transaction', function($resource) {
+	return	$resource('/ng/transaction', null, {
+		query: {method:'GET', 
+			transformResponse:function(data,headers) {
+				return angular.fromJson(data);
+			}
+		},
+		remove: {method:'POST',params:{action:'delete',id: '@id',parentid:'@parentid'}},
+		star: {method:'POST',  params:{action:'star',  id: '@id',parentid:'@parentid'}},
+		save: {method:'POST',  params: {action:'put',  name: '@name', payee:'@payee', amount: '@amount', type: '@type', date: '@date', memo: '@memo'}}
+	});
 });
+
+

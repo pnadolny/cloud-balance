@@ -231,10 +231,10 @@ cloudBalanceControllers.controller('PayeeController', ['$scope', '$modal', '$log
 ]);
 
 
-cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$scope', '$modal', '$log', 'Transactions', 'Payees', 'hotkeys','$filter',
-    function($scope, $modal, $log, Transactions, Payees, hotkeys,$filter) {
+cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$resource','$scope', '$modal', '$log', 'Payees', 'hotkeys','$filter','Transaction',
+    function($resource, $scope, $modal, $log, Payees, hotkeys,$filter,Transaction) {
 
-		init();
+	    init();
 	
 	    function init() {
 	        
@@ -243,12 +243,12 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$sco
 	        $scope.layout = 'list';
 	        $scope.alerts = [];
 	        $scope.cashFlow = [];
+	        
 	        $scope.transactions = [];
-	
-	        Transactions.fetchTransactions(function(data) {
-	            $scope.transactions = data;
+	        
+	        Transaction.query(function(response) {
+	            $scope.transactions = response.data;
 	        });
-	
 	    }
 
 	    hotkeys.add({
@@ -440,6 +440,7 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$sco
             modalInstance.result.then(function(transaction) {
 
                 var shouldPush = typeof(transaction.name) == 'undefined';
+                
                 $log.info('Modal dismissed with: ' + transaction);
                 var failFn = function(status) {
                     $scope.alerts.push({
@@ -455,13 +456,10 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$sco
                     $scope.computeCashFlow();
 
                 }
-
                 var date = new Date(transaction.date);
                 transaction.date = (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear();
-                transaction.action = 'PUT';
-                Transactions.saveTransaction(transaction, successFn, failFn);
-
-
+                Transaction.save(transaction,successFn,failFn);
+                
             }, function() {
                 $log.info('Modal cancelled at: ' + new Date());
             });
@@ -487,7 +485,8 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$sco
         }
         $scope.remove = function(t) {
             $scope.transactions.splice(findTransactionIndex(t), 1);
-            Transactions.deleteTransaction(t.name, t.payee);
+            var aTransaction = new Transaction({id: t.name, parentid: t.payee});
+            aTransaction.$remove();
         }
     }
 ]);
