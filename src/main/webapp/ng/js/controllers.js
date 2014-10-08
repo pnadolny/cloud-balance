@@ -2,7 +2,7 @@
 
 var cloudBalanceControllers = angular.module('cloudBalanceControllers', []);
 
-var ModalInstanceCtrl = function($scope, $modalInstance, transaction, PayeeService) {
+var ModalInstanceCtrl = function($scope, $modalInstance, transaction, Payee) {
 
     $scope.transaction = transaction;
     $scope.payees = [];
@@ -18,8 +18,8 @@ var ModalInstanceCtrl = function($scope, $modalInstance, transaction, PayeeServi
         }
     }
 
-    PayeeService.query(function(data) {
-        $scope.payees = data;
+    Payee.query(function(response) {
+        $scope.payees = response.data;
     });
 
     $scope.closeAlert = function(index) {
@@ -152,8 +152,8 @@ var ModalPayeeInstanceCtrl = function($scope, $modalInstance, payee) {
 
 
 
-cloudBalanceControllers.controller('PayeeController', ['$scope', '$modal', '$log', 'Payees',
-    function($scope, $modal, $log, Payees) {
+cloudBalanceControllers.controller('PayeeController', ['$scope', '$modal', '$log', 'Payee',
+    function($scope, $modal, $log, Payee) {
 
         init();
 
@@ -161,25 +161,27 @@ cloudBalanceControllers.controller('PayeeController', ['$scope', '$modal', '$log
             $scope.pageSize = 25;
             $scope.payees = [];
             $scope.alerts = [];
-            Payees.query(function(data) {
-                $scope.payees = data;
-            });
+            Payee.query(function(response) {
+	            $scope.payees = response.data;
+	        });
         }
 
         $scope.remove = function(index) {
-            var failFn = function(message) {
+
+        	Payee.remove({id: $scope.payees[index].name}, function(result) {
+            	if (typeof result.error!='undefined') {
+            		$scope.alerts.push({
+                        msg: result.error.message
+                    });
+                    return;
+            	}
+                $scope.payees.splice(index, 1);
+            }, function(message) {
                 $scope.alerts.push({
                     type: 'danger',
                     msg: message
                 });
-            }
-            var successFn = function(data) {
-                $scope.alerts.push({
-                    msg: data
-                });
-                $scope.payees.splice(index, 1);
-            }
-            Payees.deletePayee($scope.payees[index].name, successFn, failFn);
+            });
         }
 
         $scope.compose = function(payee) {
@@ -202,7 +204,7 @@ cloudBalanceControllers.controller('PayeeController', ['$scope', '$modal', '$log
                 }
             });
             modalInstance.result.then(function(payee) {
-                $log.info('Modal dismissed with: ' + payee);
+                $log.info('Modal dismissed with: ' + angular.toJson(payee));
                 $scope.save(payee);
             }, function() {
                 $log.info('Modal dismissed at: ' + new Date());
@@ -224,15 +226,17 @@ cloudBalanceControllers.controller('PayeeController', ['$scope', '$modal', '$log
             var successFn = function(data) {
                 $scope.payees.push(payee);
             }
-            Payees.save(payee, successFn, failFn);
+            Payee.save(payee, successFn, failFn);
+            
+            
         }
 
     }
 ]);
 
 
-cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$resource','$scope', '$modal', '$log', 'Payees', 'hotkeys','$filter','Transaction',
-    function($resource, $scope, $modal, $log, Payees, hotkeys,$filter,Transaction) {
+cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$resource','$scope', '$modal', '$log', 'hotkeys','$filter','Transaction','Payee',
+    function($resource, $scope, $modal, $log, hotkeys,$filter,Transaction,Payee) {
 
 	    init();
 	
@@ -432,7 +436,7 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
                         return transaction;
                     },
                     PayeeService: function() {
-                        return Payees;
+                        return Payee;
                     }
                 }
             });
@@ -492,37 +496,22 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
 ]);
 
 
-cloudBalanceControllers.controller('UserController', ['$scope', '$location', '$window', 'UserService',
-    function($scope, $location, $window, UserService) {
+cloudBalanceControllers.controller('UserController', ['$scope', '$location', '$window', 'User',
+    function($scope, $location, $window, User) {
 
         $scope.emailAddress = {};
         $scope.logoutURL = {};
 
-        UserService.query(function(data) {
-            $scope.emailAddress = data[0].email;
-            $scope.logoutURL = data[2].logoutURL;
-
-            // The following should be temporary as I figure how to do this the angular way...
+        User.query(function(response) {
+            $scope.emailAddress = response.data[0].email;
+            $scope.logoutURL = response.data[2].logoutURL;
             var e = angular.element(document.querySelector('#signout'));
-            e.html('<a title="Sign out" href="' + data[2].logoutURL + '">Sign out</a>');
+            e.html('<a title="Sign out" href="' + response.data[2].logoutURL + '">Sign out</a>');
         });
 
         $scope.signout = function() {
-                var u = $location.protocol() + "://" + $location.host() + ":" + $location.port() + $scope.logoutURL;
-                $window.location.href = u;
-            }
-            // http://www.yearofmoo.com/2012/10/more-angularjs-magic-to-supercharge-your-webapp.html#apply-digest-and-phase
-        var changeLocation = function(url, force) {
-
-            $location.path(url); //use $location.path(url).replace() if you want to replace the location instead
-
-            $scope = $scope || angular.element(document).scope();
-            if (force || !$scope.$$phase) {
-                //this will kickstart angular if to notice the change
-                $scope.$apply();
-            }
-        };
-
-
+            var u = $location.protocol() + "://" + $location.host() + ":" + $location.port() + $scope.logoutURL;
+            $window.location.href = u;
+        }
     }
 ]);

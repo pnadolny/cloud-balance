@@ -187,30 +187,26 @@ public class PayeeServlet extends BaseServlet {
 
 	}
 
-	protected void doDelete(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		String payeeKey = req.getParameter("id");
-		PrintWriter out = resp.getWriter();
+	
+    @Override
+	protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+    	super.doPost(req, resp);
+		
 		try {
-			out.println(Payee.deletePayee(payeeKey));
+			resp.getWriter().println(Payee.deletePayee(req.getParameter("id")));
 		} catch (Exception e) {
-			out.println(Util.getErrorMessage(e));
+			resp.getWriter().println(Util.getErrorMessage(e));
 		}
-	}
 
-	/**
-	 * Redirect the call to doDelete or doPut method
-	 */
+    }
+
+	
+	
+    @Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		String action = req.getParameter("action");
-		if ("delete".equalsIgnoreCase(action)) {
-			doDelete(req, resp);
-			return;
-		};
-		
+		super.doPost(req, resp);
 		doPut(req, resp);
-		return;
 	}
 
 }

@@ -41,7 +41,7 @@ public class Payee {
 		q.setAncestor(key);
 		q.setKeysOnly();
 		if (!DatastoreServiceFactory.getDatastoreService().prepare(q).asList(FetchOptions.Builder.withLimit(1)).isEmpty()) {
-			return "Cannot delete, as there are transactions associated with this payee.";
+			return Util.getErrorMessage("Cannot delete as there are transactions associated with this payee.");
 		}
 		Util.deleteEntity(key);
 		return KIND + "  "+key.getName() + " deleted successfully";

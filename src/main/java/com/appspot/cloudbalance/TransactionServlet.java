@@ -153,6 +153,7 @@ public class TransactionServlet extends BaseServlet {
 	 */
 	protected void doDelete(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
+		super.doDelete(req, resp);
 		String itemKey = req.getParameter("id");
 		String payeeName = req.getParameter("parentid");
 		PrintWriter out = resp.getWriter();
@@ -182,12 +183,12 @@ public class TransactionServlet extends BaseServlet {
 	 */
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
+		super.doPost(req, resp);
+		
 		String action = req.getParameter("action");
 		if (action.equalsIgnoreCase("star")) {
 			doStar(req, resp);
-		} else if (action.equalsIgnoreCase("delete")) {
-			doDelete(req, resp);
-		} else if (action.equalsIgnoreCase("put")) {
+		}else if (action.equalsIgnoreCase("put")) {
 			doPut(req, resp);
 			return;
 		}

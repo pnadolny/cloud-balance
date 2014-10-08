@@ -268,11 +268,60 @@ public class Util {
 	 * @param data
 	 * @param resp
 	 * @throws IOException
+	
+	 {
+		  "apiVersion": "2.0",
+		  "error": {
+		    "code": 404,
+		    "message": "File Not Found",
+		    "errors": [{
+		      "domain": "Calendar",
+		      "reason": "ResourceNotFoundException",
+		      "message": "File Not Found
+		    }]
+		  }
+	}
 	 */
+	 
 	public static String getErrorMessage(Exception ex) throws IOException {
-		return "Error:" + ex.toString();
+		StringBuilder sb = new StringBuilder();
+		sb.append("{");
+		
+		
+				sb.append("\"" + "apiVersion" + "\" : \"" + "1.0"+ "\",");
+				sb.append("\"" + "error" + "\" : " + "{" );
+					sb.append("\"code" + "\" : \"" + "404" + "\",");
+					sb.append("\"" + "message" + "\" : \"" + ex.toString() + "\",");
+					sb.append("\"" + "errors" + "\" : " + "[{");
+						sb.append("\"" + "domain" + "\" : \"" + "future" + "\",");
+						sb.append("\"" + "reason" + "\" : \"" + "future" + "\",");
+						sb.append("\"" + "message" + "\" : \"" + "future" + "\"");
+					sb.append("}]");
+				sb.append("}");
+		sb.append("}");
+		return sb.toString();
 	}
 
+	public static String getErrorMessage(String errorMessage)  {
+
+		StringBuilder sb = new StringBuilder();
+		sb.append("{");
+				sb.append("\"" + "apiVersion" + "\" : \"" + "1.0"+ "\",");
+				sb.append("\"" + "error" + "\" :" + "{" );
+					sb.append("\"code" + "\" : \"" + "404" + "\",");
+					sb.append("\"" + "message" + "\" : \"" + errorMessage + "\",");
+					sb.append("\"" + "errors" + "\" : " + "[{");
+						sb.append("\"" + "domain" + "\" : \"" + "future" + "\",");
+						sb.append("\"" + "reason" + "\" : \"" + "future" + "\",");
+						sb.append("\"" + "message" + "\" : \"" + "future" + "\"");
+					sb.append("}]");
+				sb.append("}");
+		sb.append("}");
+		return sb.toString();
+
+	}
+
+	
 	/**
 	 * get DatastoreService instance
 	 * 
