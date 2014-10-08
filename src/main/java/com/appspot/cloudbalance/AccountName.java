@@ -26,7 +26,7 @@ public class AccountName {
 		return Util.findEntity(key);
 	}
 	 public static Iterable<Entity> getAccountName() {
-		  Iterable<Entity> a =  Util.listEntities(KIND, null, null,Query.SortDirection.DESCENDING,0, null, null, null);
+		  Iterable<Entity> a =  Util.listEntities(KIND, null, null,Query.SortDirection.DESCENDING,0, null);
 		  return a;
 	  }
 	 

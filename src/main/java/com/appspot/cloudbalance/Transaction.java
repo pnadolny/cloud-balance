@@ -65,8 +65,8 @@ public class Transaction {
 	}
 
 	
-	public static Iterable<Entity> getAllTransactions(Query.SortDirection direction, int offset) {
-		Iterable<Entity> entities = Util.listEntities(KIND, null, null,direction, offset, null, null, null);
+	public static Iterable<Entity> getAllTransactions(Query.SortDirection direction) {
+		Iterable<Entity> entities = Util.listEntities(KIND, null, null,direction, null, null);
 		return entities;
 	}
 
@@ -77,7 +77,7 @@ public class Transaction {
 		return Util.getDatastoreServiceInstance().prepare(q).asList(FetchOptions.Builder.withDefaults());
 	}
 	public static Iterable<Entity> getTransaction(String itemName) {
-		Iterable<Entity> entities = Util.listEntities(KIND, "memo", itemName,Query.SortDirection.DESCENDING,0, null, null, null);
+		Iterable<Entity> entities = Util.listEntities(KIND, "memo", itemName,Query.SortDirection.DESCENDING, null, null);
 		return entities;
 	}
 

@@ -27,19 +27,16 @@ public class TransactionServlet extends BaseServlet {
 	private static final Logger logger = Logger.getLogger(TransactionServlet.class
 			.getCanonicalName());
 
-	
+	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		super.doGet(req, resp);
-		logger.log(Level.INFO, "Obtaining Transactions");
 		String searchBy = req.getParameter("transaction-searchby");
 		String searchFor = req.getParameter("q");
 		String searchParent = req.getParameter("p");
 		PrintWriter out = resp.getWriter();
 		if (searchFor == null || searchFor.equals("")) {
-		
-			Iterable<Entity> payees = Payee.getAllPayees(-1,null);
-			
+			Iterable<Entity> payees = Payee.getAllPayees();
 			List<Entity> transactions = new ArrayList<Entity>();
 			for (Entity payee :payees) {
 				logger.log(Level.INFO,payee.getKey().getName());
@@ -49,7 +46,6 @@ public class TransactionServlet extends BaseServlet {
 					transactions.add(e);
 				}
 			}
-			
 			Collections.sort(transactions, new Comparator<Entity>() {
 				@Override
 				public int compare(Entity arg0, Entity arg1) {
@@ -57,10 +53,7 @@ public class TransactionServlet extends BaseServlet {
 					Date d2 = (Date)arg1.getProperty("date");
 		    		return d1.compareTo(d2);
 				}});
-			
 				out.println(writeJSON(transactions,null,payees,"type"));
-					
-			
 		} else if (searchBy == null && searchFor!=null) {
 			out.println(Util.writeJSON(Transaction.findTransaction(searchParent,searchFor)));
 		} 
@@ -124,9 +117,7 @@ public class TransactionServlet extends BaseServlet {
 	}
 
 	
-	/**
-	 * Creates entity and persists the same
-	 */
+	@Override
 	protected void doPut(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		logger.log(Level.INFO, "Creating transaction");
@@ -147,10 +138,7 @@ public class TransactionServlet extends BaseServlet {
 		logger.log(Level.INFO, String.format("Creating transaction key with id of %s and name of %s", new Object[] {e.getKey().getId(), e.getKey().getName()}));
 	}
 
-	/**
-	 * Delete the entity from the datastore. Throws an exception if there are
-	 * any orders associated with the item and ignores the delete action for it.
-	 */
+	@Override
 	protected void doDelete(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		super.doDelete(req, resp);
@@ -165,32 +153,6 @@ public class TransactionServlet extends BaseServlet {
 
 	}
 
-	protected void doStar(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		String itemKey = req.getParameter("id");
-		String payeeName = req.getParameter("parentid");
-		PrintWriter out = resp.getWriter();
-		try {
-			out.println(Transaction.starItem(payeeName,itemKey));
-		} catch (Exception e) {
-			out.println(Util.getErrorMessage(e));
-		}
-
-	}
-	/**
-	 * Redirects to delete or insert entity based on the action in the HTTP
-	 * request.
-	 */
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		super.doPost(req, resp);
 		
-		String action = req.getParameter("action");
-		if (action.equalsIgnoreCase("star")) {
-			doStar(req, resp);
-		}else if (action.equalsIgnoreCase("put")) {
-			doPut(req, resp);
-			return;
-		}
-	}
+	
 }

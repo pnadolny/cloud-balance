@@ -11,7 +11,7 @@ cloudBalanceServices.factory('User', function($resource) {
 cloudBalanceServices.factory('Payee', function($resource) {
 	return	$resource('/ng/payee', {year: moment().format('YYYY')}, {
 		remove: {method:'DELETE',params:{id: '@id'}},
-		save:   {method:'POST',  params:{name: '@name', type: '@type', date: '@date'}}
+		save:   {method:'PUT',  params:{name: '@name', type: '@type', date: '@date'}}
 	});
 });
 
@@ -19,8 +19,7 @@ cloudBalanceServices.factory('Payee', function($resource) {
 cloudBalanceServices.factory('Transaction', function($resource) {
 	return	$resource('/ng/transaction', null, {
 		remove: {method:'DELETE',params:{id: '@id',parentid:'@parentid'}},
-		star: {method:'POST',  params:{action:'star',  id: '@id',parentid:'@parentid'}},
-		save: {method:'POST',  params: {action:'put',  name: '@name', payee:'@payee', amount: '@amount', type: '@type', date: '@date', memo: '@memo'}}
+		save: {method:'PUT',  params: {name: '@name', payee:'@payee', amount: '@amount', type: '@type', date: '@date', memo: '@memo'}}
 	});
 });
 

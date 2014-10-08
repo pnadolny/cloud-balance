@@ -10,11 +10,14 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
+import com.google.gson.Gson;
 
 @SuppressWarnings("serial")
 public class UserServlet extends BaseServlet {
 
 	private static final UserService userService = UserServiceFactory.getUserService();
+
+	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		super.doGet(req, resp);

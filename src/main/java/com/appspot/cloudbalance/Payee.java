@@ -24,10 +24,9 @@ public class Payee {
 		Util.persistEntity(payee);
 		return payee;
 	}
-
-	public static Iterable<Entity> getAllPayees(int offset, QueryCallback cb) {
+	public static Iterable<Entity> getAllPayees() {
 		Iterable<Entity> a = Util.listEntities(KIND, null, null,
-				Query.SortDirection.DESCENDING,offset, null, cb, KeyFactory.createKey(ACCOUNT, DEFAULT_ACCOUNT));
+				Query.SortDirection.DESCENDING, null, KeyFactory.createKey(ACCOUNT, DEFAULT_ACCOUNT));
 		return a;
 	}
 	

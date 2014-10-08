@@ -40,43 +40,25 @@ public class PayeeServlet extends BaseServlet {
 		}
 		String year = req.getParameter("year");
 		int iYear = Integer.valueOf(year).intValue();
-		String off = req.getParameter("offset");
-		int offset =-1;
-		if (off != null)
-	        offset = Integer.parseInt(off);
 		String searchFor = req.getParameter("q");
 		PrintWriter out = resp.getWriter();
-
-		final class QueryCallbackImpl implements QueryCallback {
-			int total; 
-			@Override
-			public void setRecordCount(int count) {
-				total = count;
-			}
-			@Override
-			public int getRecordCount() {
-				return total;
-			}
-		}
-		QueryCallback cb = new QueryCallbackImpl();
 		if (searchFor == null || searchFor.equals("") || searchFor == "*") {
-			out.println(writePayeesWithTotals(Payee.getAllPayees(offset,cb),
-					Transaction.KIND, iDayOfYear,iYear,cb));
+			out.println(writePayeesWithTotals(Payee.getAllPayees(),
+					Transaction.KIND, iDayOfYear,iYear));
 			return;
 		}
 		Entity payee = Payee.getPayee(searchFor);
 		if (payee != null) {
 			Set<Entity> result = new HashSet<Entity>();
 			result.add(payee);
-			cb.setRecordCount(result.size());
 			out.println(writePayeesWithTotals(result,
-					Transaction.KIND, iDayOfYear,iYear,cb));
+					Transaction.KIND, iDayOfYear,iYear));
 		}
 	}
 
 		
 	public static String writePayeesWithTotals(Iterable<Entity> entities,
-			String childKind, int iDayOfYear, int iYear,  QueryCallback cb) {
+			String childKind, int iDayOfYear, int iYear) {
 		StringBuilder sb = new StringBuilder();
 		int i = 0;
 		sb.append("[");
@@ -158,6 +140,7 @@ public class PayeeServlet extends BaseServlet {
 		return sb.toString();
 	}
 
+	@Override
 	protected void doPut(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		logger.log(Level.INFO, "Creating payee");
@@ -181,8 +164,7 @@ public class PayeeServlet extends BaseServlet {
 	
     @Override
 	protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-    	super.doPost(req, resp);
-		
+    	super.doDelete(req, resp);
 		try {
 			resp.getWriter().println(Payee.deletePayee(req.getParameter("id")));
 		} catch (Exception e) {
@@ -191,13 +173,6 @@ public class PayeeServlet extends BaseServlet {
 
     }
 
-	
-	
-    @Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		super.doPost(req, resp);
-		doPut(req, resp);
-	}
+   
 
 }
