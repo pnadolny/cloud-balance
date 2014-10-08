@@ -335,7 +335,7 @@ public class Util {
 		logger.log(Level.INFO, "creating JSON format object");
 		StringBuilder sb = new StringBuilder();
 		int i = 0;
-		sb.append("{\"data\": [");
+		sb.append("[");
 		for (Map.Entry<String, String> e : m.entrySet()) {
 			sb.append("{");
 			sb.append("\"" + e.getKey() + "\" : \"" + e.getValue() + "\",");
@@ -346,7 +346,7 @@ public class Util {
 		if (i > 0) {
 			sb.deleteCharAt(sb.lastIndexOf(","));
 		}
-		sb.append("]}");
+		sb.append("]");
 		logger.log(Level.INFO, sb.toString());
 		return sb.toString();
 	}

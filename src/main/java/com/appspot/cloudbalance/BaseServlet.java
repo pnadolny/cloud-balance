@@ -16,7 +16,6 @@ public class BaseServlet extends HttpServlet {
 		resp.setContentType("application/json; charset=utf-8");
 		resp.setHeader("Cache-Control", "no-cache");
 	}
-
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
@@ -24,8 +23,6 @@ public class BaseServlet extends HttpServlet {
 		resp.setHeader("Cache-Control", "no-cache");
 
 	}
-	
-
 	@Override
 	protected void doDelete(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {

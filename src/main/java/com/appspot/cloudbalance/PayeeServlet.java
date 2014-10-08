@@ -79,15 +79,7 @@ public class PayeeServlet extends BaseServlet {
 			String childKind, int iDayOfYear, int iYear,  QueryCallback cb) {
 		StringBuilder sb = new StringBuilder();
 		int i = 0;
-		sb.append("{");
-		sb.append("\"meta\": [");
-		sb.append("{");
-		String count = "entityCount";
-		
-		sb.append("\"" + count + "\" : \"" + Integer.valueOf(cb.getRecordCount()).toString() + "\"");
-		sb.append("}");
-		sb.append("],");
-		sb.append("\"data\": [");
+		sb.append("[");
 		for (Entity result : entities) {
 
 			Map<String, Object> properties = result.getProperties();
@@ -161,9 +153,8 @@ public class PayeeServlet extends BaseServlet {
 		if (i > 0) {
 			sb.deleteCharAt(sb.lastIndexOf(","));
 		}
-		sb.append("]}");
+		sb.append("]");
 		logger.log(Level.INFO,sb.toString());
-		
 		return sb.toString();
 	}
 

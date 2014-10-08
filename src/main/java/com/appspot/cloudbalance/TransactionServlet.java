@@ -71,7 +71,7 @@ public class TransactionServlet extends BaseServlet {
 		StringBuilder sb = new StringBuilder();
 		
 		int i = 0;
-		sb.append("{\"data\": [");
+		sb.append("[");
 		for (Entity result : entities) {
 			Map<String, Object> properties = result.getProperties();
 			sb.append("{");
@@ -118,7 +118,7 @@ public class TransactionServlet extends BaseServlet {
 		if (i > 0) {
 			sb.deleteCharAt(sb.lastIndexOf(","));
 		}
-		sb.append("]}");
+		sb.append("]");
 		logger.log(Level.INFO, sb.toString());
 		return sb.toString();
 	}

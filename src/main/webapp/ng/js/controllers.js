@@ -19,7 +19,7 @@ var ModalInstanceCtrl = function($scope, $modalInstance, transaction, Payee) {
     }
 
     Payee.query(function(response) {
-        $scope.payees = response.data;
+        $scope.payees = response;
     });
 
     $scope.closeAlert = function(index) {
@@ -162,7 +162,7 @@ cloudBalanceControllers.controller('PayeeController', ['$scope', '$modal', '$log
             $scope.payees = [];
             $scope.alerts = [];
             Payee.query(function(response) {
-	            $scope.payees = response.data;
+	            $scope.payees = response;
 	        });
         }
 
@@ -251,7 +251,7 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
 	        $scope.transactions = [];
 	        
 	        Transaction.query(function(response) {
-	            $scope.transactions = response.data;
+	            $scope.transactions = response;
 	        });
 	    }
 
@@ -503,10 +503,10 @@ cloudBalanceControllers.controller('UserController', ['$scope', '$location', '$w
         $scope.logoutURL = {};
 
         User.query(function(response) {
-            $scope.emailAddress = response.data[0].email;
-            $scope.logoutURL = response.data[2].logoutURL;
+            $scope.emailAddress = response[0].email;
+            $scope.logoutURL = response[2].logoutURL;
             var e = angular.element(document.querySelector('#signout'));
-            e.html('<a title="Sign out" href="' + response.data[2].logoutURL + '">Sign out</a>');
+            e.html('<a title="Sign out" href="' + response[2].logoutURL + '">Sign out</a>');
         });
 
         $scope.signout = function() {
