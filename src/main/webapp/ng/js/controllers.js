@@ -101,7 +101,6 @@ var ModalInstanceCtrl = function($scope, $modalInstance, transaction, Payee) {
 
 var ModalPayeeInstanceCtrl = function($scope, $modalInstance, payee) {
 
-    $scope.isEditing = typeof(payee.name) != 'undefined';
     $scope.payee = payee;
     $scope.alerts = [];
 
@@ -168,7 +167,8 @@ cloudBalanceControllers.controller('PayeeController', ['$scope', '$modal', '$log
         $scope.remove = function(index) {
 
         	Payee.remove({id: $scope.payees[index].name}, function(result) {
-            	if (typeof result.error!='undefined') {
+
+        		if (!angular.isUndefined(result.error)) {
             		$scope.alerts.push({
                         msg: result.error.message
                     });
@@ -184,7 +184,8 @@ cloudBalanceControllers.controller('PayeeController', ['$scope', '$modal', '$log
         }
 
         $scope.compose = function(payee) {
-            if (typeof(payee) == 'undefined') {
+        	
+        	if (angular.isUndefined(payee)) {
                 payee = {
                     lastAmount: 0,
                     thisMonth: 0,
@@ -419,7 +420,7 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
                 resolve: {
                     transaction: function() {
 
-                        if (typeof(transaction) == 'undefined') {
+                    	if (angular.isUndefined(transaction)) {
                             var date = new Date();
                             var today = (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear();
                             var newTransaction = {
@@ -428,6 +429,7 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
                             };
                             return newTransaction;
                         }
+                        
                         if (copy) {
                             transaction = angular.copy(transaction);
                             transaction.name = undefined;
@@ -442,29 +444,34 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
 
             modalInstance.result.then(function(transaction) {
 
-                var shouldPush = typeof(transaction.name) == 'undefined';
-                
                 $log.info('Modal dismissed with: ' + transaction);
+
                 var failFn = function(status) {
                     $scope.alerts.push({
                         msg: status
                     });
                 }
                 var successFn = function(resp) {
-                    if (shouldPush) {
-                        var key = resp.key;
-                        transaction.name = key.id;
-                        $scope.transactions.push(transaction);
-                    }
-                    $scope.computeCashFlow();
-
+                	Transaction.query(function(response) {
+        	            $scope.transactions = response;
+        	            $scope.computeCashFlow();
+                        
+        	        });
+                    
+                	
                 }
+                
                 var date = new Date(transaction.date);
                 transaction.date = (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear();
+                
                 Transaction.save(transaction,successFn,failFn);
                 
+                
+                
+                
             }, function() {
-                $log.info('Modal cancelled at: ' + new Date());
+            	
+                $log.info('Modal cancelled');
             });
         };
 
