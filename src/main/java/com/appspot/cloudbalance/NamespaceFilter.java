@@ -107,7 +107,7 @@ public class NamespaceFilter implements Filter {
 				if (userService.getCurrentUser() != null) {
 					NamespaceManager.set(userService.getCurrentUser()
 							.getUserId());
-					 logger.log(Level.INFO, "Namepaces will be "
+					 logger.log(Level.FINE, "Namepaces will be "
 					 + userService.getCurrentUser().getUserId());
 				}
 				break;

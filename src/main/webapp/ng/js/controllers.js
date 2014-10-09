@@ -1,7 +1,6 @@
 'use strict';
 
 var cloudBalanceControllers = angular.module('cloudBalanceControllers', []);
-
 var ModalInstanceCtrl = function($scope, $modalInstance, transaction, Payee) {
 
     $scope.transaction = transaction;

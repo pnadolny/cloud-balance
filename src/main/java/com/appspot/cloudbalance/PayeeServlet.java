@@ -23,6 +23,10 @@ import com.google.gson.Gson;
 @SuppressWarnings("serial")
 public class PayeeServlet extends BaseServlet {
 
+	
+	
+	
+	
 	private static final Logger logger = Logger.getLogger(PayeeServlet.class
 			.getCanonicalName());
 
@@ -31,7 +35,6 @@ public class PayeeServlet extends BaseServlet {
 		super.doGet(req, resp);
 		logger.log(Level.INFO, "Obtaining payee listing");
 		String dayOfYear = req.getParameter("dayOfYear");
-
 		int iDayOfYear=0;
 		if (dayOfYear==null) {
 			iDayOfYear = GregorianCalendar.getInstance().get(GregorianCalendar.DAY_OF_YEAR);
