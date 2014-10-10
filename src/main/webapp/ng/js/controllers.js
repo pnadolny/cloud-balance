@@ -101,6 +101,7 @@ var ModalInstanceCtrl = function($scope, $modalInstance, transaction, Payee) {
 
 var ModalPayeeInstanceCtrl = function($scope, $modalInstance, payee) {
 
+	$scope.isEditing = !angular.isUndefined(payee.name);
     $scope.payee = payee;
     $scope.alerts = [];
 
@@ -153,7 +154,7 @@ var ModalPayeeInstanceCtrl = function($scope, $modalInstance, payee) {
 cloudBalanceControllers.controller('PayeeController', ['$scope', '$modal', '$log', 'Payee',
     function($scope, $modal, $log, Payee) {
 
-        init();
+	 	init();
 
         function init() {
             $scope.pageSize = 25;
@@ -204,10 +205,22 @@ cloudBalanceControllers.controller('PayeeController', ['$scope', '$modal', '$log
                 }
             });
             modalInstance.result.then(function(payee) {
-                $log.info('Modal dismissed with: ' + angular.toJson(payee));
-                $scope.save(payee);
+
+            	$log.info('Modal dismissed with: ' + angular.toJson(payee));
+                var failFn = function(message) {
+                    $scope.alerts.push({
+                        msg: message
+                    });
+                }
+                var successFn = function(data) {
+                	Payee.query(function(response) {
+        	            $scope.payees = response;
+        	        }); 	
+                }
+                Payee.save(payee, successFn, failFn);
+                
             }, function() {
-                $log.info('Modal dismissed at: ' + new Date());
+                $log.info('Modal dismissed');
             });
 
         }
@@ -217,19 +230,6 @@ cloudBalanceControllers.controller('PayeeController', ['$scope', '$modal', '$log
         $scope.closeAlert = function(index) {
             $scope.alerts.splice(index, 1);
         };
-        $scope.save = function(payee) {
-            var failFn = function(message) {
-                $scope.alerts.push({
-                    msg: message
-                });
-            }
-            var successFn = function(data) {
-                $scope.payees.push(payee);
-            }
-            Payee.save(payee, successFn, failFn);
-            
-            
-        }
 
     }
 ]);
