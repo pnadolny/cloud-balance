@@ -247,13 +247,25 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
 	        $scope.layout = 'list';
 	        $scope.alerts = [];
 	        $scope.cashFlow = [];
+	        $scope.balance =0;
+	        
+	        
 	        
 	        $scope.transactions = [];
 	        
 	        Transaction.query(function(response) {
 	            $scope.transactions = response;
 	        });
-	    }
+	        
+	        $scope.$watch(
+	        		function () {return $scope.transactions;},
+	             	function(newValue, oldValue) {
+	        			 $scope.computeCashFlow();
+	        			 $scope.balance = $scope.currentBalance();
+	        		}
+	       );
+
+	    };     	    
 
 	    hotkeys.add({
             combo: 'b',
@@ -294,7 +306,7 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
             callback: function(event, hotkey) {
 
                 $scope.layout = 'grid';
-                $scope.computeCashFlow();
+               
             }
         });
 
@@ -454,8 +466,7 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
                 var successFn = function(resp) {
                 	Transaction.query(function(response) {
         	            $scope.transactions = response;
-        	            $scope.computeCashFlow();
-                        
+        	            
         	        });
                     
                 	
@@ -480,23 +491,14 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
             $scope.alerts.splice(index, 1);
         };
 
-        var findTransactionIndex = function(t) {
-            var index = 0;
-            for (var i = 0; i < $scope.transactions.length; i++) {
-                if ($scope.transactions[i].name == t.name) {
-                    if ($scope.transactions[i].payee == t.payee) {
-                        index = i;
-                        break;
-                    }
-                }
-            }
-            return index;
-
-        }
         $scope.remove = function(t) {
-            $scope.transactions.splice(findTransactionIndex(t), 1);
             var aTransaction = new Transaction({id: t.name, parentid: t.payee});
             aTransaction.$remove();
+            
+            Transaction.query(function(response) {
+	            $scope.transactions = response;
+	        });
+            
         }
     }
 ]);
