@@ -274,8 +274,11 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
 	        $scope.$watch(
 	        		function () {return $scope.transactions;},
 	             	function(newValue, oldValue) {
-	        			 $scope.computeCashFlow();
+	        			   $log.log('Watch executing...');
+	        			   $scope.computeCashFlow();
 	        			 $scope.balance = $scope.currentBalance();
+	        			 $log.log('Watch done...');
+	        		       
 	        		},true
 	       );
 
@@ -361,7 +364,9 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
         
         $scope.computeCashFlow = function() {
 
-            $scope.transactions.sort(function(a, b) {
+        	var transactionsCopy = angular.copy($scope.transactions)
+        	
+            transactionsCopy.sort(function(a, b) {
                 return moment(a.date).valueOf() - moment(b.date).valueOf();
             });
 
@@ -377,12 +382,12 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
             var monthlyOther = 0;
             var amount;
             var item = {};
-            var i = $scope.transactions.length;
+            var i = transactionsCopy.length;
             while (i--) {
-                if (i + 1 == $scope.transactions.length) {
-                    m = moment($scope.transactions[i].date).format("MMM");
+                if (i + 1 == transactionsCopy.length) {
+                    m = moment(transactionsCopy[i].date).format("MMM");
                 }
-                if (moment($scope.transactions[i].date).format("MMM") != m) {
+                if (moment(transactionsCopy[i].date).format("MMM") != m) {
                     $log.log("new month " + moment($scope.transactions[i].date).format("MMM") + i);
                     item = {
                         month: m,
@@ -403,9 +408,9 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
                     monthlyFuture = 0;
                 }
 
-                amount = Number($scope.transactions[i].amount);
+                amount = Number(transactionsCopy[i].amount);
                 monthlyCashFlow = monthlyCashFlow + amount;
-                switch ($scope.transactions[i].type) {
+                switch (transactionsCopy[i].type) {
                     case "i":
                         monthlyIncome = monthlyIncome + amount;
                         break;
@@ -421,7 +426,7 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
                     default:
                         monthlyOther = monthlyOther + amount;
                 }
-                m = moment($scope.transactions[i].date).format("MMM");
+                m = moment(transactionsCopy[i].date).format("MMM");
             }
             item = {
                 month: m,

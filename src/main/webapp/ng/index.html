@@ -54,7 +54,7 @@
                         <button class="btn btn-default" style="float: left" ng-click="compose();">Compose</button>
                         
                         <a style="float: right;" class="list-icon" ng-class="{active: layout == 'list'}" ng-click="layout = 'list'; "></a>
-                        <a style="float: right;" class="grid-icon" ng-class="{active: layout == 'grid'}" ng-click="layout = 'grid';"></a>
+                        <a style="float: right;" class="grid-icon" ng-class="{active: layout == 'grid'}" ng-click="layout = 'grid'; computeCashFlow();"></a>
 						<h2 style="float: right; margin-right: 12px; margin-top: 0px;">{{balance | currency}}</h2>
                         
                     </div>
@@ -229,7 +229,7 @@
                         <select id="payee" class="form-control" 
 								ng-disabled="transaction.name!=null" 
 								ng-model="transaction.payee" 
-								ng-options="p.name for p in payees | orderBy:name">
+								ng-options="p.name as p.name for p in payees | orderBy:name">
 
 						</select>
                     </div>
