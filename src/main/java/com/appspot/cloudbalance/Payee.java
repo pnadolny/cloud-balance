@@ -43,7 +43,6 @@ public class Payee {
 			return Util.getErrorMessage("Cannot delete as there are transactions associated with this payee.");
 		}
 		Util.deleteEntity(key);
-		return KIND + "  "+key.getName() + " deleted successfully";
-
+		return Util.getJsonSuccessMessage(KIND + "  "+key.getName() + " deleted successfully");
 	}
 }

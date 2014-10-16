@@ -2,9 +2,15 @@
 
 var cloudBalanceControllers = angular.module('cloudBalanceControllers', []);
 var ModalInstanceCtrl = function($scope, $modalInstance, transaction, Payee) {
-
+	
     $scope.transaction = transaction;
     $scope.payees = [];
+    
+    Payee.query(function(response) {
+        $scope.payees = response;
+    });
+
+    
     $scope.memento = angular.copy(transaction);
     $scope.alerts = [];
 
@@ -17,13 +23,11 @@ var ModalInstanceCtrl = function($scope, $modalInstance, transaction, Payee) {
         }
     }
 
-    Payee.query(function(response) {
-        $scope.payees = response;
-    });
-
+    
     $scope.closeAlert = function(index) {
         $scope.alerts.splice(index, 1);
     };
+    
     $scope.ok = function() {
 
         $scope.alerts = [];
@@ -171,11 +175,20 @@ cloudBalanceControllers.controller('PayeeController', ['$scope', '$modal', '$log
 
         		if (!angular.isUndefined(result.error)) {
             		$scope.alerts.push({
+            		    type: 'warning',
                         msg: result.error.message
                     });
                     return;
+            	} else {
+            		
+            		$scope.alerts.push({
+            			type: 'success',
+                        msg: result.success.message
+                    });
+            		
             	}
                 $scope.payees.splice(index, 1);
+                
             }, function(message) {
                 $scope.alerts.push({
                     type: 'danger',
@@ -213,6 +226,7 @@ cloudBalanceControllers.controller('PayeeController', ['$scope', '$modal', '$log
                     });
                 }
                 var successFn = function(data) {
+                	
                 	Payee.query(function(response) {
         	            $scope.payees = response;
         	        }); 	
@@ -262,7 +276,7 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
 	             	function(newValue, oldValue) {
 	        			 $scope.computeCashFlow();
 	        			 $scope.balance = $scope.currentBalance();
-	        		}
+	        		},true
 	       );
 
 	    };     	    
@@ -464,10 +478,9 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
                     });
                 }
                 var successFn = function(resp) {
-                	Transaction.query(function(response) {
-        	            $scope.transactions = response;
-        	            
-        	        });
+                	
+                      transaction.name = resp.key.id;
+                      $scope.transactions.push(transaction);
                     
                 	
                 }
@@ -491,13 +504,25 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
             $scope.alerts.splice(index, 1);
         };
 
+        
+        var findTransactionIndex = function(t) {
+            var index = 0;
+            for (var i = 0; i < $scope.transactions.length; i++) {
+                if ($scope.transactions[i].name == t.name) {
+                    if ($scope.transactions[i].payee == t.payee) {
+                        index = i;
+                        break;
+                    }
+                }
+            }
+            return index;
+
+        }
+        
         $scope.remove = function(t) {
-            var aTransaction = new Transaction({id: t.name, parentid: t.payee});
+        	$scope.transactions.splice(findTransactionIndex(t), 1);
+        	var aTransaction = new Transaction({id: t.name, parentid: t.payee});
             aTransaction.$remove();
-            
-            Transaction.query(function(response) {
-	            $scope.transactions = response;
-	        });
             
         }
     }

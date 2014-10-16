@@ -109,9 +109,10 @@ public class Transaction {
 		Entity entity = findTransaction(payeeName, itemKey);
 		if (entity != null) {
 			Util.deleteEntity(entity.getKey());
-			return ("Transaction deleted successfully.");
-		} else
-			return ("Transaction not found");
+			return Util.getJsonSuccessMessage("Transaction deleted successfully.");
+		} else {
+			return Util.getErrorMessage("Transaction not found");
+		}
 	}
 
 	public static String starItem(String payeeName, String itemKey) {

@@ -235,6 +235,27 @@ public class Util {
 		return sb.toString();
 
 	}
+	
+	public static String getJsonSuccessMessage(String message) {
+		
+		
+		StringBuilder sb = new StringBuilder();
+		sb.append("{");
+		sb.append("\"" + "apiVersion" + "\" : \"" + "1.0" + "\",");
+		sb.append("\"" + "success" + "\" :" + "{");
+		sb.append("\"code" + "\" : \"" + "0" + "\",");
+		sb.append("\"" + "message" + "\" : \"" + message + "\",");
+		sb.append("\"" + "errors" + "\" : " + "[{");
+		sb.append("\"" + "domain" + "\" : \"" + "future" + "\",");
+		sb.append("\"" + "reason" + "\" : \"" + "future" + "\",");
+		sb.append("\"" + "message" + "\" : \"" + "future" + "\"");
+		sb.append("}]");
+		sb.append("}");
+		sb.append("}");
+		return sb.toString();
+
+	}
+	
 
 	/**
 	 * get DatastoreService instance
