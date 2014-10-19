@@ -5,15 +5,25 @@ var ModalInstanceCtrl = function($scope, $modalInstance, transaction, Payee) {
 	
     $scope.transaction = transaction;
     $scope.payees = [];
-    
-    Payee.query(function(response) {
-        $scope.payees = response;
-    });
-
-    
     $scope.memento = angular.copy(transaction);
     $scope.alerts = [];
+    
+    Payee.query(function(response) {
+    	for (var i = 0; i < response.length; i++) {
+    		
+    		switch (response[i].type) {
+    		case 'i': $scope.payees.push({name: response[i].name, type: 'Income'}); break;
+    		case 's': $scope.payees.push({name: response[i].name, type: 'Static'});break;
+    		case 'd': $scope.payees.push({name: response[i].name, type: 'Descretionary'});break;
+    		case 'f': $scope.payees.push({name: response[i].name, type: 'Future'});break;
+    		case 'o': $scope.payees.push({name: response[i].name, type: 'Other'});break;
+    		default:  $scope.payees.push({name: response[i].name, type: 'Unkown'});break;
+    		}
+    	}
+    });
 
+
+    
 
     if (transaction.amount <= 0) {
         transaction.amount = transaction.amount * -1;
@@ -275,7 +285,7 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
 	        		function () {return $scope.transactions;},
 	             	function(newValue, oldValue) {
 	        			   $log.log('Watch executing...');
-	        			   $scope.computeCashFlow();
+	        			 //  $scope.computeCashFlow();
 	        			 $scope.balance = $scope.currentBalance();
 	        			 $log.log('Watch done...');
 	        		       
@@ -355,7 +365,6 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
             	if (moment(transactions[i].date).isAfter(moment()) && transactions[i].type=='i') {
                 	return balance;
                 }
-            	
             	balance = balance + Number(transactions[i].amount);
             }
             return balance;
@@ -483,10 +492,10 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
                     });
                 }
                 var successFn = function(resp) {
-                	
-                      transaction.name = resp.key.id;
-                      $scope.transactions.push(transaction);
-                    
+                	if (angular.isUndefined(transaction.name)) {
+                        transaction.name = resp.key.id;
+                		$scope.transactions.push(transaction);
+                	}
                 	
                 }
                 
