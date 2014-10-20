@@ -229,7 +229,7 @@
                         <select class="form-control" 
 								ng-disabled="transaction.name!=null" 
 								ng-model="transaction.payee" 
-								ng-options="payee.name as payee.name group by payee.type for payee in payees | orderBy:payee.type">
+								ng-options="payee.payee as payee.payee group by payee.typeName for payee in payees">
 						</select>
                     </div>
                 </div>

@@ -1,28 +1,12 @@
 'use strict';
 
 var cloudBalanceControllers = angular.module('cloudBalanceControllers', []);
-var ModalInstanceCtrl = function($scope, $modalInstance, transaction, Payee) {
+var ModalInstanceCtrl = function($scope, $modalInstance, transaction, payees) {
 	
     $scope.transaction = transaction;
-    $scope.payees = [];
+    $scope.payees = payees;
     $scope.memento = angular.copy(transaction);
     $scope.alerts = [];
-    
-    Payee.query(function(response) {
-    	for (var i = 0; i < response.length; i++) {
-    		
-    		switch (response[i].type) {
-    		case 'i': $scope.payees.push({name: response[i].name, type: 'Income'}); break;
-    		case 's': $scope.payees.push({name: response[i].name, type: 'Static'});break;
-    		case 'd': $scope.payees.push({name: response[i].name, type: 'Descretionary'});break;
-    		case 'f': $scope.payees.push({name: response[i].name, type: 'Future'});break;
-    		case 'o': $scope.payees.push({name: response[i].name, type: 'Other'});break;
-    		default:  $scope.payees.push({name: response[i].name, type: 'Unkown'});break;
-    		}
-    	}
-    });
-
-
     
 
     if (transaction.amount <= 0) {
@@ -32,8 +16,7 @@ var ModalInstanceCtrl = function($scope, $modalInstance, transaction, Payee) {
             transaction.deposit = true;
         }
     }
-
-    
+	
     $scope.closeAlert = function(index) {
         $scope.alerts.splice(index, 1);
     };
@@ -453,64 +436,92 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
 
 
         $scope.compose = function(transaction, copy) {
-
-            var modalInstance = $modal.open({
-                templateUrl: 'transaction.html',
-                controller: ModalInstanceCtrl,
-                resolve: {
-                    transaction: function() {
-
-                    	if (angular.isUndefined(transaction)) {
-                            var date = new Date();
-                            var today = (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear();
-                            var newTransaction = {
-                                memo: '',
-                                date: today
-                            };
-                            return newTransaction;
-                        }
-                        
-                        if (copy) {
-                            transaction = angular.copy(transaction);
-                            transaction.name = undefined;
-                        }
-                        return transaction;
-                    },
-                    PayeeService: function() {
-                        return Payee;
-                    }
-                }
-            });
-
-            modalInstance.result.then(function(transaction) {
-
-                $log.info('Modal dismissed with: ' + transaction);
-
-                var failFn = function(status) {
-                    $scope.alerts.push({
-                        msg: status
-                    });
-                }
-                var successFn = function(resp) {
-                	if (angular.isUndefined(transaction.name)) {
-                        transaction.name = resp.key.id;
-                		$scope.transactions.push(transaction);
-                	}
-                	
-                }
-                
-                var date = new Date(transaction.date);
-                transaction.date = (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear();
-                
-                Transaction.save(transaction,successFn,failFn);
-                
-                
-                
-                
-            }, function() {
+    
+        	var payees = [];
+        	Payee.query(function(response) {
             	
-                $log.info('Modal cancelled');
+        		for (var i = 0; i < response.length; i++) {
+            	   switch (response[i].type) {
+            		case 'i': payees.push({name: response[i].name, typeName: 'Income', type: response[i].type, payee: response[i].name}); break;
+            		case 's': payees.push({name: response[i].name, typeName: 'Static',type: response[i].type,payee: response[i].name});break;
+            		case 'd': payees.push({name: response[i].name, typeName: 'Discretionary',type: response[i].type, payee: response[i].name});break;
+            		case 'f': payees.push({name: response[i].name, typeName: 'Future',type: response[i].type, payee: response[i].name});break;
+            		case 'o': payees.push({name: response[i].name, typeName: 'Other',type: response[i].type, payee: response[i].name});break;
+            		default:  payees.push({name: response[i].name, typeName: 'Unkown',type: response[i].type, payee: response[i].name});break;
+            		}
+            	}
+            	
+            	
+       
+        		
+        		var modalInstance = $modal.open({
+                    templateUrl: 'transaction.html',
+                    controller: ModalInstanceCtrl,
+                    resolve: {
+                        transaction: function() {
+
+                        	if (angular.isUndefined(transaction)) {
+                                var date = new Date();
+                                var today = (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear();
+                                var newTransaction = {
+                                    memo: '',
+                                    date: today
+                                };
+                                return newTransaction;
+                            }
+                            
+                            if (copy) {
+                                transaction = angular.copy(transaction);
+                                transaction.name = undefined;
+                            }
+                            return transaction;
+                        },
+                        payees: function() {
+                            return payees;
+                        }
+                    }
+                });
+
+                modalInstance.result.then(function(transaction) {
+
+                    $log.info('Modal dismissed with: ' + angular.toJson(transaction));
+
+                    var failFn = function(status) {
+                        $scope.alerts.push({
+                            msg: status
+                        });
+                    }
+                    var successFn = function(resp) {
+                    	if (angular.isUndefined(transaction.name)) {
+                    		transaction.name = resp.key.id;
+                            $scope.transactions.push(transaction);
+                    	}
+                    }
+                    
+                    var date = new Date(transaction.date);
+                    transaction.date = (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear();
+                    
+                    Transaction.save(transaction,successFn,failFn);
+                    
+                    
+                    
+                    
+                }, function() {
+                	
+                    $log.info('Modal cancelled');
+                });
+
+        		
+            	
+            	
+            	
+            	
             });
+
+        	
+        	
+        	
+        	
         };
 
 
