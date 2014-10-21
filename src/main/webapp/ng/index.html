@@ -160,7 +160,7 @@
                                 <th>Action</th>
                             </tr>
                         </thead>
-                        <tr style="text-align: left;" ng-repeat="p in payees | limitTo:pageSize">
+                        <tr style="text-align: left;" ng-repeat="p in payees | orderBy:'type' | limitTo:pageSize">
                             <td>
                                 <div style="float: left; margin-right: 5px;" class="legend payee-type-{{p.type}}">{{p.type}}</div>
 
