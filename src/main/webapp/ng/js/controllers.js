@@ -267,14 +267,19 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
 	        $scope.$watch(
 	        		function () {return $scope.transactions;},
 	             	function(newValue, oldValue) {
-	        			   $log.log('Watch executing...');
-	        			 //  $scope.computeCashFlow();
 	        			 $scope.balance = $scope.currentBalance();
-	        			 $log.log('Watch done...');
-	        		       
 	        		},true
 	       );
 
+	        $scope.$watch(
+	        		function () {return $scope.layout;},
+	             	function(newValue, oldValue) {
+	        			   if (newValue ==='grid' ) {
+	        				   $scope.computeCashFlow();
+	        			   }
+	        		},true
+	       ); 
+	        
 	    };     	    
 
 	    hotkeys.add({
