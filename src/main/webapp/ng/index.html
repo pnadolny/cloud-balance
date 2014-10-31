@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Cloud Balance</title>
     <link rel="stylesheet" href="css/default.css" />
@@ -237,8 +238,15 @@
                 <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-9">
                         <datepicker id="date" ng-model="transaction.date" show-weeks="showWeeks"></datepicker>
+  					
                     </div>
+					<div class="col-sm-offset-2 col-sm-9">
+						<button type="button" class="btn btn-sm btn-info" ng-click="today()">Today</button>
+					</div>
+					   
+
                 </div>
+
                 <div class="modal-footer">
                     <button class="btn btn-success" ng-click="ok()">Save</button>
                     <button class="btn btn-danger" ng-click="cancel()">Cancel</button>
