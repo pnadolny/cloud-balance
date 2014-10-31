@@ -17,6 +17,10 @@ var ModalInstanceCtrl = function($scope, $modalInstance, transaction, payees) {
         }
     }
 	
+    $scope.today = function() {
+        transaction.date = new Date();
+     };
+      
     $scope.closeAlert = function(index) {
         $scope.alerts.splice(index, 1);
     };
@@ -500,15 +504,21 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
                     	if (angular.isUndefined(transaction.name)) {
                     		transaction.name = resp.key.id;
                             $scope.transactions.push(transaction);
+                            if ($scope.layout =='grid') {
+                            	$scope.computeCashFlow();
+                            }
+                  	       
                     	}
                     }
+                    
+                    
                     
                     var date = new Date(transaction.date);
                     transaction.date = (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear();
                     
                     Transaction.save(transaction,successFn,failFn);
                     
-                    
+                            
                     
                     
                 }, function() {
