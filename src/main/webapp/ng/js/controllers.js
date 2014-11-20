@@ -29,6 +29,15 @@ var ModalInstanceCtrl = function($scope, $modalInstance, transaction, payees) {
 
         $scope.alerts = [];
 
+        if (/^[a-zA-Z0-9-() ]*$/.test(transaction.memo) == false) {
+            $scope.alerts.push({
+                type: 'danger',
+                msg: 'Memo contains illegal characters.'
+            });
+            return;
+        }
+
+
         if (angular.isUndefined(transaction.amount)) {
             $scope.alerts.push({
                 type: 'danger',

@@ -223,6 +223,13 @@
                 </div>
 
 
+				<div class="form-group">
+                    <label class="col-sm-2 control-label" for="memo">Memo</label>
+                    <div class="col-sm-10">
+                        <input id="amount" type="text" class="form-control" ng-model="transaction.memo" autocomplete="off" name="memo" required placeholder="Memo, Check Num, etc." />
+                    </div>
+                </div>
+
 
                 <div class="form-group">
                     <label class="col-sm-2 control-label" for="payee">Payee</label>
@@ -236,7 +243,9 @@
                 </div>
 
                 <div class="form-group">
-                    <div class="col-sm-offset-2 col-sm-9">
+                    <label class="col-sm-2 control-label" for="date">Date</label>
+                    
+					<div class="col-sm-offset-0 col-sm-9">
                         <datepicker id="date" ng-model="transaction.date" show-weeks="showWeeks"></datepicker>
   					
                     </div>
