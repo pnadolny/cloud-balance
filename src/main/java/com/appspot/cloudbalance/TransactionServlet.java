@@ -16,6 +16,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.tools.ant.types.LogLevel;
+
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.Query;
@@ -74,6 +76,12 @@ public class TransactionServlet extends BaseServlet {
 				sb.append("\"name\" : \"" + result.getKey().getName() + "\",");
 
 			for (String key : properties.keySet()) {
+				
+				if (properties.get(key)==null) {
+					sb.append("\"" + key + "\" : \"\",");
+					continue;
+				}
+				
 				if ("java.util.Date".equals(properties.get(key).getClass()
 						.getCanonicalName())) {
 					
@@ -91,6 +99,11 @@ public class TransactionServlet extends BaseServlet {
 			}
 			if (moreValues!=null) {
 			for (String key : moreValues.keySet()) {
+				if (properties.get(key)==null) {
+					sb.append("\"" + key + "\" : \"\",");
+					continue;
+				}
+				
 				sb.append("\"" + key + "\" : \"" + moreValues.get(key)
 						+ "\",");
 			}
