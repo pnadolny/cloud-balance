@@ -32,9 +32,6 @@ public class Transaction {
 		}
 		
 		Double transactionAmount = Double.valueOf(amount);
-		if ("w".equals(type)) {
-			transactionAmount = transactionAmount * -1;
-		}
 		
 		Entity payee = Payee.getPayee(payeeName);
 		Entity item =null;

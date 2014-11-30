@@ -1,22 +1,13 @@
 'use strict';
 
 var cloudBalanceControllers = angular.module('cloudBalanceControllers', []);
-var ModalInstanceCtrl = function($scope, $modalInstance, transaction, payees) {
+var transactionController = function($scope, $modalInstance, transaction, payees) {
 	
     $scope.transaction = transaction;
     $scope.payees = payees;
     $scope.memento = angular.copy(transaction);
     $scope.alerts = [];
     
-
-    if (transaction.amount <= 0) {
-        transaction.amount = transaction.amount * -1;
-    } else {
-        if (typeof(transaction.amount) != 'undefined') {
-            transaction.deposit = true;
-        }
-    }
-	
     $scope.today = function() {
         transaction.date = new Date();
      };
@@ -46,18 +37,7 @@ var ModalInstanceCtrl = function($scope, $modalInstance, transaction, payees) {
             return;
         }
 
-        if (transaction.amount < 0) {
-            $scope.alerts.push({
-                type: 'danger',
-                msg: 'Amount is negative'
-            });
-            return;
-        }
-
-        if (!transaction.deposit) {
-            transaction.amount = transaction.amount * -1;
-        }
-
+   
         /*^ match beginning of string
         -{0,1} optional negative sign
         \d* optional digits
@@ -96,7 +76,7 @@ var ModalInstanceCtrl = function($scope, $modalInstance, transaction, payees) {
                 transaction.type = $scope.payees[i].type;
             }
         }
-
+        
         $modalInstance.close(transaction);
 
     };
@@ -458,6 +438,7 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
         	var payees = [];
         	Payee.query(function(response) {
             	
+        		
         		for (var i = 0; i < response.length; i++) {
             	   switch (response[i].type) {
             		case 'i': payees.push({name: response[i].name, typeName: 'Income', type: response[i].type, payee: response[i].name}); break;
@@ -474,7 +455,7 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
         		
         		var modalInstance = $modal.open({
                     templateUrl: 'transaction.html',
-                    controller: ModalInstanceCtrl,
+                    controller: transactionController,
                     resolve: {
                         transaction: function() {
 
