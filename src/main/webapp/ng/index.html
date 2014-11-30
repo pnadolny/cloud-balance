@@ -1,4 +1,4 @@
-<!doctype html>
+f<!doctype html>
 <html lang="en" xmlns:ng="https://angularjs.org" ng-app="cloudBalanceApp">
 
 <head>
@@ -218,7 +218,10 @@
                 <div class="form-group">
                     <label class="col-sm-2 control-label" for="amount">Amount</label>
                     <div class="col-sm-10">
-                        <input id="amount" type="text" class="form-control" ng-model="transaction.amount" autocomplete="off" name="amount" required placeholder="Amount" />
+                        <input id="amount" type="text"  class="form-control" ng-model="transaction.amount" 
+
+						ng-model-options="{updateOn: 'blur'}"
+						autocomplete="off" name="amount" required placeholder="Amount" />
                     </div>
                 </div>
 
@@ -246,7 +249,8 @@
                     <label class="col-sm-2 control-label" for="date">Date</label>
                     
 					<div class="col-sm-offset-0 col-sm-9">
-                        <datepicker id="date" ng-model="transaction.date" show-weeks="showWeeks"></datepicker>
+                        <datepicker 
+						id="date" ng-model="transaction.date" show-weeks="showWeeks"></datepicker>
   					
                     </div>
 					<div class="col-sm-offset-2 col-sm-9">
