@@ -27,19 +27,25 @@
         </div>
     </noscript>
 
-
     <div ng-controller="UserController">
-        <div class="headerBar">
 
-            <div style="float: right;line-height:20px; padding: 15px; height:50px;  margin-right:5px" id="signout"></div> 
-            <a style="float: right;line-height:20px; padding: 15px; height:50px;  margin-right:5px" title="Feedback" href="https://github.com/pnadolny/cloud-balance/issues">Feedback</a>
-            <div id="gc-userinformation" style="float: right;line-height:20px; padding: 15px; height:50px;  margin-right:5px">{{emailAddress}}</div>
-            <div id="gc-accountName" style="float: left; font-size: 18px;  line-height:20px; padding: 15px; height:50px; ">
-            <div app-name></div>
-            </div>
-        </div>
-    </div>
 
+<!-- Static navbar -->
+      <nav class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <a class="navbar-brand" href="#"><div app-name></div></a>
+          </div>
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+              <li><a title="Feedback" href="https://github.com/pnadolny/cloud-balance/issues">Feedback</a></li>
+              <li><a href="#">{{emailAddress}}</a></li>
+              <li id="signout"></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div><!--/.container-fluid -->
+      </nav>
+      
     <div id="shell" style="padding: 30px; width:1000px; margin: 0 auto;">
 
 

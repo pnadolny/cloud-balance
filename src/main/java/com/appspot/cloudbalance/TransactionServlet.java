@@ -16,8 +16,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.tools.ant.types.LogLevel;
-
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.Query;
@@ -28,7 +26,6 @@ public class TransactionServlet extends BaseServlet {
 
 	private static final Logger logger = Logger.getLogger(TransactionServlet.class
 			.getCanonicalName());
-
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
