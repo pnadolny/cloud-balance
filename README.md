@@ -20,9 +20,10 @@ An application to manage a cash account, transactions, and compute your cash flo
 - [Holder.js][11]
 
 
-## Setup Instructions (Eclipse)
+## Setup Instructions (Maven)
 
-1. The application is a Maven project built to run on Google's app engine.   
+1. Check out the app and run mvn appengine:deverserver
+2. Point your browser to http://localhost:8080
 
 
 
