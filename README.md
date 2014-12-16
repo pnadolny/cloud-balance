@@ -16,7 +16,7 @@ An application to manage a cash account, transactions, and compute your cash flo
 - [UI Bootstrap][8]
 - [AngularHotkeys.js][6]
 - [Moment.js][7]
-- [Maven][9]
+- [Maven 3.1.0 or higher][9]
 - [Holder.js][11]
 
 
