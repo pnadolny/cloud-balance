@@ -61,7 +61,6 @@ public class TransactionServlet extends BaseServlet {
 	public static String writeJSON(Iterable<Entity> entities, Map<String,String> moreValues, Iterable<Entity> parents, String valueToNormalize) {
 		logger.log(Level.INFO, "creating JSON format object");
 		StringBuilder sb = new StringBuilder();
-		
 		int i = 0;
 		sb.append("[");
 		for (Entity result : entities) {
@@ -71,17 +70,13 @@ public class TransactionServlet extends BaseServlet {
 				sb.append("\"name\" : \"" + result.getKey().getId() + "\",");
 			else
 				sb.append("\"name\" : \"" + result.getKey().getName() + "\",");
-
 			for (String key : properties.keySet()) {
-				
 				if (properties.get(key)==null) {
 					sb.append("\"" + key + "\" : \"\",");
 					continue;
 				}
-				
 				if ("java.util.Date".equals(properties.get(key).getClass()
 						.getCanonicalName())) {
-					
 					SimpleDateFormat formatShort = new SimpleDateFormat(Constants.DATE_FORMAT);
 					
 					sb.append("\""

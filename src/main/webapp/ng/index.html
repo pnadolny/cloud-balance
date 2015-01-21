@@ -11,7 +11,16 @@
     <link rel="stylesheet" href="css/hotkeys.min.css" />
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
     <style>
-    
+	
+    [ng\:cloak],
+        [ng-cloak],
+        [data-ng-cloak],
+        [x-ng-cloak],
+        .ng-cloak,
+        .x-ng-cloak {
+            display: none !important;
+        }
+        
     .alert {
 		margin-top:20px;	
 	 }
@@ -19,7 +28,7 @@
     </style>
 </head>
 
-<body ng-cloak style="margin:0;">
+<body style="margin:0;">
 
     <noscript>
         <div style="width: 22em; position: absolute; left: 50%; margin-left: -11em; color: red; background-color: white; border: 1px solid red; padding: 4px; font-family: sans-serif">
@@ -27,7 +36,7 @@
         </div>
     </noscript>
 
-    <div ng-controller="UserController">
+    <div ng-cloak ng-controller="UserController">
 
 
 <!-- Static navbar -->
