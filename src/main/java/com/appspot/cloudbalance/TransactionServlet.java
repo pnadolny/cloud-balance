@@ -15,25 +15,31 @@ import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
 
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.Query;
 import com.google.gson.Gson;
-
-@SuppressWarnings("serial")
-public class TransactionServlet extends BaseServlet {
+ 
+@Path("transaction")
+@Produces("application/json")
+public class TransactionServlet  {
 
 	private static final Logger logger = Logger.getLogger(TransactionServlet.class
 			.getCanonicalName());
-	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		super.doGet(req, resp);
-		String searchBy = req.getParameter("transaction-searchby");
-		String searchFor = req.getParameter("q");
-		String searchParent = req.getParameter("p");
-		PrintWriter out = resp.getWriter();
+	
+	@GET 
+	public String doGet(@QueryParam("transaction-searchby") String searchBy,
+			@QueryParam("q") String searchFor, @QueryParam("p") String searchParent) {
+
 		if (searchFor == null || searchFor.equals("")) {
 			Iterable<Entity> payees = Payee.getAllPayees();
 			List<Entity> transactions = new ArrayList<Entity>();
@@ -52,13 +58,14 @@ public class TransactionServlet extends BaseServlet {
 					Date d2 = (Date)arg1.getProperty("date");
 		    		return d1.compareTo(d2);
 				}});
-				out.println(writeJSON(transactions,null,payees,"type"));
+				return writeJSON(transactions,null,payees,"type");
 		} else if (searchBy == null && searchFor!=null) {
-			out.println(Util.writeJSON(Transaction.findTransaction(searchParent,searchFor)));
+			return Util.writeJSON(Transaction.findTransaction(searchParent,searchFor));
 		} 
+		return "";
 	}
 
-	public static String writeJSON(Iterable<Entity> entities, Map<String,String> moreValues, Iterable<Entity> parents, String valueToNormalize) {
+	private static String writeJSON(Iterable<Entity> entities, Map<String,String> moreValues, Iterable<Entity> parents, String valueToNormalize) {
 		logger.log(Level.INFO, "creating JSON format object");
 		StringBuilder sb = new StringBuilder();
 		int i = 0;
@@ -121,39 +128,28 @@ public class TransactionServlet extends BaseServlet {
 		return sb.toString();
 	}
 
+	@PUT
+	public String doPut(@QueryParam("name") String itemName, @QueryParam("memo") String memo,
+			@QueryParam("payee") String payeeName, @QueryParam("amount") String amount, @QueryParam("date") String date, 
+			@QueryParam("transaction-type") String type)
+			 {
 	
-	@Override
-	protected void doPut(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		logger.log(Level.INFO, "Creating transaction");
 		
-		String itemName = req.getParameter("name");
-		String memo = req.getParameter("memo");
-		String payeeName = req.getParameter("payee");
-		String amount = req.getParameter("amount");
-		String date = req.getParameter("date");
-		String type = req.getParameter("transaction-type");
-		if (req.getParameter("type")!=null) {
-			type = req.getParameter("type");
-		}
 		Entity e = Transaction.createOrUpdateItem(payeeName, itemName, amount, date,memo,type);
-		PrintWriter out = resp.getWriter();
-		Gson gson = new Gson();
-		out.println(gson.toJson(e));
 		logger.log(Level.INFO, String.format("Creating transaction key with id of %s and name of %s", new Object[] {e.getKey().getId(), e.getKey().getName()}));
+
+		Gson gson = new Gson();
+		return gson.toJson(e);
+		
 	}
 
-	@Override
-	protected void doDelete(HttpServletRequest req, HttpServletResponse resp)
+	@DELETE
+	public String doDelete(@QueryParam("id") String itemKey, @QueryParam("parentid") String payeeName)
 			throws ServletException, IOException {
-		super.doDelete(req, resp);
-		String itemKey = req.getParameter("id");
-		String payeeName = req.getParameter("parentid");
-		PrintWriter out = resp.getWriter();
 		try {
-			out.println(Transaction.deleteItem(payeeName, itemKey));
+			return Transaction.deleteItem(payeeName, itemKey);
 		} catch (Exception e) {
-			out.println(Util.getErrorMessage(e));
+			return Util.getErrorMessage(e);
 		}
 
 	}

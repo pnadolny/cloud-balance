@@ -1,7 +1,5 @@
 package com.appspot.cloudbalance;
 
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -11,52 +9,49 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.Query;
 import com.google.gson.Gson;
 
-@SuppressWarnings("serial")
-public class PayeeServlet extends BaseServlet {
+@Path("payee")
+@Produces("application/json")
+public class PayeeServlet  {
 
-	
-	
-	
-	
 	private static final Logger logger = Logger.getLogger(PayeeServlet.class
 			.getCanonicalName());
 
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		super.doGet(req, resp);
+	@GET
+	public String doGet(@QueryParam("q") String searchFor, @QueryParam("dayOfYear") String dayOfYear, @QueryParam("year") String year)
+			 {
 		logger.log(Level.INFO, "Obtaining payee listing");
-		String dayOfYear = req.getParameter("dayOfYear");
 		int iDayOfYear=0;
 		if (dayOfYear==null) {
 			iDayOfYear = GregorianCalendar.getInstance().get(GregorianCalendar.DAY_OF_YEAR);
 		} else {
 			iDayOfYear = Integer.valueOf(dayOfYear).intValue();
 		}
-		String year = req.getParameter("year");
 		int iYear = Integer.valueOf(year).intValue();
-		String searchFor = req.getParameter("q");
-		PrintWriter out = resp.getWriter();
 		if (searchFor == null || searchFor.equals("") || searchFor == "*") {
-			out.println(writePayeesWithTotals(Payee.getAllPayees(),
-					Transaction.KIND, iDayOfYear,iYear));
-			return;
+			return writePayeesWithTotals(Payee.getAllPayees(),
+					Transaction.KIND, iDayOfYear,iYear);
 		}
 		Entity payee = Payee.getPayee(searchFor);
 		if (payee != null) {
 			Set<Entity> result = new HashSet<Entity>();
 			result.add(payee);
-			out.println(writePayeesWithTotals(result,
-					Transaction.KIND, iDayOfYear,iYear));
+			return writePayeesWithTotals(result,
+					Transaction.KIND, iDayOfYear,iYear);
 		}
+		return null;
+		
 	}
 
 		
@@ -143,35 +138,28 @@ public class PayeeServlet extends BaseServlet {
 		return sb.toString();
 	}
 
-	@Override
-	protected void doPut(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		logger.log(Level.INFO, "Creating payee");
-		PrintWriter out = resp.getWriter();
-		String name = req.getParameter("name");
-		String description = req.getParameter("description");
-		String type = req.getParameter("type");
+	@PUT
+	public String doPut(@QueryParam("name") String name, @QueryParam("description") String description, @QueryParam("type") String type) {
 		try {
 			Entity e = Payee.createOrUpdatePayee(name.trim(), description, type);
-			Gson gson = new Gson();
-			out.println(gson.toJson(e));
 			logger.log(Level.INFO, String.format("Putting entity with id of %s and name of %s", new Object[] {e.getKey().getId(), e.getKey().getName()}));
-
+			
+			Gson gson = new Gson();
+			return gson.toJson(e);
+			
 		} catch (Exception e) {
-			String msg = Util.getErrorMessage(e);
-			out.print(msg);
+			return Util.getErrorMessage(e);
 		}
 
 	}
 
 	
-    @Override
-	protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-    	super.doDelete(req, resp);
+    @DELETE
+	public String doDelete(@QueryParam("id") String id)  {
 		try {
-			resp.getWriter().println(Payee.deletePayee(req.getParameter("id")));
+			return Payee.deletePayee(id);
 		} catch (Exception e) {
-			resp.getWriter().println(Util.getErrorMessage(e));
+			return Util.getErrorMessage(e);
 		}
 
     }

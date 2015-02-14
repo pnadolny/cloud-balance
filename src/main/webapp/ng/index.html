@@ -92,6 +92,7 @@
                                     <th>
                                         <div style="float: left; margin-right: 5px;" class="legend payee-type-o">O</div>Other</th>
                                     <th>Cash Flow</th>
+                                    <th>Average Cash Flow</th>
                                 </tr>
                             </thead>
                             <tr style="text-align: left;" ng-repeat="t in cashFlow | limitTo:cashFlowPageSize">
@@ -102,6 +103,8 @@
                                 <td>{{t.future | currency}}</td>
                                 <td>{{t.other | currency}}</td>
                                 <td>{{t.cashFlow | currency}}</td>
+                                <td>{{t.averageCashFlow | currency}}</td>
+                                
                             </tr>
                         </table>
 

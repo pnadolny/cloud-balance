@@ -371,6 +371,7 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
             var monthlyFuture = 0;
             var monthlyOther = 0;
             var amount;
+            var averageCashFlow =0;
             var item = {};
             var i = transactionsCopy.length;
             while (i--) {
@@ -386,10 +387,18 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
                         static: monthlyStatic,
                         other: monthlyOther,
                         cashFlow: monthlyCashFlow,
-                        discretionary: monthlyDiscretionary
+                        discretionary: monthlyDiscretionary,
+                        averageCashFlow:0
                     };
                     $log.log(item);
                     $scope.cashFlow.push(item);
+                    
+                    
+                    
+                    
+                    
+                     
+                    
                     monthlyCashFlow = 0;
                     monthlyIncome = 0;
                     monthlyDiscretionary = 0;
@@ -425,11 +434,27 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
                 static: monthlyStatic,
                 other: monthlyOther,
                 cashFlow: monthlyCashFlow,
-                discretionary: monthlyDiscretionary
+                discretionary: monthlyDiscretionary,
+                averageCashFlow:0
             };
             $log.log(item);
             $scope.cashFlow.push(item);
             $log.log('Done..Computing monthly totals');
+            
+        
+        	    
+            var i = $scope.cashFlow.length;
+            var counter = 1;
+            while (i--) {
+            	var cashFlowItem = $scope.cashFlow[i];
+            	averageCashFlow = averageCashFlow + cashFlowItem.cashFlow;
+            	cashFlowItem.averageCashFlow = averageCashFlow / counter;
+            	counter++;
+            }
+            
+                   
+                    
+            
         }
 
 
@@ -566,10 +591,10 @@ cloudBalanceControllers.controller('UserController', ['$scope', '$location', '$w
         $scope.logoutURL = {};
 
         User.query(function(response) {
-            $scope.emailAddress = response[0].email;
-            $scope.logoutURL = response[2].logoutURL;
+            $scope.emailAddress = response[2].email;
+            $scope.logoutURL = response[0].logoutURL;
             var e = angular.element(document.querySelector('#signout'));
-            e.html('<a title="Sign out" href="' + response[2].logoutURL + '">Sign out</a>');
+            e.html('<a title="Sign out" href="' + response[0].logoutURL + '">Sign out</a>');
         });
 
         $scope.signout = function() {

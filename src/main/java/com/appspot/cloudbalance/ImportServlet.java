@@ -1,34 +1,31 @@
 package com.appspot.cloudbalance;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.core.Context;
 
 import com.google.appengine.api.datastore.Entity;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+@Path("import")
+public class ImportServlet  {
 
-public class ImportServlet extends BaseServlet {
-
-	private static final long serialVersionUID = 1L;
-
+	
 	private static final Logger logger = Logger.getLogger(ImportServlet.class
 			.getCanonicalName());
 
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-	}
-
-	protected void doPost(HttpServletRequest request, HttpServletResponse resp)
-			throws ServletException, IOException {
+	
+	@POST
+	public void doPost(@Context HttpServletRequest request, @Context HttpServletResponse resp) throws Exception {
 		
 		logger.log(Level.INFO, "Import JSON");
 		

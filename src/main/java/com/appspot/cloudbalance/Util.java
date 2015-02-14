@@ -200,7 +200,7 @@ public class Util {
 	}
 
 	
-	public static String getErrorMessage(Exception ex) throws IOException {
+	public static String getErrorMessage(Exception ex)  {
 		StringBuilder sb = new StringBuilder();
 		sb.append("{");
 		sb.append("\"" + "apiVersion" + "\" : \"" + "1.0" + "\",");
