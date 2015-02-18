@@ -4,6 +4,10 @@
     color: #D8000C;
 }
 
+.shadow {
+	box-shadow: 9px 10px 5px 0px rgba(0, 0, 0, 0.75);
+}
+
 span.error {
     background-color: #FFBABA;
 }
