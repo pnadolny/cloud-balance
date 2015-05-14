@@ -2,20 +2,20 @@
 
 var cloudBalanceControllers = angular.module('cloudBalanceControllers', []);
 var transactionController = function($scope, $modalInstance, transaction, payees) {
-	
+
     $scope.transaction = transaction;
     $scope.payees = payees;
     $scope.memento = angular.copy(transaction);
     $scope.alerts = [];
-    
+
     $scope.today = function() {
         transaction.date = new Date();
      };
-      
+
     $scope.closeAlert = function(index) {
         $scope.alerts.splice(index, 1);
     };
-    
+
     $scope.ok = function() {
 
         $scope.alerts = [];
@@ -37,15 +37,15 @@ var transactionController = function($scope, $modalInstance, transaction, payees
             return;
         }
 
-   
+
         /*^ match beginning of string
         -{0,1} optional negative sign
         \d* optional digits
         \.{0,1} optional decimal point
         \d+ at least one digit
         $/ match end of string
-        
-        
+
+
         http://stackoverflow.com/questions/18082/validate-decimal-numbers-in-javascript-isnumeric
         */
 
@@ -76,7 +76,7 @@ var transactionController = function($scope, $modalInstance, transaction, payees
                 transaction.type = $scope.payees[i].type;
             }
         }
-        
+
         $modalInstance.close(transaction);
 
     };
@@ -166,15 +166,15 @@ cloudBalanceControllers.controller('PayeeController', ['$scope', '$modal', '$log
                     });
                     return;
             	} else {
-            		
+
             		$scope.alerts.push({
             			type: 'success',
                         msg: result.success.message
                     });
-            		
+
             	}
                 $scope.payees.splice(index, 1);
-                
+
             }, function(message) {
                 $scope.alerts.push({
                     type: 'danger',
@@ -184,7 +184,7 @@ cloudBalanceControllers.controller('PayeeController', ['$scope', '$modal', '$log
         }
 
         $scope.compose = function(payee) {
-        	
+
         	if (angular.isUndefined(payee)) {
                 payee = {
                     lastAmount: 0,
@@ -212,13 +212,13 @@ cloudBalanceControllers.controller('PayeeController', ['$scope', '$modal', '$log
                     });
                 }
                 var successFn = function(data) {
-                	
+
                 	Payee.query(function(response) {
         	            $scope.payees = response;
-        	        }); 	
+        	        });
                 }
                 Payee.save(payee, successFn, failFn);
-                
+
             }, function() {
                 $log.info('Modal dismissed');
             });
@@ -239,24 +239,24 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
     function($resource, $scope, $modal, $log, hotkeys,$filter,Transaction,Payee) {
 
 	    init();
-	
+
 	    function init() {
-	        
+
 	    	$scope.cashFlowPageSize = 6;
 	        $scope.pageSize = 25;
 	        $scope.layout = 'list';
 	        $scope.alerts = [];
 	        $scope.cashFlow = [];
 	        $scope.balance =0;
-	        
-	        
-	        
+
+
+
 	        $scope.transactions = [];
-	        
+
 	        Transaction.query(function(response) {
 	            $scope.transactions = response;
 	        });
-	        
+
 	        $scope.$watch(
 	        		function () {return $scope.transactions;},
 	             	function(newValue, oldValue) {
@@ -271,19 +271,19 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
 	        				   $scope.computeCashFlow();
 	        			   }
 	        		},true
-	       ); 
-	        
-	    };     	    
+	       );
+
+	    };
 
 	    hotkeys.add({
             combo: 'b',
             description: 'Show current balance',
             callback: function(event, hotkey) {
-            	
+
             	$scope.alerts = [];
             	$scope.alerts.push({
                     type: 'success',
-                    msg: 'Your balance is '+$filter('currency')($scope.currentBalance(),'$') + ' and your available balance is '+$filter('currency')($scope.availableBalance(),'$') 
+                    msg: 'Your balance is '+$filter('currency')($scope.currentBalance(),'$') + ' and your available balance is '+$filter('currency')($scope.availableBalance(),'$')
                 });
 
             	$scope.alerts.push();
@@ -314,11 +314,11 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
             callback: function(event, hotkey) {
 
                 $scope.layout = 'grid';
-               
+
             }
         });
 
-        
+
         $scope.currentBalance = function() {
             var balance = 0;
             var transactions = angular.copy($scope.transactions);
@@ -351,11 +351,11 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
             return balance;
         }
 
-        
+
         $scope.computeCashFlow = function() {
 
         	var transactionsCopy = angular.copy($scope.transactions)
-        	
+
             transactionsCopy.sort(function(a, b) {
                 return moment(a.date).valueOf() - moment(b.date).valueOf();
             });
@@ -392,13 +392,13 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
                     };
                     $log.log(item);
                     $scope.cashFlow.push(item);
-                    
-                    
-                    
-                    
-                    
-                     
-                    
+
+
+
+
+
+
+
                     monthlyCashFlow = 0;
                     monthlyIncome = 0;
                     monthlyDiscretionary = 0;
@@ -440,9 +440,9 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
             $log.log(item);
             $scope.cashFlow.push(item);
             $log.log('Done..Computing monthly totals');
-            
-        
-        	    
+
+
+
             var i = $scope.cashFlow.length;
             var counter = 1;
             while (i--) {
@@ -451,19 +451,19 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
             	cashFlowItem.averageCashFlow = averageCashFlow / counter;
             	counter++;
             }
-            
-                   
-                    
-            
+
+
+
+
         }
 
 
         $scope.compose = function(transaction, copy) {
-    
+
         	var payees = [];
         	Payee.query(function(response) {
-            	
-        		
+
+
         		for (var i = 0; i < response.length; i++) {
             	   switch (response[i].type) {
             		case 'i': payees.push({name: response[i].name, typeName: 'Income', type: response[i].type, payee: response[i].name}); break;
@@ -474,10 +474,10 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
             		default:  payees.push({name: response[i].name, typeName: 'Unkown',type: response[i].type, payee: response[i].name});break;
             		}
             	}
-            	
-            	
-       
-        		
+
+
+
+
         		var modalInstance = $modal.open({
                     templateUrl: 'transaction.html',
                     controller: transactionController,
@@ -493,7 +493,7 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
                                 };
                                 return newTransaction;
                             }
-                            
+
                             if (copy) {
                                 transaction = angular.copy(transaction);
                                 transaction.name = undefined;
@@ -522,36 +522,36 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
                             if ($scope.layout =='grid') {
                             	$scope.computeCashFlow();
                             }
-                  	       
+
                     	}
                     }
-                    
-                    
-                    
+
+
+
                     var date = new Date(transaction.date);
                     transaction.date = (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear();
-                    
+
                     Transaction.save(transaction,successFn,failFn);
-                    
-                            
-                    
-                    
+
+
+
+
                 }, function() {
-                	
+
                     $log.info('Modal cancelled');
                 });
 
-        		
-            	
-            	
-            	
-            	
+
+
+
+
+
             });
 
-        	
-        	
-        	
-        	
+
+
+
+
         };
 
 
@@ -559,7 +559,7 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
             $scope.alerts.splice(index, 1);
         };
 
-        
+
         var findTransactionIndex = function(t) {
             var index = 0;
             for (var i = 0; i < $scope.transactions.length; i++) {
@@ -573,12 +573,12 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
             return index;
 
         }
-        
+
         $scope.remove = function(t) {
         	$scope.transactions.splice(findTransactionIndex(t), 1);
         	var aTransaction = new Transaction({id: t.name, parentid: t.payee});
             aTransaction.$remove();
-            
+
         }
     }
 ]);
@@ -591,7 +591,8 @@ cloudBalanceControllers.controller('UserController', ['$scope', '$location', '$w
         $scope.logoutURL = {};
 
         User.query(function(response) {
-            $scope.emailAddress = response[2].email;
+
+						$scope.emailAddress = response[0].email;
             $scope.logoutURL = response[0].logoutURL;
             var e = angular.element(document.querySelector('#signout'));
             e.html('<a title="Sign out" href="' + response[0].logoutURL + '">Sign out</a>');
