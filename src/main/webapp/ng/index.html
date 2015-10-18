@@ -68,10 +68,10 @@
 
                     <div class="switchBar">
                         <button class="btn btn-default" style="float: left" ng-click="compose();">Compose</button>
-
+                        <input type="text" ng-show="layout == 'list' " style="float: left;margin-top: 5px; margin-left: 5px;" placeholder="Search" size="25" ng-model="search"/>
                         <a style="float: right;" class="list-icon" ng-class="{active: layout == 'list'}" ng-click="layout = 'list'; "></a>
                         <a style="float: right;" class="grid-icon" ng-class="{active: layout == 'grid'}" ng-click="layout = 'grid'; "></a>
-						<h2 style="float: right; margin-right: 12px; margin-top: 0px;">{{balance | currency}}</h2>
+						<h2 style="float: right; border-color:none; margin-right: 12px; margin-top: 0px;">{{balance | currency}}</h2>
 
                     </div>
 
@@ -129,7 +129,7 @@
                                 </tr>
                             </thead>
 
-                            <tr style="text-align: left;" ng-repeat="t in transactions  | addSortableDate | orderBy:'sortableDate':true | calcBalance | limitTo:pageSize ">
+                            <tr style="text-align: left;" ng-repeat="t in transactions  | addSortableDate | filter:search:strict | orderBy:'sortableDate':true | calcBalance | limitTo:pageSize ">
                                 <td>{{t.date}}</td>
                                 <td>
                                     <div style="float: left; margin-right: 5px;" class="legend payee-type-{{t.type}}">{{t.type}}</div>
@@ -165,6 +165,8 @@
 
                     <div style="margin: 10px auto 25px;">
                         <button class="btn btn-default" style="float: left" ng-click="compose();">Compose</button>
+						<input type="text" style="border-color:none;float: left;margin-top: 5px; margin-left: 5px;" placeholder="Search" size="25" ng-model="search"/>
+                       
                     </div>
 
 
@@ -179,7 +181,7 @@
                                 <th>Action</th>
                             </tr>
                         </thead>
-                        <tr style="text-align: left;" ng-repeat="p in payees | orderBy:'type' | limitTo:pageSize">
+                        <tr style="text-align: left;" ng-repeat="p in payees | filter:search:strict | orderBy:'type' | limitTo:pageSize">
                             <td>
                                 <div style="float: left; margin-right: 5px;" class="legend payee-type-{{p.type}}">{{p.type}}</div>
 
