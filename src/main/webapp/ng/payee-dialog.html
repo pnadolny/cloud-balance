@@ -1,0 +1,56 @@
+<md-dialog>
+
+    <div class="modal-header">
+        <h3>Payee</h3>
+    </div>
+
+    <div class="modal-body">
+
+        <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
+        <div class="form-horizontal" role="form">
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="payee">Payee</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" ng-model="payee.name" autocomplete="off" name="name" required ng-readonly="isEditing" />
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="type">Type</label>
+                <div class="col-sm-10">
+
+                    <div class="row" style="text-align: left; padding-left: 10px; padding-top:10px">
+                        <fieldset>
+                            <input ng-model="payee.type" type="radio" name="type" id="type-i" value="i" />
+                            <label for="type-i" class="legend payee-type-i">I</label>Income
+                            <br>
+                            <input ng-model="payee.type" type="radio" name="type" id="type-s" value="s" />
+                            <label for="type-i" class="legend payee-type-s">S</label>Static
+                            <br>
+                            <input ng-model="payee.type" type="radio" name="type" id="type-d" value="d" />
+                            <label for="type-i" class="legend payee-type-d">D</label>Discretionary
+                            <br>
+                            <input ng-model="payee.type" type="radio" name="type" id="type-f" value="f" />
+                            <label for="type-i" class="legend payee-type-f">F</label>Future
+                            <br>
+                            <input ng-model="payee.type" type="radio" name="type" id="type-none" value="o" />
+                            <label for="type-none" class="legend payee-type-o">O</label>Other
+                            <br>
+                        </fieldset>
+
+                    </div>
+
+
+                </div>
+            </div>
+
+
+
+        </div>
+
+        <div class="modal-footer">
+            <button class="btn btn-success" ng-click="ok()">Save</button>
+            <button class="btn btn-danger" ng-click="cancel()">Cancel</button>
+        </div>
+</md-dialog>

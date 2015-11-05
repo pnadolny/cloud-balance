@@ -1,0 +1,124 @@
+<md-card>
+    <md-card-content>
+
+        <div ng-repeat="alert in alerts" close="closeAlert($index)">
+
+            {{alert.msg}}
+
+            <md-button class="md-icon-button" aria-label="close" ng-click="closeAlert($index)">
+              <md-icon md-font-set="material-icons">clear</md-icon>
+            </md-button>
+
+
+        </div>
+
+
+        <div ng-show="searching" layout="row" layout-align="start center" class="md-card-header">
+              <md-button class="md-icon-button" aria-label="Back" ng-click="searching=false;search='';">
+                <md-icon md-font-set="material-icons">arrow_back</md-icon>
+              </md-button>
+              <md-input-container flex>
+                  <label>Search</label>
+                  <input ng-model="search" type="text" />
+              </md-input-container>
+            </div>
+
+
+        <div ng-show="!searching" layout="row" layout-align="start center">
+            <p>Transactions</p>
+            <span flex></span>
+
+            <h2>{{balance | currency}}</h2>
+            <md-button class="md-icon-button" aria-label="Back" ng-click="searching=true">
+              <md-icon md-font-set="material-icons">search</md-icon>
+            </md-button>
+
+            <md-button ng-click="layout = 'list'" class="md-icon-button">
+                <md-icon aria-label="Menu" md-font-set="material-icons">list</md-icon>
+            </md-button>
+            <md-button ng-click="layout = 'grid'" class="md-icon-button">
+                <md-icon aria-label="Menu" md-font-set="material-icons">view_module</md-icon>
+            </md-button>
+
+
+        </div>
+
+
+        <div ng-show="layout == 'grid' ">
+            <table class="mdDataTable">
+                <thead>
+                    <tr>
+                        <th class="leftAlignedColumn">Month</th>
+                        <th class="leftAlignedColumn">
+                            <div style="float: left; margin-right: 5px;" class="legend payee-type-i">I</div>Income</th>
+                        <th class="leftAlignedColumn">
+
+                            <div style="float: left; margin-right: 5px;" class="legend payee-type-s">S</div>Static</th>
+                        <th class="leftAlignedColumn">
+                            <div style="float: left; margin-right: 5px;" class="legend payee-type-d">D</div>Discretionary</th>
+                        <th class="leftAlignedColumn">
+                            <div style="float: left; margin-right: 5px;" class="legend payee-type-f">F</div>Future</th>
+                        <th class="leftAlignedColumn">
+                            <div style="float: left; margin-right: 5px;" class="legend payee-type-o">O</div>Other</th>
+                        <th class="leftAlignedColumn">Cash Flow</th>
+                        <th class="leftAlignedColumn">Average Cash Flow</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="t in cashFlow | limitTo:cashFlowPageSize">
+                        <td class="column leftAlignedColumn">{{t.month}}</td>
+                        <td class="column leftAlignedColumn">{{t.income | currency}}</td>
+                        <td class="column leftAlignedColumn">{{t.static | currency}}</td>
+                        <td class="column leftAlignedColumn">{{t.discretionary | currency}}</td>
+                        <td class="column leftAlignedColumn">{{t.future | currency}}</td>
+                        <td class="column leftAlignedColumn">{{t.other | currency}}</td>
+                        <td class="column leftAlignedColumn">{{t.cashFlow | currency}}</td>
+                        <td class="column leftAlignedColumn">{{t.averageCashFlow | currency}}</td>
+
+                    </tr>
+                </tbody>
+            </table>
+
+                    <md-button ng-hide="cashFlow.length<=cashFlowPageSize" class="md-primary md-raised" ng-click="cashFlowPageSize= cashFlowPageSize + 6">Show more</md-button>
+
+        </div>
+
+
+        <div ng-show="layout == 'list' ">
+            <table class="mdDataTable" ng-show="layout == 'list' ">
+                <thead>
+                    <tr>
+                        <th class="leftAlignedColumn">Date</th>
+                        <th class="leftAlignedColumn">Payee</th>
+                        <th class="leftAlignedColumn">Amount</th>
+                        <th class="leftAlignedColumn">Balance</th>
+                        <th class="leftAlignedColumn">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="t in transactions  | addSortableDate | filter:search:strict | orderBy:'sortableDate':true | calcBalance | limitTo:pageSize ">
+                        <td class="column leftAlignedColumn">{{t.date}}</td>
+                        <td class="column leftAlignedColumn">
+                            <div style="float: left; margin-right: 5px;" class="legend payee-type-{{t.type}}">{{t.type}}</div>
+                            <a ng-click="compose(t,false);">{{t.payee}}</a>
+                        </td>
+                        <td class="column leftAlignedColumn">{{t.amount | currency}}</td>
+                        <td class="column leftAlignedColumn">{{t.balance | currency}}</td>
+                        <td class="column leftAlignedColumn"><a ng-click="remove(t);">Delete</a> | <a ng-click="compose(t,true);">Copy...</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div layout-align="center center" layout="row">
+                    <md-button ng-hide="transactions.length<=pageSize" class="md-primary md-raised" ng-click="pageSize= pageSize + 25">Show more</md-button>
+            </div>
+            <p> Press ? for shortcuts</p>
+        </div>
+    </md-card-content>
+
+</md-card>
+
+
+<md-button class="md-fab md-fab-bottom-right" ng-click="compose()" ng-scope md-ink-ripple aria-label="add">
+    <md-icon aria-label="Menu" md-font-set="material-icons">add</md-icon>
+</md-button>

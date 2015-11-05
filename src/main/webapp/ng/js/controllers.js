@@ -1,7 +1,9 @@
 'use strict';
 
 var cloudBalanceControllers = angular.module('cloudBalanceControllers', []);
-var transactionController = function($scope, $modalInstance, transaction, payees) {
+
+
+var transactionController = function($scope, transaction, payees) {
 
     $scope.transaction = transaction;
     $scope.payees = payees;
@@ -82,14 +84,14 @@ var transactionController = function($scope, $modalInstance, transaction, payees
     };
     $scope.cancel = function() {
         angular.copy($scope.memento, transaction);
-        $modalInstance.dismiss();
+    //    $modalInstance.dismiss();
     };
 
 
 };
 
 
-var ModalPayeeInstanceCtrl = function($scope, $modalInstance, payee) {
+var ModalPayeeInstanceCtrl = function($scope, payee) {
 
 	$scope.isEditing = !angular.isUndefined(payee.name);
     $scope.payee = payee;
@@ -132,17 +134,17 @@ var ModalPayeeInstanceCtrl = function($scope, $modalInstance, payee) {
             return;
         }
 
-        $modalInstance.close($scope.payee);
+      //  $modalInstance.close($scope.payee);
     };
     $scope.cancel = function() {
-        $modalInstance.dismiss('cancel');
+      //  $modalInstance.dismiss('cancel');
     };
 };
 
 
 
-cloudBalanceControllers.controller('PayeeController', ['$scope', '$modal', '$log', 'Payee',
-    function($scope, $modal, $log, Payee) {
+cloudBalanceControllers.controller('PayeeController', ['$scope', '$log', 'Payee',
+    function($scope, $log, Payee) {
 
 	 	init();
 
@@ -234,9 +236,8 @@ cloudBalanceControllers.controller('PayeeController', ['$scope', '$modal', '$log
     }
 ]);
 
-
-cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$resource','$scope', '$modal', '$log', 'hotkeys','$filter','Transaction','Payee',
-    function($resource, $scope, $modal, $log, hotkeys,$filter,Transaction,Payee) {
+cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$resource','$scope',  '$log', 'hotkeys','$filter','Transaction','Payee',
+    function($resource, $scope,  $log, hotkeys,$filter,Transaction,Payee) {
 
 	    init();
 
@@ -275,7 +276,7 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
 
 	    };
 
-	    hotkeys.add({
+	    hotkeys.bindTo($scope).add({
             combo: 'b',
             description: 'Show current balance',
             callback: function(event, hotkey) {
@@ -291,7 +292,7 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
         });
 
 
-        hotkeys.add({
+        hotkeys.bindTo($scope).add({
             combo: 'c',
             description: 'Compose a transaction',
             callback: function(event, hotkey) {
@@ -299,7 +300,7 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
             }
         });
 
-        hotkeys.add({
+        hotkeys.bindTo($scope).add({
             combo: 'l',
             description: 'Switch to list view',
             callback: function(event, hotkey) {
@@ -308,7 +309,7 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
             }
         });
 
-        hotkeys.add({
+        hotkeys.bindTo($scope).add({
             combo: 'f',
             description: 'Switch to grid view',
             callback: function(event, hotkey) {
@@ -318,6 +319,15 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
             }
         });
 
+        hotkeys.bindTo($scope).add({
+            combo: 's',
+            description: 'Search',
+            callback: function(event, hotkey) {
+
+                $scope.searching = !$scope.searching;
+
+            }
+        });
 
         $scope.currentBalance = function() {
             var balance = 0;
@@ -392,13 +402,6 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
                     };
                     $log.log(item);
                     $scope.cashFlow.push(item);
-
-
-
-
-
-
-
                     monthlyCashFlow = 0;
                     monthlyIncome = 0;
                     monthlyDiscretionary = 0;
@@ -584,8 +587,9 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
 ]);
 
 
-cloudBalanceControllers.controller('UserController', ['$scope', '$location', '$window', 'User',
-    function($scope, $location, $window, User) {
+
+cloudBalanceControllers.controller('UserController', ['$mdSidenav','$scope', '$location', '$window', 'User',
+    function($mdSidenav,$scope, $location, $window, User) {
 
         $scope.emailAddress = {};
         $scope.logoutURL = {};
@@ -597,6 +601,11 @@ cloudBalanceControllers.controller('UserController', ['$scope', '$location', '$w
             var e = angular.element(document.querySelector('#signout'));
             e.html('<a title="Sign out" href="' + response[0].logoutURL + '">Sign out</a>');
         });
+
+        $scope.toggleSidenav = function(menuId) {
+            $mdSidenav("left").toggle().then(function() {
+            });
+        };
 
         $scope.signout = function() {
             var u = $location.protocol() + "://" + $location.host() + ":" + $location.port() + $scope.logoutURL;

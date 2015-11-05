@@ -17,5 +17,3 @@ cloudBalanceServices.factory('Transaction', function($resource) {
 		save: {method:'PUT',  params: {name: '@name', payee:'@payee', amount: '@amount', type: '@type', date: '@date', memo: '@memo'}}
 	});
 });
-
-
