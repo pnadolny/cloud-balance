@@ -97,7 +97,7 @@
                 </thead>
                 <tbody>
                     <tr ng-repeat="t in transactions  | addSortableDate | filter:search:strict | orderBy:'sortableDate':true | calcBalance | limitTo:pageSize ">
-                        <td class="column leftAlignedColumn">{{t.date}}</td>
+                        <td class="column leftAlignedColumn">{{t.date | date:'MM/dd/yyyy @ h:mma'}}</td>
                         <td class="column leftAlignedColumn">
                             <div style="float: left; margin-right: 5px;" class="legend payee-type-{{t.type}}">{{t.type}}</div>
                             <a ng-click="compose(t,false);">{{t.payee}}</a>

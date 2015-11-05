@@ -6,6 +6,8 @@
             </div>
         </md-toolbar>
         <md-dialog-content>
+          <md-content layout-padding>
+
             <div ng-repeat="alert in alerts" close="closeAlert($index)">
                 {{alert.msg}}
                 <md-button class="md-icon-button" aria-label="close" ng-click="closeAlert($index)">
@@ -18,10 +20,22 @@
                 <input id="amount" type="text" ng-model="transaction.amount" ng-model-options="{updateOn: 'blur'}" autocomplete="off" name="amount" required placeholder="Amount" />
             </md-input-container>
             <md-input-container>
+                <label>Payee</label>
+                <md-select ng-model="transaction.payee" required>
+                  <md-option ng-repeat="payee in payees" value="{{payee.name}}">{{payee.name}}</md-option>
+                </md-select>
+                </md-input-container>
+
+            <md-input-container>
                 <label>Memo</label>
                 <input id="amount" type="text" ng-model="transaction.memo" autocomplete="off" name="memo" required placeholder="Memo, Check Num, etc." />
             </md-input-container>
+
+
+
             <md-datepicker id="date" ng-model="transaction.date" show-weeks="showWeeks"></md-datepicker>
+
+          </md-content>
             <div class="md-actions">
                 <md-button class="md-raised md-primary" ng-click="ok()">Save</md-button>
                 <md-button class="md-raised md-primary" ng-click="cancel()">Cancel</md-button>
