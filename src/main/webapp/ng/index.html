@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="css/md-data-table.css" />
 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/0.11.4/angular-material.min.css">
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.0.0-rc1/angular-material.min.css">
 
     <style>
         [ng\:cloak],
@@ -30,7 +30,7 @@
     </style>
 </head>
 
-<body ng-cloak>
+<body ng-cloak ng-controller="UserController">
 
     <noscript>
         <div style="width: 22em; position: absolute; left: 50%; margin-left: -11em; color: red; background-color: white; border: 1px solid red; padding: 4px; font-family: sans-serif">
@@ -38,55 +38,39 @@
         </div>
     </noscript>
 
-    <div ng-cloak ng-controller="UserController">
-
-
-      <md-sidenav layout="column" flex
-         class="md-sidenav-left md-whiteframe-z2" md-component-id="left"
-        layout-fill >
-       <md-toolbar class="md-medium" >
-          <div class="md-toolbar-tools">
-            <span flex></span>
-          </div>
-      </md-toolbar>
-
+    <md-sidenav layout="column" flex class="md-sidenav-left md-whiteframe-z2" md-component-id="left" layout-fill>
+        <md-toolbar class="md-medium">
+            <div class="md-toolbar-tools">
+                <span flex></span>
+            </div>
+        </md-toolbar>
         <md-button ng-href="#/transactions">
             Transactions
         </md-button>
         <md-divider></md-divider>
         <md-button ng-href="#/payees">
-           Payees
+            Payees
         </md-button>
         <md-divider></md-divider>
-
     </md-sidenav>
 
-        <div flex layout="column">
-
-            <md-toolbar layout="row">
-
-              <md-button ng-click="toggleSidenav('left')" class="md-icon-button" >
-                  <md-icon aria-label="Menu" md-font-set="material-icons">menu</md-icon>
-              </md-button>
-
-                <div class="md-toolbar-tools">
-                    <p>Cloud Balance</p>
-                    <span flex></span>
-                    <md-button title="Feedback" ng-href="https://github.com/pnadolny/cloud-balance/issues">Feedback</md-button>
-                    <md-button ng-href="#">{{emailAddress}}</md-button>
-                    <md-button id="signout"></md-button>
-                </div>
-            </md-toolbar>
-            <div layout="column" flex style="overflow-y: scroll;">
-                <div id="content" ng-view flex></div>
+    <div flex layout="column">
+        <md-toolbar layout="row">
+            <div class="md-toolbar-tools">
+                <md-button ng-click="toggleSidenav('left')" class="md-icon-button">
+                    <md-icon aria-label="Menu" md-font-set="material-icons">menu</md-icon>
+                </md-button>
+                <p>Cloud Balance</p>
+                <span flex></span>
+                <md-button title="Feedback" ng-href="https://github.com/pnadolny/cloud-balance/issues">Feedback</md-button>
+                <md-button ng-href="#">{{emailAddress}}</md-button>
+                <md-button id="signout"></md-button>
             </div>
+        </md-toolbar>
+        <div layout="column" flex style="overflow-y: scroll;">
+            <div id="content" ng-view flex></div>
         </div>
-
-
     </div>
-
-
-
 
 
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script>
@@ -96,7 +80,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-route.min.js"></script>
 
 
-    	<script src="https://ajax.googleapis.com/ajax/libs/angular_material/0.11.4/angular-material.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.0.0-rc1/angular-material.min.js"></script>
 
 
     <script src="js/app.js"></script>
