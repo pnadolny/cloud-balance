@@ -3,7 +3,7 @@
 var cloudBalanceControllers = angular.module('cloudBalanceControllers', []);
 
 
-var transactionController = function($scope, transaction, payees) {
+var transactionController = function($scope, transaction, payees,$mdDialog) {
 
     $scope.transaction = transaction;
     $scope.payees = payees;
@@ -79,12 +79,11 @@ var transactionController = function($scope, transaction, payees) {
             }
         }
 
-        $modalInstance.close(transaction);
-
+        $mdDialog.hide(transaction);
     };
     $scope.cancel = function() {
         angular.copy($scope.memento, transaction);
-    //    $modalInstance.dismiss();
+        $mdDialog.cancel();
     };
 
 
@@ -236,8 +235,8 @@ cloudBalanceControllers.controller('PayeeController', ['$scope', '$log', 'Payee'
     }
 ]);
 
-cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$resource','$scope',  '$log', 'hotkeys','$filter','Transaction','Payee',
-    function($resource, $scope,  $log, hotkeys,$filter,Transaction,Payee) {
+cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$resource','$scope',  '$log', 'hotkeys','$filter','Transaction','Payee','$mdDialog',
+    function($resource, $scope,  $log, hotkeys,$filter,Transaction,Payee,$mdDialog) {
 
 	    init();
 
@@ -481,8 +480,8 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
 
 
 
-        		var modalInstance = $modal.open({
-                    templateUrl: 'transaction.html',
+        		$mdDialog.show({
+                    templateUrl: 'transaction-dialog.html',
                     controller: transactionController,
                     resolve: {
                         transaction: function() {
@@ -507,9 +506,7 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
                             return payees;
                         }
                     }
-                });
-
-                modalInstance.result.then(function(transaction) {
+                }).then(function(transaction) {
 
                     $log.info('Modal dismissed with: ' + angular.toJson(transaction));
 

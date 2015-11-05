@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.TimeZone;
+import java.text.DateFormat;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -28,15 +30,30 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.Query;
 import com.google.gson.Gson;
- 
+
 @Path("transaction")
 @Produces("application/json")
 public class TransactionServlet  {
 
+  private static final String ISO_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+
+  protected static String formatDate(Date d) {
+
+                          TimeZone tz = TimeZone.getTimeZone("UTC");
+
+                          DateFormat df = new SimpleDateFormat(ISO_DATE_FORMAT);
+
+                          df.setTimeZone(tz);
+
+                          return df.format(d);
+
+              }
+
+
 	private static final Logger logger = Logger.getLogger(TransactionServlet.class
 			.getCanonicalName());
-	
-	@GET 
+
+	@GET
 	public String doGet(@QueryParam("transaction-searchby") String searchBy,
 			@QueryParam("q") String searchFor, @QueryParam("p") String searchParent) {
 
@@ -61,7 +78,7 @@ public class TransactionServlet  {
 				return writeJSON(transactions,null,payees,"type");
 		} else if (searchBy == null && searchFor!=null) {
 			return Util.writeJSON(Transaction.findTransaction(searchParent,searchFor));
-		} 
+		}
 		return "";
 	}
 
@@ -84,12 +101,11 @@ public class TransactionServlet  {
 				}
 				if ("java.util.Date".equals(properties.get(key).getClass()
 						.getCanonicalName())) {
-					SimpleDateFormat formatShort = new SimpleDateFormat(Constants.DATE_FORMAT);
-					
+
 					sb.append("\""
 							+ key
 							+ "\" : \""
-							+ formatShort.format(properties.get(key)) + "\",");
+							+ formatDate((Date)properties.get(key)) + "\",");
 				} else {
 					sb.append("\"" + key + "\" : \"" + properties.get(key)
 							+ "\",");
@@ -102,20 +118,20 @@ public class TransactionServlet  {
 					sb.append("\"" + key + "\" : \"\",");
 					continue;
 				}
-				
+
 				sb.append("\"" + key + "\" : \"" + moreValues.get(key)
 						+ "\",");
 			}
 			}
-			
+
 			for (Entity p: parents) {
-				
+
 				if (p.getKey().equals(result.getParent())) {
 					sb.append("\"" + valueToNormalize + "\" : \"" + p.getProperty(valueToNormalize)
 							+ "\",");
 				}
 			}
-			
+
 			sb.deleteCharAt(sb.lastIndexOf(","));
 			sb.append("},");
 			i++;
@@ -130,17 +146,17 @@ public class TransactionServlet  {
 
 	@PUT
 	public String doPut(@QueryParam("name") String itemName, @QueryParam("memo") String memo,
-			@QueryParam("payee") String payeeName, @QueryParam("amount") String amount, @QueryParam("date") String date, 
+			@QueryParam("payee") String payeeName, @QueryParam("amount") String amount, @QueryParam("date") String date,
 			@QueryParam("transaction-type") String type)
 			 {
-	
-		
+
+
 		Entity e = Transaction.createOrUpdateItem(payeeName, itemName, amount, date,memo,type);
 		logger.log(Level.INFO, String.format("Creating transaction key with id of %s and name of %s", new Object[] {e.getKey().getId(), e.getKey().getName()}));
 
 		Gson gson = new Gson();
 		return gson.toJson(e);
-		
+
 	}
 
 	@DELETE
@@ -154,6 +170,6 @@ public class TransactionServlet  {
 
 	}
 
-		
-	
+
+
 }
