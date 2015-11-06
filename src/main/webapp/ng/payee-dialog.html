@@ -24,28 +24,15 @@
         </md-input-container>
 
 
+        <md-radio-group ng-model="payee.type">
+              <md-radio-button value="i" class="md-primary">Income</md-radio-button>
+              <md-radio-button value="s"> Static </md-radio-button>
+              <md-radio-button value="d">Discretionary</md-radio-button>
+              <md-radio-button value="f"> Future </md-radio-button>
+              <md-radio-button value="o">Other</md-radio-button>
 
+        </md-radio-group>
 
-        <div class="row" style="text-align: left; padding-left: 10px; padding-top:10px">
-            <fieldset>
-                <input ng-model="payee.type" type="radio" name="type" id="type-i" value="i" />
-                <label for="type-i" class="legend payee-type-i">I</label>Income
-                <br>
-                <input ng-model="payee.type" type="radio" name="type" id="type-s" value="s" />
-                <label for="type-i" class="legend payee-type-s">S</label>Static
-                <br>
-                <input ng-model="payee.type" type="radio" name="type" id="type-d" value="d" />
-                <label for="type-i" class="legend payee-type-d">D</label>Discretionary
-                <br>
-                <input ng-model="payee.type" type="radio" name="type" id="type-f" value="f" />
-                <label for="type-i" class="legend payee-type-f">F</label>Future
-                <br>
-                <input ng-model="payee.type" type="radio" name="type" id="type-none" value="o" />
-                <label for="type-none" class="legend payee-type-o">O</label>Other
-                <br>
-            </fieldset>
-
-        </div>
 
       </md-content>
           <div class="md-actions">
@@ -53,6 +40,6 @@
               <md-button class="md-raised md-primary" ng-click="cancel()">Cancel</md-button>
           </div>
         </md-dialog-content>
-      
+
 </md-dialog>
 </form>
