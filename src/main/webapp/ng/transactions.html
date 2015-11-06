@@ -104,7 +104,15 @@
                         </td>
                         <td class="column leftAlignedColumn">{{t.amount | currency}}</td>
                         <td class="column leftAlignedColumn">{{t.balance | currency}}</td>
-                        <td class="column leftAlignedColumn"><a ng-click="remove(t);">Delete</a> | <a ng-click="compose(t,true);">Copy...</a>
+
+
+                        <td class="column leftAlignedColumn">
+                          <md-button class="md-icon-button" aria-label="delete" ng-click="remove(t)">
+                            <md-icon md-font-set="material-icons">delete</md-icon>
+                          </md-button>
+                          <md-button class="md-icon-button" aria-label="copy" ng-click="compose(t,true)">
+                            <md-icon md-font-set="material-icons">content_copy</md-icon>
+                          </md-button>
                         </td>
                     </tr>
                 </tbody>
