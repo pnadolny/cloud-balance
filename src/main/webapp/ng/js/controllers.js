@@ -487,11 +487,9 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
                         transaction: function() {
 
                         	if (angular.isUndefined(transaction)) {
-                                var date = new Date();
-                                var today = (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear();
                                 var newTransaction = {
                                     memo: '',
-                                    date: today
+                                    date: moment()
                                 };
                                 return newTransaction;
                             }
