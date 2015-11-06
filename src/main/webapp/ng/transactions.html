@@ -92,7 +92,7 @@
                         <th class="leftAlignedColumn">Payee</th>
                         <th class="leftAlignedColumn">Amount</th>
                         <th class="leftAlignedColumn">Balance</th>
-                        <th class="leftAlignedColumn">Action</th>
+                        <th class="rightAlignedColumn">Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -106,7 +106,7 @@
                         <td class="column leftAlignedColumn">{{t.balance | currency}}</td>
 
 
-                        <td class="column leftAlignedColumn">
+                        <td class="column rightAlignedColumn">
                           <md-button class="md-icon-button" aria-label="delete" ng-click="remove(t)">
                             <md-icon md-font-set="material-icons">delete</md-icon>
                           </md-button>
