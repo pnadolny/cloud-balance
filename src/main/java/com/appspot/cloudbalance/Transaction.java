@@ -22,17 +22,18 @@ public class Transaction {
 	public static final String KIND = "Transaction";
 	public static Entity createOrUpdateItem(String payeeName, String itemName,
 			String amount, String date, String memo, String type) {
-		
+
 		Date transactionDate = null;
 		try {
-			transactionDate = new SimpleDateFormat(Constants.DATE_FORMAT).parse(date);
+
+			transactionDate = new SimpleDateFormat(Constants.ISO_DATE_FORMAT).parse(date);
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		Double transactionAmount = Double.valueOf(amount);
-		
+
 		Entity payee = Payee.getPayee(payeeName);
 		Entity item =null;
 		if (itemName == null || "".equals(itemName)) {
@@ -54,14 +55,14 @@ public class Transaction {
 		Util.persistEntity(item);
 		return item;
 	}
-	
+
 	public static Entity findTransaction(String payeeName, String itemName) {
 		Entity payee = Payee.getPayee(payeeName);
 		Key key = KeyFactory.createKey(payee.getKey(), KIND, Long.valueOf(itemName).longValue());
 		return Util.findEntity(key);
 	}
 
-	
+
 	public static Iterable<Entity> getAllTransactions(Query.SortDirection direction) {
 		Iterable<Entity> entities = Util.listEntities(KIND, null, null,direction, null, null);
 		return entities;
@@ -69,7 +70,7 @@ public class Transaction {
 
 	public static List<Entity> getTransactions(String name) {
 		Query q = new Query(Transaction.KIND);
-		
+
 		q.setAncestor(KeyFactory.createKey(KIND, name));
 		return Util.getDatastoreServiceInstance().prepare(q).asList(FetchOptions.Builder.withDefaults());
 	}
@@ -78,7 +79,7 @@ public class Transaction {
 		return entities;
 	}
 
-	
+
 	public static Iterable<Entity> findTransactionsByMonth(int dayOfYear, String searchByMonth) {
 
 		GregorianCalendar gcBegin = new GregorianCalendar();
@@ -86,13 +87,13 @@ public class Transaction {
 		gcBegin.set(GregorianCalendar.MONTH, Integer.parseInt(searchByMonth));
 		gcBegin.set(GregorianCalendar.DAY_OF_MONTH, 1);
 		Filter dateMinFilter = new FilterPredicate("date",  FilterOperator.GREATER_THAN_OR_EQUAL, gcBegin.getTime());
-		
+
 		GregorianCalendar gcEnd= new GregorianCalendar();
 		gcEnd.set(GregorianCalendar.DAY_OF_YEAR, dayOfYear);
 		gcEnd.set(GregorianCalendar.MONTH, Integer.parseInt(searchByMonth));
 		gcEnd.set(GregorianCalendar.DAY_OF_MONTH, 31);
 		Filter dateMaxFilter =  new FilterPredicate("date", FilterOperator.LESS_THAN_OR_EQUAL,gcEnd.getTime());
-		
+
 		Filter dateRangeFilter =
 		  CompositeFilterOperator.and(dateMinFilter, dateMaxFilter);
 		Query q = new Query(KIND).setFilter(dateRangeFilter);

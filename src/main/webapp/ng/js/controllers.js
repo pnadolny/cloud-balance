@@ -520,15 +520,7 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
 
                     	}
                     }
-
-
-
-                    var date = new Date(transaction.date);
-                    transaction.date = (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear();
-
                     Transaction.save(transaction,successFn,failFn);
-
-
 
 
                 }, function() {

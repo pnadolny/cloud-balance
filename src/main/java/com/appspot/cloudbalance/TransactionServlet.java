@@ -35,13 +35,11 @@ import com.google.gson.Gson;
 @Produces("application/json")
 public class TransactionServlet  {
 
-  private static final String ISO_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
-
   protected static String formatDate(Date d) {
 
                           TimeZone tz = TimeZone.getTimeZone("UTC");
 
-                          DateFormat df = new SimpleDateFormat(ISO_DATE_FORMAT);
+                          DateFormat df = new SimpleDateFormat(Constants.ISO_DATE_FORMAT);
 
                           df.setTimeZone(tz);
 
