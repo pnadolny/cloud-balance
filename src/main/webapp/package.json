@@ -1,0 +1,19 @@
+{
+  "name": "cloud-balance",
+  "version": "1.0.0",
+  "description": "Web app dependencies.  run npm install or npm update",
+  "devDependencies": {
+    "angular": "1.4.7",
+    "angular-animate": "1.4.7",
+    "angular-aria": "1.4.7",
+    "angular-messages": "1.4.7",
+    "angular-mocks": "1.4.7",
+    "angular-route": "1.4.7",
+    "angular-resource": "1.4.7",
+    "angular-material":"0.11.4",
+    "ag-grid":"2.3.5",
+    "moment":"2.10.6",
+    "angular-hotkeys":"1.6.0",
+    "angular-loading-bar":"0.8.0"
+  }
+}

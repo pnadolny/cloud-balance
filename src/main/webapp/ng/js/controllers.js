@@ -10,10 +10,6 @@ var transactionController = function($scope, transaction, payees,$mdDialog) {
     $scope.memento = angular.copy(transaction);
     $scope.alerts = [];
 
-    $scope.today = function() {
-        transaction.date = new Date();
-     };
-
     $scope.closeAlert = function(index) {
         $scope.alerts.splice(index, 1);
     };
@@ -90,7 +86,7 @@ var transactionController = function($scope, transaction, payees,$mdDialog) {
 };
 
 
-var ModalPayeeInstanceCtrl = function($scope, payee) {
+var ModalPayeeInstanceCtrl = function($scope, payee,$mdDialog) {
 
 	$scope.isEditing = !angular.isUndefined(payee.name);
     $scope.payee = payee;
@@ -133,17 +129,18 @@ var ModalPayeeInstanceCtrl = function($scope, payee) {
             return;
         }
 
-      //  $modalInstance.close($scope.payee);
+
+      $mdDialog.hide($scope.payee);
     };
     $scope.cancel = function() {
-      //  $modalInstance.dismiss('cancel');
+      $mdDialog.cancel();
     };
 };
 
 
 
-cloudBalanceControllers.controller('PayeeController', ['$scope', '$log', 'Payee',
-    function($scope, $log, Payee) {
+cloudBalanceControllers.controller('PayeeController', ['$scope', '$log', 'Payee','$mdDialog',
+    function($scope, $log, Payee,  $mdDialog) {
 
 	 	init();
 
@@ -195,16 +192,16 @@ cloudBalanceControllers.controller('PayeeController', ['$scope', '$log', 'Payee'
 
             }
 
-            var modalInstance = $modal.open({
-                templateUrl: 'payee.html',
+
+            $mdDialog.show({
+                templateUrl: 'payee-dialog.html',
                 controller: ModalPayeeInstanceCtrl,
                 resolve: {
                     payee: function() {
                         return payee;
                     }
                 }
-            });
-            modalInstance.result.then(function(payee) {
+            }).then(function(payee) {
 
             	$log.info('Modal dismissed with: ' + angular.toJson(payee));
                 var failFn = function(message) {
@@ -489,7 +486,7 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
                         	if (angular.isUndefined(transaction)) {
                                 var newTransaction = {
                                     memo: '',
-                                    date: moment()
+                                    date: moment().toDate()
                                 };
                                 return newTransaction;
                             }
