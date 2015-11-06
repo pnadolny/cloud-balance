@@ -1,8 +1,11 @@
 <md-card>
 </md-card-content>
-
-<div ng-repeat="alert in alerts" close="closeAlert($index)">
-    {{alert.msg}}</div>
+        <div ng-repeat="alert in alerts" close="closeAlert($index)">
+            {{alert.msg}}
+            <md-button class="md-icon-button" aria-label="close" ng-click="closeAlert($index)">
+              <md-icon md-font-set="material-icons">clear</md-icon>
+            </md-button>
+        </div>
 
 
 
@@ -32,8 +35,7 @@
             <th class="leftAlignedColumn">Last</th>
             <th class="leftAlignedColumn">This Month</th>
             <th class="leftAlignedColumn">Total</th>
-
-            <th>Action</th>
+            <th class="rightAlignedColumn">Action</th>
         </tr>
     </thead>
     <tr style="text-align: left;" ng-repeat="p in payees | filter:search:strict | orderBy:'type' | limitTo:pageSize">
@@ -46,7 +48,11 @@
         <td class="column leftAlignedColumn">{{p.thisMonth | currency}}</td>
         <td class="column leftAlignedColumn">{{p.total | currency}}</td>
 
-        <td class="column leftAlignedColumn"><a ng-click="remove($index);">Delete</a>
+
+        <td class="column rightAlignedColumn">
+            <md-button class="md-icon-button" aria-label="delete" ng-click="remove($index)">
+              <md-icon md-font-set="material-icons">delete</md-icon>
+            </md-button>
         </td>
     </tr>
 
