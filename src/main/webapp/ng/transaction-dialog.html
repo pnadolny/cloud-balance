@@ -10,7 +10,8 @@
             <md-datepicker name="date" required ng-model="transaction.date"></md-datepicker>
             <md-input-container>
                 <label>Amount</label>
-                <input name="amount" ng-pattern="/^-{0,1}\d*\.{0,1}\d+$/" required ng-model="transaction.amount" ng-model-options="{updateOn: 'blur'}" autocomplete="off" placeholder="Amount" />
+                <input name="amount" ng-pattern="/^-{0,1}\d*\.{0,1}\d+$/" required ng-model="transaction.amount" ng-model-options="{updateOn: 'blur'}" autocomplete="off"
+                 />
                 <div ng-messages for="transactionForm.amount.$error" role="alert">
                     <div ng-message="required">Required</div>
                       <div ng-message="pattern">Must be a number.</div>
@@ -33,7 +34,7 @@
 
             <md-input-container>
                 <label>Memo</label>
-                <input type="text" ng-pattern="/^[a-zA-Z0-9-() ]*$/" ng-model="transaction.memo" name="memo" placeholder="Memo, Check Num, etc." />
+                <input type="text" ng-pattern="/^[a-zA-Z0-9-() ]*$/" ng-model="transaction.memo" name="memo"  />
                 <ng-messages for="transactionForm.memo.$error">
                     <div ng-message="pattern">Memo contains illegal characters.</div>
                 </ng-messages>
