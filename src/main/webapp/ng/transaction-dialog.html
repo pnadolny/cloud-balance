@@ -40,7 +40,7 @@
             </md-input-container>
           </md-content>
             <div class="md-actions">
-                <md-button class="md-raised md-primary" ng-click="ok()">Save</md-button>
+                <md-button class="md-raised md-primary" ng-disabled="transactionForm.$invalid || !transactionForm.$dirty" ng-click="ok()">Save</md-button>
                 <md-button class="md-raised md-primary" ng-click="cancel()">Cancel</md-button>
             </div>
         </md-dialog-content>
