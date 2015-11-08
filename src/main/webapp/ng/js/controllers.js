@@ -40,15 +40,14 @@ var ModalPayeeInstanceCtrl = function($scope, payee,$mdDialog) {
 
 
 
-cloudBalanceControllers.controller('PayeeController', ['$scope', '$log', 'Payee','$mdDialog',
-    function($scope, $log, Payee,  $mdDialog) {
+cloudBalanceControllers.controller('PayeeController', ['$scope', '$log', 'Payee','$mdDialog','$mdToast',
+    function($scope, $log, Payee,  $mdDialog,$mdToast) {
 
-	 	init();
+   	 	init();
 
         function init() {
             $scope.pageSize = 25;
             $scope.payees = [];
-            $scope.alerts = [];
             Payee.query(function(response) {
 	            $scope.payees = response;
 	        });
@@ -59,26 +58,26 @@ cloudBalanceControllers.controller('PayeeController', ['$scope', '$log', 'Payee'
         	Payee.remove({id: $scope.payees[index].name}, function(result) {
 
         		if (!angular.isUndefined(result.error)) {
-            		$scope.alerts.push({
-            		    type: 'warning',
-                        msg: result.error.message
-                    });
-                    return;
+
+                $mdToast.show($mdToast.simple().content(result.error.message));
+
             	} else {
 
-            		$scope.alerts.push({
-            			type: 'success',
-                        msg: result.success.message
-                    });
+                $mdToast.show(
+                     $mdToast.simple()
+                       .content(result.success.message)
+                   );
+
 
             	}
                 $scope.payees.splice(index, 1);
 
             }, function(message) {
-                $scope.alerts.push({
-                    type: 'danger',
-                    msg: message
-                });
+
+                $mdToast.show(
+                   $mdToast.simple()
+                     .content(message)
+                 );
             });
         }
 
@@ -105,11 +104,14 @@ cloudBalanceControllers.controller('PayeeController', ['$scope', '$log', 'Payee'
                 }
             }).then(function(payee) {
 
-            	$log.info('Modal dismissed with: ' + angular.toJson(payee));
+
                 var failFn = function(message) {
-                    $scope.alerts.push({
-                        msg: message
-                    });
+
+                  $mdToast.show(
+                     $mdToast.simple()
+                       .content(message)
+                   );
+
                 }
                 var successFn = function(data) {
 
@@ -124,18 +126,11 @@ cloudBalanceControllers.controller('PayeeController', ['$scope', '$log', 'Payee'
             });
 
         }
-
-
-
-        $scope.closeAlert = function(index) {
-            $scope.alerts.splice(index, 1);
-        };
-
     }
 ]);
 
-cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$resource','$scope',  '$log', 'hotkeys','$filter','Transaction','Payee','$mdDialog',
-    function($resource, $scope,  $log, hotkeys,$filter,Transaction,Payee,$mdDialog) {
+cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$resource','$scope',  '$log', 'hotkeys','$filter','Transaction','Payee','$mdDialog','$mdToast',
+    function($resource, $scope,  $log, hotkeys,$filter,Transaction,Payee,$mdDialog,$mdToast) {
 
 	    init();
 
@@ -144,7 +139,7 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
 	    	$scope.cashFlowPageSize = 6;
 	        $scope.pageSize = 25;
 	        $scope.layout = 'list';
-	        $scope.alerts = [];
+
 	        $scope.cashFlow = [];
 	        $scope.balance =0;
 
@@ -179,13 +174,12 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
             description: 'Show current balance',
             callback: function(event, hotkey) {
 
-            	$scope.alerts = [];
-            	$scope.alerts.push({
-                    type: 'success',
-                    msg: 'Your balance is '+$filter('currency')($scope.currentBalance(),'$') + ' and your available balance is '+$filter('currency')($scope.availableBalance(),'$')
-                });
 
-            	$scope.alerts.push();
+              var message = 'Your balance is '+$filter('currency')($scope.currentBalance(),'$') + ' and your available balance is '+$filter('currency')($scope.availableBalance(),'$')
+              $mdToast.show(
+                 $mdToast.simple()
+                   .content(message)
+               );
             }
         });
 
