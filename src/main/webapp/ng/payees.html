@@ -1,72 +1,57 @@
 <md-card>
-</md-card-content>
-        <div ng-repeat="alert in alerts" close="closeAlert($index)">
-            {{alert.msg}}
-            <md-button class="md-icon-button" aria-label="close" ng-click="closeAlert($index)">
-              <md-icon md-font-set="material-icons">clear</md-icon>
-            </md-button>
-        </div>
-
-
-
+    </md-card-content>
     <div ng-show="searching" layout="row" layout-align="start center" class="md-card-header">
-          <md-button class="md-icon-button" aria-label="Back" ng-click="searching=false;search='';">
+        <md-button class="md-icon-button" aria-label="Back" ng-click="searching=false;search='';">
             <md-icon md-font-set="material-icons">arrow_back</md-icon>
-          </md-button>
-          <md-input-container flex>
-              <label>Search</label>
-              <input ng-model="search" type="text" />
-          </md-input-container>
-        </div>
+        </md-button>
+        <md-input-container flex>
+            <label>Search</label>
+            <input ng-model="search" type="text" />
+        </md-input-container>
+    </div>
+    <div layout="row" ng-show="!searching" layout-align="end center" class="md-card-header">
+        <p>Payees</p>
+        <span flex></span>
+        <md-button class="md-icon-button" aria-label="Back" ng-click="searching=true">
+            <md-icon md-font-set="material-icons">search</md-icon>
+        </md-button>
+    </div>
+    <table class="mdDataTable">
+        <thead>
+            <tr>
+                <th class="leftAlignedColumn">Name</th>
+                <th class="leftAlignedColumn">Last</th>
+                <th class="leftAlignedColumn">This Month</th>
+                <th class="leftAlignedColumn">Total</th>
+                <th class="rightAlignedColumn">Action</th>
+            </tr>
+        </thead>
+        <tr style="text-align: left;" ng-repeat="p in payees | filter:search:strict | orderBy:'type' | limitTo:pageSize">
+            <td class="column leftAlignedColumn">
+                <div style="float: left; margin-right: 5px;" class="legend payee-type-{{p.type}}">{{p.type}}</div>
+                {{p.name}}
+            </td>
+            <td class="column leftAlignedColumn">{{p.lastAmount | currency}}</td>
+            <td class="column leftAlignedColumn">{{p.thisMonth | currency}}</td>
+            <td class="column leftAlignedColumn">{{p.total | currency}}</td>
 
 
-
-<div layout="row" ng-show="!searching" layout-align="end center">
-    <md-button class="md-icon-button" aria-label="Back" ng-click="searching=true">
-      <md-icon md-font-set="material-icons">search</md-icon>
-    </md-button>
-</div>
-
-
-<table class="mdDataTable">
-    <thead>
-        <tr>
-            <th class="leftAlignedColumn">Name</th>
-            <th class="leftAlignedColumn">Last</th>
-            <th class="leftAlignedColumn">This Month</th>
-            <th class="leftAlignedColumn">Total</th>
-            <th class="rightAlignedColumn">Action</th>
+            <td class="column rightAlignedColumn">
+                <md-button class="md-icon-button" aria-label="edit" ng-click="compose(p)">
+                    <md-icon md-font-set="material-icons">edit</md-icon>
+                </md-button>
+                <md-button class="md-icon-button" aria-label="delete" ng-click="remove($index)">
+                    <md-icon md-font-set="material-icons">delete</md-icon>
+                </md-button>
+            </td>
         </tr>
-    </thead>
-    <tr style="text-align: left;" ng-repeat="p in payees | filter:search:strict | orderBy:'type' | limitTo:pageSize">
-        <td class="column leftAlignedColumn">
-            <div style="float: left; margin-right: 5px;" class="legend payee-type-{{p.type}}">{{p.type}}</div>
-            {{p.name}}
-        </td>
-        <td class="column leftAlignedColumn">{{p.lastAmount | currency}}</td>
-        <td class="column leftAlignedColumn">{{p.thisMonth | currency}}</td>
-        <td class="column leftAlignedColumn">{{p.total | currency}}</td>
-
-
-        <td class="column rightAlignedColumn">
-          <md-button class="md-icon-button" aria-label="edit" ng-click="compose(p)">
-            <md-icon md-font-set="material-icons">edit</md-icon>
-          </md-button>
-            <md-button class="md-icon-button" aria-label="delete" ng-click="remove($index)">
-              <md-icon md-font-set="material-icons">delete</md-icon>
-            </md-button>
-        </td>
-    </tr>
-
-    </tbody>
-</table>
-
-<div layout-align="center center" layout="row">
+        </tbody>
+    </table>
+    <div layout-align="center center" layout="row">
         <md-button ng-hide="payees.length<=pageSize" class="md-primary md-raised" ng-click="pageSize= pageSize + 25">Show more</md-button>
-</div>
-</md-card-content>
+    </div>
+    </md-card-content>
 </md-card>
-
-<md-button class="md-fab md-fab-bottom-right" ng-click="compose()"  ng-scope md-ink-ripple aria-label="add">
+<md-button class="md-fab md-fab-bottom-right" ng-click="compose()" ng-scope md-ink-ripple aria-label="add">
     <md-icon aria-label="Menu" md-font-set="material-icons">add</md-icon>
 </md-button>

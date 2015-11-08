@@ -1,18 +1,5 @@
 <md-card>
     <md-card-content>
-
-        <div ng-repeat="alert in alerts" close="closeAlert($index)">
-
-            {{alert.msg}}
-
-            <md-button class="md-icon-button" aria-label="close" ng-click="closeAlert($index)">
-              <md-icon md-font-set="material-icons">clear</md-icon>
-            </md-button>
-
-
-        </div>
-
-
         <div ng-show="searching" layout="row" layout-align="start center" class="md-card-header">
               <md-button class="md-icon-button" aria-label="Back" ng-click="searching=false;search='';">
                 <md-icon md-font-set="material-icons">arrow_back</md-icon>
@@ -21,9 +8,7 @@
                   <label>Search</label>
                   <input ng-model="search" type="text" />
               </md-input-container>
-            </div>
-
-
+        </div>
         <div ng-show="!searching" layout="row" layout-align="start center">
             <p>Transactions</p>
             <span flex></span>
