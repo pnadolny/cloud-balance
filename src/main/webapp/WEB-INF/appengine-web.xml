@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <appengine-web-app xmlns="http://appengine.google.com/ns/1.0">
 	<application>mycloudbalance</application>
-	<version>2</version>
+	<version>3</version>
 	<threadsafe>true</threadsafe>
 	<!-- Configure java.util.logging -->
 	<system-properties>
@@ -14,17 +14,17 @@
         <handler file="/dos_api_denial.html" error-code="dos_api_denial"/>
         <handler file="/timeout.html" error-code="timeout"/>
     </static-error-handlers>
-	
+
 	<static-files>
 	    <include path="/*.html" />
-		 
+
 		<include path="/**.js" />
 		<include path="/**.css" />
 		<include path="/**.jpg" />
-    </static-files> 
-	 
+    </static-files>
+
 	 <admin-console>
   		<page name="Cloud Balance Admin Page" url="/admin.html" />
 	</admin-console>
-	 
+
 </appengine-web-app>
