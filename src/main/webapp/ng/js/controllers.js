@@ -3,7 +3,7 @@
 var cloudBalanceControllers = angular.module('cloudBalanceControllers', []);
 
 
-var transactionController = function($scope, transaction, payees,$mdDialog) {
+var transactionController = function($scope, transaction, payees, $mdDialog) {
 
     $scope.transaction = transaction;
     $scope.payees = payees;
@@ -27,65 +27,76 @@ var transactionController = function($scope, transaction, payees,$mdDialog) {
 };
 
 
-var ModalPayeeInstanceCtrl = function($scope, payee,$mdDialog) {
-	  $scope.isEditing = !angular.isUndefined(payee.name);
+var ModalPayeeInstanceCtrl = function($scope, payee, $mdDialog) {
+    $scope.isEditing = !angular.isUndefined(payee.name);
     $scope.payee = payee;
     $scope.ok = function() {
-      $mdDialog.hide($scope.payee);
+        $mdDialog.hide($scope.payee);
     };
     $scope.cancel = function() {
-      $mdDialog.cancel();
+        $mdDialog.cancel();
     };
 };
 
 
 
-cloudBalanceControllers.controller('PayeeController', ['$scope', '$log', 'Payee','$mdDialog','$mdToast',
-    function($scope, $log, Payee,  $mdDialog,$mdToast) {
+cloudBalanceControllers.controller('PayeeController', ['$scope', '$log', 'Payee', '$mdDialog', '$mdToast','hotkeys',
+    function($scope, $log, Payee, $mdDialog, $mdToast,hotkeys) {
 
-   	 	init();
+        init();
 
         function init() {
             $scope.pageSize = 25;
             $scope.payees = [];
             Payee.query(function(response) {
-	            $scope.payees = response;
-	        });
+                $scope.payees = response;
+            });
         }
+        hotkeys.bindTo($scope).add({
+            combo: 's',
+            description: 'Search',
+            callback: function(event, hotkey) {
+
+                $scope.searching = !$scope.searching;
+
+            }
+        });
 
         $scope.remove = function(index) {
 
-        	Payee.remove({id: $scope.payees[index].name}, function(result) {
+            Payee.remove({
+                id: $scope.payees[index].name
+            }, function(result) {
 
-        		if (!angular.isUndefined(result.error)) {
+                if (!angular.isUndefined(result.error)) {
 
-                $mdToast.show($mdToast.simple().content(result.error.message));
+                    $mdToast.show($mdToast.simple().content(result.error.message));
 
-            	} else {
+                } else {
 
-                $mdToast.show(
-                     $mdToast.simple()
-                       .content(result.success.message)
-                   );
+                    $mdToast.show(
+                        $mdToast.simple()
+                        .content(result.success.message)
+                    );
 
 
-            	}
+                }
                 $scope.payees.splice(index, 1);
 
             }, function(message) {
 
                 $mdToast.show(
-                   $mdToast.simple()
-                     .content(message)
-                 );
+                    $mdToast.simple()
+                    .content(message)
+                );
             });
         }
 
         $scope.compose = function(payee) {
 
-        	if (angular.isUndefined(payee)) {
+            if (angular.isUndefined(payee)) {
                 payee = {
-                    payeeType:'i',
+                    payeeType: 'i',
                     lastAmount: 0,
                     thisMonth: 0,
                     total: 0
@@ -107,17 +118,17 @@ cloudBalanceControllers.controller('PayeeController', ['$scope', '$log', 'Payee'
 
                 var failFn = function(message) {
 
-                  $mdToast.show(
-                     $mdToast.simple()
-                       .content(message)
-                   );
+                    $mdToast.show(
+                        $mdToast.simple()
+                        .content(message)
+                    );
 
                 }
                 var successFn = function(data) {
 
-                	Payee.query(function(response) {
-        	            $scope.payees = response;
-        	        });
+                    Payee.query(function(response) {
+                        $scope.payees = response;
+                    });
                 }
                 Payee.save(payee, successFn, failFn);
 
@@ -129,57 +140,61 @@ cloudBalanceControllers.controller('PayeeController', ['$scope', '$log', 'Payee'
     }
 ]);
 
-cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$resource','$scope',  '$log', 'hotkeys','$filter','Transaction','Payee','$mdDialog','$mdToast',
-    function($resource, $scope,  $log, hotkeys,$filter,Transaction,Payee,$mdDialog,$mdToast) {
+cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$resource', '$scope', '$log', 'hotkeys', '$filter', 'Transaction', 'Payee', '$mdDialog', '$mdToast',
+    function($resource, $scope, $log, hotkeys, $filter, Transaction, Payee, $mdDialog, $mdToast) {
 
-	    init();
+        init();
 
-	    function init() {
+        function init() {
 
-	    	$scope.cashFlowPageSize = 6;
-	        $scope.pageSize = 25;
-	        $scope.layout = 'list';
+            $scope.cashFlowPageSize = 6;
+            $scope.pageSize = 25;
+            $scope.layout = 'list';
 
-	        $scope.cashFlow = [];
-	        $scope.balance =0;
+            $scope.cashFlow = [];
+            $scope.balance = 0;
 
 
 
-	        $scope.transactions = [];
+            $scope.transactions = [];
 
-	        Transaction.query(function(response) {
-	            $scope.transactions = response;
-	        });
+            Transaction.query(function(response) {
+                $scope.transactions = response;
+            });
 
-	        $scope.$watch(
-	        		function () {return $scope.transactions;},
-	             	function(newValue, oldValue) {
-	        			 $scope.balance = $scope.currentBalance();
-	        		},true
-	       );
+            $scope.$watch(
+                function() {
+                    return $scope.transactions;
+                },
+                function(newValue, oldValue) {
+                    $scope.balance = $scope.currentBalance();
+                }, true
+            );
 
-	        $scope.$watch(
-	        		function () {return $scope.layout;},
-	             	function(newValue, oldValue) {
-	        			   if (newValue ==='grid' ) {
-	        				   $scope.computeCashFlow();
-	        			   }
-	        		},true
-	       );
+            $scope.$watch(
+                function() {
+                    return $scope.layout;
+                },
+                function(newValue, oldValue) {
+                    if (newValue === 'grid') {
+                        $scope.computeCashFlow();
+                    }
+                }, true
+            );
 
-	    };
+        };
 
-	    hotkeys.bindTo($scope).add({
+        hotkeys.bindTo($scope).add({
             combo: 'b',
             description: 'Show current balance',
             callback: function(event, hotkey) {
 
 
-              var message = 'Your balance is '+$filter('currency')($scope.currentBalance(),'$') + ' and your available balance is '+$filter('currency')($scope.availableBalance(),'$')
-              $mdToast.show(
-                 $mdToast.simple()
-                   .content(message)
-               );
+                var message = 'Your balance is ' + $filter('currency')($scope.currentBalance(), '$') + ' and your available balance is ' + $filter('currency')($scope.availableBalance(), '$')
+                $mdToast.show(
+                    $mdToast.simple()
+                    .content(message)
+                );
             }
         });
 
@@ -229,10 +244,10 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
             });
             var i = transactions.length;
             while (i--) {
-            	if (moment(transactions[i].date).isAfter(moment())) {
-                	return balance;
+                if (moment(transactions[i].date).isAfter(moment())) {
+                    return balance;
                 }
-            	balance = balance + Number(transactions[i].amount);
+                balance = balance + Number(transactions[i].amount);
             }
             return balance;
         }
@@ -245,10 +260,10 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
             });
             var i = transactions.length;
             while (i--) {
-            	if (moment(transactions[i].date).isAfter(moment()) && transactions[i].type=='i') {
-                	return balance;
+                if (moment(transactions[i].date).isAfter(moment()) && transactions[i].type == 'i') {
+                    return balance;
                 }
-            	balance = balance + Number(transactions[i].amount);
+                balance = balance + Number(transactions[i].amount);
             }
             return balance;
         }
@@ -256,7 +271,7 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
 
         $scope.computeCashFlow = function() {
 
-        	var transactionsCopy = angular.copy($scope.transactions)
+            var transactionsCopy = angular.copy($scope.transactions)
 
             transactionsCopy.sort(function(a, b) {
                 return moment(a.date).valueOf() - moment(b.date).valueOf();
@@ -273,7 +288,7 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
             var monthlyFuture = 0;
             var monthlyOther = 0;
             var amount;
-            var averageCashFlow =0;
+            var averageCashFlow = 0;
             var item = {};
             var i = transactionsCopy.length;
             while (i--) {
@@ -290,7 +305,7 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
                         other: monthlyOther,
                         cashFlow: monthlyCashFlow,
                         discretionary: monthlyDiscretionary,
-                        averageCashFlow:0
+                        averageCashFlow: 0
                     };
                     $log.log(item);
                     $scope.cashFlow.push(item);
@@ -330,7 +345,7 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
                 other: monthlyOther,
                 cashFlow: monthlyCashFlow,
                 discretionary: monthlyDiscretionary,
-                averageCashFlow:0
+                averageCashFlow: 0
             };
             $log.log(item);
             $scope.cashFlow.push(item);
@@ -341,10 +356,10 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
             var i = $scope.cashFlow.length;
             var counter = 1;
             while (i--) {
-            	var cashFlowItem = $scope.cashFlow[i];
-            	averageCashFlow = averageCashFlow + cashFlowItem.cashFlow;
-            	cashFlowItem.averageCashFlow = averageCashFlow / counter;
-            	counter++;
+                var cashFlowItem = $scope.cashFlow[i];
+                averageCashFlow = averageCashFlow + cashFlowItem.cashFlow;
+                cashFlowItem.averageCashFlow = averageCashFlow / counter;
+                counter++;
             }
 
 
@@ -355,31 +370,73 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
 
         $scope.compose = function(transaction, copy) {
 
-        	var payees = [];
-        	Payee.query(function(response) {
+            var payees = [];
+            Payee.query(function(response) {
 
 
-        		for (var i = 0; i < response.length; i++) {
-            	   switch (response[i].type) {
-            		case 'i': payees.push({name: response[i].name, typeName: 'Income', type: response[i].type, payee: response[i].name}); break;
-            		case 's': payees.push({name: response[i].name, typeName: 'Static',type: response[i].type,payee: response[i].name});break;
-            		case 'd': payees.push({name: response[i].name, typeName: 'Discretionary',type: response[i].type, payee: response[i].name});break;
-            		case 'f': payees.push({name: response[i].name, typeName: 'Future',type: response[i].type, payee: response[i].name});break;
-            		case 'o': payees.push({name: response[i].name, typeName: 'Other',type: response[i].type, payee: response[i].name});break;
-            		default:  payees.push({name: response[i].name, typeName: 'Unkown',type: response[i].type, payee: response[i].name});break;
-            		}
-            	}
+                for (var i = 0; i < response.length; i++) {
+                    switch (response[i].type) {
+                        case 'i':
+                            payees.push({
+                                name: response[i].name,
+                                typeName: 'Income',
+                                type: response[i].type,
+                                payee: response[i].name
+                            });
+                            break;
+                        case 's':
+                            payees.push({
+                                name: response[i].name,
+                                typeName: 'Static',
+                                type: response[i].type,
+                                payee: response[i].name
+                            });
+                            break;
+                        case 'd':
+                            payees.push({
+                                name: response[i].name,
+                                typeName: 'Discretionary',
+                                type: response[i].type,
+                                payee: response[i].name
+                            });
+                            break;
+                        case 'f':
+                            payees.push({
+                                name: response[i].name,
+                                typeName: 'Future',
+                                type: response[i].type,
+                                payee: response[i].name
+                            });
+                            break;
+                        case 'o':
+                            payees.push({
+                                name: response[i].name,
+                                typeName: 'Other',
+                                type: response[i].type,
+                                payee: response[i].name
+                            });
+                            break;
+                        default:
+                            payees.push({
+                                name: response[i].name,
+                                typeName: 'Unkown',
+                                type: response[i].type,
+                                payee: response[i].name
+                            });
+                            break;
+                    }
+                }
 
 
 
 
-        		$mdDialog.show({
+                $mdDialog.show({
                     templateUrl: 'transaction-dialog.html',
                     controller: transactionController,
                     resolve: {
                         transaction: function() {
 
-                        	if (angular.isUndefined(transaction)) {
+                            if (angular.isUndefined(transaction)) {
                                 var newTransaction = {
                                     memo: '',
                                     date: moment().toDate()
@@ -407,16 +464,16 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
                         });
                     }
                     var successFn = function(resp) {
-                    	if (angular.isUndefined(transaction.name)) {
-                    		transaction.name = resp.key.id;
+                        if (angular.isUndefined(transaction.name)) {
+                            transaction.name = resp.key.id;
                             $scope.transactions.push(transaction);
-                            if ($scope.layout =='grid') {
-                            	$scope.computeCashFlow();
+                            if ($scope.layout == 'grid') {
+                                $scope.computeCashFlow();
                             }
 
-                    	}
+                        }
                     }
-                    Transaction.save(transaction,successFn,failFn);
+                    Transaction.save(transaction, successFn, failFn);
 
 
                 }, function() {
@@ -427,10 +484,7 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
 
 
 
-
-
             });
-
 
 
 
@@ -458,8 +512,11 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
         }
 
         $scope.remove = function(t) {
-        	$scope.transactions.splice(findTransactionIndex(t), 1);
-        	var aTransaction = new Transaction({id: t.name, parentid: t.payee});
+            $scope.transactions.splice(findTransactionIndex(t), 1);
+            var aTransaction = new Transaction({
+                id: t.name,
+                parentid: t.payee
+            });
             aTransaction.$remove();
 
         }
@@ -468,23 +525,22 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
 
 
 
-cloudBalanceControllers.controller('UserController', ['$mdSidenav','$scope', '$location', '$window', 'User',
-    function($mdSidenav,$scope, $location, $window, User) {
+cloudBalanceControllers.controller('UserController', ['$mdSidenav', '$scope', '$location', '$window', 'User',
+    function($mdSidenav, $scope, $location, $window, User) {
 
         $scope.emailAddress = {};
         $scope.logoutURL = {};
 
         User.query(function(response) {
 
-						$scope.emailAddress = response[0].email;
+            $scope.emailAddress = response[0].email;
             $scope.logoutURL = response[0].logoutURL;
             var e = angular.element(document.querySelector('#signout'));
             e.html('<a title="Sign out" href="' + response[0].logoutURL + '">Sign out</a>');
         });
 
         $scope.toggleSidenav = function(menuId) {
-            $mdSidenav("left").toggle().then(function() {
-            });
+            $mdSidenav("left").toggle().then(function() {});
         };
 
         $scope.signout = function() {
