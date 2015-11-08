@@ -8,73 +8,14 @@ var transactionController = function($scope, transaction, payees,$mdDialog) {
     $scope.transaction = transaction;
     $scope.payees = payees;
     $scope.memento = angular.copy(transaction);
-    $scope.alerts = [];
 
-    $scope.closeAlert = function(index) {
-        $scope.alerts.splice(index, 1);
-    };
 
     $scope.ok = function() {
-
-        $scope.alerts = [];
-
-        if (/^[a-zA-Z0-9-() ]*$/.test(transaction.memo) == false) {
-            $scope.alerts.push({
-                type: 'danger',
-                msg: 'Memo contains illegal characters.'
-            });
-            return;
-        }
-
-
-        if (angular.isUndefined(transaction.amount)) {
-            $scope.alerts.push({
-                type: 'danger',
-                msg: 'Amount is missing'
-            });
-            return;
-        }
-
-
-        /*^ match beginning of string
-        -{0,1} optional negative sign
-        \d* optional digits
-        \.{0,1} optional decimal point
-        \d+ at least one digit
-        $/ match end of string
-
-
-        http://stackoverflow.com/questions/18082/validate-decimal-numbers-in-javascript-isnumeric
-        */
-
-        if (/^-{0,1}\d*\.{0,1}\d+$/.test(transaction.amount) == false) {
-            $scope.alerts.push({
-                type: 'danger',
-                msg: 'Amount must be a number'
-            });
-            return;
-        }
-
-        if (angular.isUndefined(transaction.payee)) {
-            $scope.alerts.push({
-                type: 'danger',
-                msg: 'Payee is missing'
-            });
-            return;
-        }
-        if (angular.isUndefined(transaction.date)) {
-            $scope.alerts.push({
-                type: 'danger',
-                msg: 'Date is missing'
-            });
-            return;
-        }
         for (var i = 0; i < $scope.payees.length; i++) {
             if (transaction.payee === $scope.payees[i].name) {
                 transaction.type = $scope.payees[i].type;
             }
         }
-
         $mdDialog.hide(transaction);
     };
     $scope.cancel = function() {

@@ -7,41 +7,42 @@
         </md-toolbar>
         <md-dialog-content>
           <md-content layout-padding>
-
-            <div ng-repeat="alert in alerts" close="closeAlert($index)">
-                {{alert.msg}}
-                <md-button class="md-icon-button" aria-label="close" ng-click="closeAlert($index)">
-                    <md-icon md-font-set="material-icons">clear</md-icon>
-                </md-button>
-            </div>
-
+            <md-datepicker name="date" required ng-model="transaction.date"></md-datepicker>
             <md-input-container>
                 <label>Amount</label>
-                <input id="amount" type="text" ng-model="transaction.amount" ng-model-options="{updateOn: 'blur'}" autocomplete="off" name="amount" required placeholder="Amount" />
+                <input name="amount" ng-pattern="/^-{0,1}\d*\.{0,1}\d+$/" required ng-model="transaction.amount" ng-model-options="{updateOn: 'blur'}" autocomplete="off" placeholder="Amount" />
+                <div ng-messages for="transactionForm.amount.$error" role="alert">
+                    <div ng-message="required">Required</div>
+                      <div ng-message="pattern">Must be a number.</div>
+                </div>
             </md-input-container>
-            <md-input-container>
+            <md-input-container ng-show="transaction.name.length>0" >
                 <label>Payee</label>
-                <md-select ng-model="transaction.payee" required>
-                  <md-option ng-repeat="payee in payees" value="{{payee.name}}">{{payee.name}}</md-option>
+                <input ng-model="transaction.payee" readonly>
+            </md-input-container>
+
+            <md-input-container ng-show="transaction.name ==null">
+                <label>Payee</label>
+                <md-select  name="payee" ng-model="transaction.payee" required>
+                  <md-option ng-repeat="payee in payees"  value="{{payee.name}}">{{payee.name}}</md-option>
                 </md-select>
-                </md-input-container>
+                <ng-messages for="transactionForm.payee.$error">
+                    <div ng-message="required">Required</div>
+                </ng-messages>
+            </md-input-container>
 
             <md-input-container>
                 <label>Memo</label>
-                <input id="amount" type="text" ng-model="transaction.memo" autocomplete="off" name="memo" required placeholder="Memo, Check Num, etc." />
+                <input type="text" ng-pattern="/^[a-zA-Z0-9-() ]*$/" ng-model="transaction.memo" name="memo" placeholder="Memo, Check Num, etc." />
+                <ng-messages for="transactionForm.memo.$error">
+                    <div ng-message="pattern">Memo contains illegal characters.</div>
+                </ng-messages>
             </md-input-container>
-
-
-
-            <md-datepicker id="date" ng-model="transaction.date" show-weeks="showWeeks"></md-datepicker>
-
           </md-content>
             <div class="md-actions">
                 <md-button class="md-raised md-primary" ng-click="ok()">Save</md-button>
                 <md-button class="md-raised md-primary" ng-click="cancel()">Cancel</md-button>
             </div>
         </md-dialog-content>
-
-
     </md-dialog>
 </form>

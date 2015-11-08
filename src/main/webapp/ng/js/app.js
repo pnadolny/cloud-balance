@@ -1,6 +1,7 @@
 'use strict';
 
-angular.module("cloudBalanceApp", ['ngResource', 'ngAnimate', 'chieffancypants.loadingBar',
+angular.module("cloudBalanceApp", ['ngResource', 'ngAnimate', 'ngMessages',
+'chieffancypants.loadingBar',
     'cloudBalanceServices', 'ngMaterial',
     'cloudBalanceControllers', 'cloudBalanceFilters', 'cloudBalance.routes',
     'cloudBalanceDirectives', 'cfp.hotkeys'
