@@ -41,8 +41,7 @@
     <tr style="text-align: left;" ng-repeat="p in payees | filter:search:strict | orderBy:'type' | limitTo:pageSize">
         <td class="column leftAlignedColumn">
             <div style="float: left; margin-right: 5px;" class="legend payee-type-{{p.type}}">{{p.type}}</div>
-
-            <a ng-click="compose(p);">{{p.name}}</a>
+            {{p.name}}
         </td>
         <td class="column leftAlignedColumn">{{p.lastAmount | currency}}</td>
         <td class="column leftAlignedColumn">{{p.thisMonth | currency}}</td>
@@ -50,6 +49,9 @@
 
 
         <td class="column rightAlignedColumn">
+          <md-button class="md-icon-button" aria-label="edit" ng-click="compose(p)">
+            <md-icon md-font-set="material-icons">edit</md-icon>
+          </md-button>
             <md-button class="md-icon-button" aria-label="delete" ng-click="remove($index)">
               <md-icon md-font-set="material-icons">delete</md-icon>
             </md-button>

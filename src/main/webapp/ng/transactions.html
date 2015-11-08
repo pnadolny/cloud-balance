@@ -96,17 +96,20 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="t in transactions  | addSortableDate | filter:search:strict | orderBy:'sortableDate':true | calcBalance | limitTo:pageSize ">
+                    <tr  ng-repeat="t in transactions  | addSortableDate | filter:search:strict | orderBy:'sortableDate':true | calcBalance | limitTo:pageSize ">
                         <td class="column leftAlignedColumn">{{t.date | date:'MM/dd/yyyy'}}</td>
                         <td class="column leftAlignedColumn">
                             <div style="float: left; margin-right: 5px;" class="legend payee-type-{{t.type}}">{{t.type}}</div>
-                            <a ng-click="compose(t,false);">{{t.payee}}</a>
+                            {{t.payee}}
                         </td>
                         <td class="column leftAlignedColumn">{{t.amount | currency}}</td>
                         <td class="column leftAlignedColumn">{{t.balance | currency}}</td>
 
 
                         <td class="column rightAlignedColumn">
+                          <md-button class="md-icon-button" aria-label="edit" ng-click="compose(t,false)">
+                            <md-icon md-font-set="material-icons">edit</md-icon>
+                          </md-button>
                           <md-button class="md-icon-button" aria-label="delete" ng-click="remove(t)">
                             <md-icon md-font-set="material-icons">delete</md-icon>
                           </md-button>

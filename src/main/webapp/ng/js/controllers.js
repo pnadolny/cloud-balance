@@ -28,49 +28,9 @@ var transactionController = function($scope, transaction, payees,$mdDialog) {
 
 
 var ModalPayeeInstanceCtrl = function($scope, payee,$mdDialog) {
-
-	$scope.isEditing = !angular.isUndefined(payee.name);
+	  $scope.isEditing = !angular.isUndefined(payee.name);
     $scope.payee = payee;
-    $scope.alerts = [];
-
-    $scope.closeAlert = function(index) {
-        $scope.alerts.splice(index, 1);
-    };
-
     $scope.ok = function() {
-
-        $scope.alerts = [];
-
-        if (angular.isUndefined(payee.name)) {
-            $scope.alerts.push({
-                type: 'danger',
-                msg: 'Payee Name is missing.'
-            });
-            return;
-        }
-        if (!angular.isString(payee.name)) {
-            $scope.alerts.push({
-                type: 'danger',
-                msg: 'Payee Name is not a string'
-            });
-            return;
-        }
-        if (/^[a-zA-Z0-9-() ]*$/.test(payee.name) == false) {
-            $scope.alerts.push({
-                type: 'danger',
-                msg: 'Payee Name contains illegal characters.'
-            });
-            return;
-        }
-        if (angular.isUndefined(payee.type)) {
-            $scope.alerts.push({
-                type: 'danger',
-                msg: 'Payee type is missing.'
-            });
-            return;
-        }
-
-
       $mdDialog.hide($scope.payee);
     };
     $scope.cancel = function() {
@@ -126,6 +86,7 @@ cloudBalanceControllers.controller('PayeeController', ['$scope', '$log', 'Payee'
 
         	if (angular.isUndefined(payee)) {
                 payee = {
+                    payeeType:'i',
                     lastAmount: 0,
                     thisMonth: 0,
                     total: 0

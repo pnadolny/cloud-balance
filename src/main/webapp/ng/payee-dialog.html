@@ -1,45 +1,32 @@
 <form name="payeeForm" novalidate>
   <md-dialog>
-
     <md-toolbar>
         <div class="md-toolbar-tools">
             <h2>Payee</h2>
         </div>
     </md-toolbar>
-
-
     <md-dialog-content>
       <md-content layout-padding>
-
-        <div ng-repeat="alert in alerts" close="closeAlert($index)">
-            {{alert.msg}}
-            <md-button class="md-icon-button" aria-label="close" ng-click="closeAlert($index)">
-                <md-icon md-font-set="material-icons">clear</md-icon>
-            </md-button>
-        </div>
-
         <md-input-container>
             <label>Payee</label>
-            <input ng-model="payee.name" autocomplete="off" name="name" required ng-readonly="isEditing" />
+            <input name="payee"  ng-pattern="/^[a-zA-Z0-9-() ]*$/"   ng-readonly="isEditing" required ng-model="payee.name" placeholder="Payee name" />
+            <div ng-messages for="payeeForm.amount.$error">
+                <div ng-message="required">Required</div>
+                <div ng-message="pattern">Contains illegal characters.</div>
+            </div>
         </md-input-container>
-
-
         <md-radio-group ng-model="payee.type">
               <md-radio-button value="i" class="md-primary">Income</md-radio-button>
               <md-radio-button value="s"> Static </md-radio-button>
               <md-radio-button value="d">Discretionary</md-radio-button>
               <md-radio-button value="f"> Future </md-radio-button>
               <md-radio-button value="o">Other</md-radio-button>
-
         </md-radio-group>
-
-
       </md-content>
           <div class="md-actions">
-              <md-button class="md-raised md-primary" ng-click="ok()">Save</md-button>
+              <md-button class="md-raised md-primary"  ng-disabled="payeeForm.$invalid || !payeeForm.$dirty" ng-click="ok()">Save</md-button>
               <md-button class="md-raised md-primary" ng-click="cancel()">Cancel</md-button>
           </div>
         </md-dialog-content>
-
 </md-dialog>
 </form>
