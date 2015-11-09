@@ -10,8 +10,21 @@
     <link rel="shortcut icon" href="../favicon.ico">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/0.11.4/angular-material.min.css">
+
+    <style>
+        [ng\:cloak],
+        [ng-cloak],
+        [data-ng-cloak],
+        [x-ng-cloak],
+        .ng-cloak,
+        .x-ng-cloak {
+            display: none !important;
+        }
+
+    </style>
+
 </head>
-<body>
+<body ng-cloak>
 
   <div flex layout="column">
       <md-toolbar layout="row">
@@ -37,16 +50,16 @@
               </p>
             </div>
 
-            <md-button class="md-primary md-raised" style="margin-top: 10px;" href="https://github.com/pnadolny/cloud-balance">View on Git
-            					Hub</a>
+            <md-button class="md-primary md-raised" style="margin-top: 10px;" href="https://github.com/pnadolny/cloud-balance">View source on GitHub</a>
     </div>
 
-
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-resource.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-animate.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-aria.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-route.min.js"></script>
+    <!-- Angular Dependencies -->
+   <script src="../node_modules/angular/angular.min.js"></script>
+   <script src="../node_modules/angular-route/angular-route.min.js"></script>
+   <script src="../node_modules/angular-resource/angular-resource.min.js"></script>
+   <script src="../node_modules/angular-messages/angular-messages.min.js"></script>
+   <script src="../node_modules/angular-aria/angular-aria.min.js"></script>
+   <script src="../node_modules/angular-animate/angular-animate.min.js"></script>
     <script src="app.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angular_material/0.11.4/angular-material.min.js"></script>
 </body>

@@ -10,7 +10,9 @@
               </md-input-container>
         </div>
         <div ng-show="!searching" layout="row" layout-align="start center">
-            <p>Transactions</p>
+            <p ng-show="layout == 'grid'">Cash Flow</p>
+            <p ng-show="layout == 'list'">Transactions</p>
+
             <span flex></span>
 
             <h2>{{balance | currency}}</h2>
@@ -29,7 +31,7 @@
         </div>
 
 
-        <div ng-show="layout == 'grid' ">
+        <div  ng-show="layout == 'grid'">
             <table class="mdDataTable">
                 <thead>
                     <tr>
