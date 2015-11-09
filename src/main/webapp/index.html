@@ -50,29 +50,24 @@
               </p>
             </div>
 
-            <md-button class="md-primary md-raised" style="margin-top: 10px;" href="https://github.com/pnadolny/cloud-balance">View source on GitHub</md-button>
 
-            <md-button class="md-primary md-raised" ng-href="https://github.com/pnadolny/cloud-balance/issues">Feedback</md-button>
 
             <p style="margin-top: 10px;">Screen shots</p>
-            <div layout="row" layout-align="start center">
-            <a href="/images/transactions.png">
-               <img src="/images/transactions.png" style="margin:5px" alt="Transactions" border="1" height="100" width="120">
-               <md-tooltip>Transactions</md-tooltip>
-            </a>
-            <a href="/images/transaction-edit.png">
-               <img src="/images/transaction-edit.png" style="margin:5px" alt="Transactions" border="1" height="100" width="120">
-               <md-tooltip>Transaction edit</md-tooltip>
-            </a>
-            <a href="/images/cashflow.png">
-               <img src="/images/cashflow.png" style="margin:5px" alt="Transactions" border="1" height="100" width="120">
-               <md-tooltip>Cash Flow</md-tooltip>
-            </a>
-            <a href="/images/payee.png">
-               <img src="/images/payee.png" style="margin:5px" alt="Transactions" border="1" height="100" width="120">
-               <md-tooltip>Payee</md-tooltip>
-            </a>
-          </div>
+
+            <ul layout="row" layout-align="start center">
+
+              <li style="list-style-type: none;" ng-repeat="(index, link) in [
+                      { href: '/images/transactions.png', text: 'Transactions' },
+                      {href: '/images/transaction-edit.png', text: 'Transaction Edit' },
+                      {href: '/images/cashflow.png', text: 'Cash Flow' },
+                      {href: '/images/payee.png', text: 'Payees' }]">
+                      <a ng-href="{{link.href}}">
+                         <img src="{{link.href}}" style="margin:5px" alt="{{link.text}}" border="1" height="100" width="120">
+                         <md-tooltip>{{link.text}}</md-tooltip>
+                      </a>
+              </li>
+            </ul>
+
 
           <p>
             Project built with <a href="http://www.angularjs.org">Angular JS</a> and
@@ -80,6 +75,9 @@
             <a href="https://cloud.google.com/appengine/">Google's app engine</a>
          </p>
 
+         <md-button class="md-primary md-raised" style="margin-top: 10px;" href="https://github.com/pnadolny/cloud-balance">View source on GitHub</md-button>
+
+         <md-button class="md-primary md-raised" ng-href="https://github.com/pnadolny/cloud-balance/issues">Feedback</md-button>
     </div>
 
     <!-- Angular Dependencies -->
