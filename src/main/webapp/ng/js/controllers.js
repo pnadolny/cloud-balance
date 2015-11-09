@@ -220,9 +220,7 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
             combo: 'f',
             description: 'Switch to grid view',
             callback: function(event, hotkey) {
-
                 $scope.layout = 'grid';
-
             }
         });
 
@@ -230,9 +228,7 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
             combo: 's',
             description: 'Search',
             callback: function(event, hotkey) {
-
                 $scope.searching = !$scope.searching;
-
             }
         });
 
@@ -456,12 +452,8 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
                     }
                 }).then(function(transaction) {
 
-                    $log.info('Modal dismissed with: ' + angular.toJson(transaction));
-
                     var failFn = function(status) {
-                        $scope.alerts.push({
-                            msg: status
-                        });
+
                     }
                     var successFn = function(resp) {
                         if (angular.isUndefined(transaction.name)) {
@@ -474,6 +466,7 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
                         }
                     }
                     Transaction.save(transaction, successFn, failFn);
+                    $mdToast.show($mdToast.simple().content('Item saved'));
 
 
                 }, function() {
@@ -492,9 +485,7 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
         };
 
 
-        $scope.closeAlert = function(index) {
-            $scope.alerts.splice(index, 1);
-        };
+
 
 
         var findTransactionIndex = function(t) {
@@ -511,13 +502,57 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
 
         }
 
-        $scope.remove = function(t) {
-            $scope.transactions.splice(findTransactionIndex(t), 1);
-            var aTransaction = new Transaction({
-                id: t.name,
-                parentid: t.payee
-            });
-            aTransaction.$remove();
+        $scope.copyToNextMonth = function(t) {
+
+            var copy = angular.copy(t);
+
+
+            copy.name=null;
+            copy.date = moment(copy.date).add(1, 'month').toDate();
+            var failFn = function(status) {
+
+            }
+            var successFn = function(resp) {
+
+                 $mdToast.show($mdToast.simple().content('Copied to next month'));
+                    copy.name = resp.key.id;
+                    $scope.transactions.push(copy);
+                    if ($scope.layout == 'grid') {
+                        $scope.computeCashFlow();
+                    }
+
+
+          }
+
+            Transaction.save(copy, successFn, failFn);
+
+
+        }
+        $scope.remove = function(t,ev) {
+
+          var confirm = $mdDialog.confirm()
+	            .title('Would you like to delete this item?')
+	            .content('The item will be permenently deleted.')
+	            .ariaLabel('Inactivate')
+	            .targetEvent(ev)
+	            .ok('Do it!')
+	            .cancel('Cancel');
+	        $mdDialog.show(confirm).then(function() {
+
+
+              $scope.transactions.splice(findTransactionIndex(t), 1);
+              var aTransaction = new Transaction({
+                  id: t.name,
+                  parentid: t.payee
+              });
+              aTransaction.$remove();
+              $mdToast.show($mdToast.simple().content('Item deleted'));
+
+
+	        }, function() {
+
+	        });
+
 
         }
     }
