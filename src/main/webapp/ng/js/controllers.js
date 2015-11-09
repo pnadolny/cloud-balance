@@ -1,6 +1,6 @@
 'use strict';
 
-var cloudBalanceControllers = angular.module('cloudBalanceControllers', []);
+var cloudBalanceControllers = angular.module('cloudBalance.controllers', []);
 
 
 var transactionController = function($scope, transaction, payees, $mdDialog) {
@@ -528,8 +528,8 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
 cloudBalanceControllers.controller('UserController', ['$mdSidenav', '$scope', '$location', '$window', 'User',
     function($mdSidenav, $scope, $location, $window, User) {
 
-        $scope.emailAddress = {};
-        $scope.logoutURL = {};
+        $scope.emailAddress = null;
+        $scope.logoutURL = null;
 
         User.query(function(response) {
 

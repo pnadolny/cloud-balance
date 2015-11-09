@@ -2,9 +2,9 @@
 
 angular.module("cloudBalanceApp", ['ngResource', 'ngAnimate', 'ngMessages',
 'chieffancypants.loadingBar',
-    'cloudBalanceServices', 'ngMaterial',
-    'cloudBalanceControllers', 'cloudBalanceFilters', 'cloudBalance.routes',
-    'cloudBalanceDirectives', 'cfp.hotkeys'
+    'cloudBalance.services', 'ngMaterial',
+    'cloudBalance.controllers', 'cloudBalance.filters', 'cloudBalance.routes',
+    'cloudBalance.directives', 'cfp.hotkeys'
 ]).config(function($httpProvider) {
 
     $httpProvider.defaults.transformResponse.push(function(responseData) {

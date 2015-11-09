@@ -1,6 +1,6 @@
 'use strict';
 
-var cloudBalanceServices = angular.module('cloudBalanceServices', ['ngResource']);
+var cloudBalanceServices = angular.module('cloudBalance.services', ['ngResource']);
 
 cloudBalanceServices.factory('User', function($resource) {
 	return	$resource('/ng/resources/user');

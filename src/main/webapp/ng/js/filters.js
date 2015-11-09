@@ -2,7 +2,7 @@
 
 /* Filters */
 
-var cloudBalanceFilters = angular.module('cloudBalanceFilters', []);
+var cloudBalanceFilters = angular.module('cloudBalance.filters', []);
 
 cloudBalanceFilters.filter('startFrom', function() {
     return function(input, start) {
@@ -16,7 +16,7 @@ cloudBalanceFilters.filter('calcBalance', function() {
         var i = input.length;
         var balance = 0;
         while (i--) {
-        	
+
             balance = balance + Number(input[i].amount);
             input[i].balance = balance;
         }

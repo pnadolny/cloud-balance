@@ -2,7 +2,7 @@
 
 
 
-var cloudBalanceDirectives = angular.module('cloudBalanceDirectives', []);
+var cloudBalanceDirectives = angular.module('cloudBalance.directives', []);
 
 
 cloudBalanceDirectives.directive('appName', function() {
@@ -10,5 +10,3 @@ cloudBalanceDirectives.directive('appName', function() {
         template: 'Cloud Balance'
     };
 });
-
-
