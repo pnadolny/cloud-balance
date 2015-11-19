@@ -6,18 +6,18 @@ An application to manage a cash account, transactions, and compute your cash flo
 
 
 ## Products
-- [App Engine][1]
+- [Google App Engine][1]
 
 ## Language
 - [Java][2]
+ 
+## Frameworks
 - [Angular JS][4]
-  [UI Bootstrap][10]
-- [Bootstrap][5]
-- [UI Bootstrap][8]
+- [Angular Material][12]
 - [AngularHotkeys.js][6]
 - [Moment.js][7]
 - [Maven 3.1.0 or higher][9]
-- [Holder.js][11]
+
 
 
 ## Setup Instructions (Maven)
@@ -38,3 +38,6 @@ An application to manage a cash account, transactions, and compute your cash flo
 [9]: http://maven.apache.org/
 [10]: http://angular-ui.github.io/bootstrap/
 [11]: http://imsky.github.io/holder
+[12]: https://material.angularjs.org/
+
+
