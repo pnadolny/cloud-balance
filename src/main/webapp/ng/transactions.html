@@ -12,7 +12,9 @@
 
 
         <div ng-show="!searching" layout="row" layout-align="start center">
-            <p>Transactions</p>
+            <p ng-show="layout == 'list'">Transactions</p>
+            <p ng-show="layout == 'grid'">Cash Flow</p>
+
             <span flex></span>
 
             <h2>{{balance | currency}}</h2>
