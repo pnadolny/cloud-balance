@@ -5,3 +5,6 @@ war/images/Thumbs.db
 war/WEB-INF/appengine-generated/local_db.bin
 war/WEB-INF/appengine-generated/datastore-indexes-auto.xml
 /target
+
+src/main/webapp/ng2/node_modules
+
