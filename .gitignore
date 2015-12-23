@@ -8,3 +8,9 @@ war/WEB-INF/appengine-generated/datastore-indexes-auto.xml
 
 src/main/webapp/ng2/node_modules
 
+
+src/main/webapp/ng2/app/app.component.js
+
+*.map
+
+src/main/webapp/ng2/app/boot.js
