@@ -5,5 +5,7 @@ export interface Transaction {
   transactionType: TransactionType;
   id: number;
   amount: number;
+  balance: number;
+  payeeName: string;
 }
 
