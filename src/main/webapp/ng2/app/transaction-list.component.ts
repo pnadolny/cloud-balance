@@ -1,10 +1,12 @@
 import {Component,OnInit} from 'angular2/core';
 import {Transaction} from './transaction';
 import {TransactionService} from './transaction.service';
+import {TransactionDetailComponent} from './transaction-detail.component';
 
 @Component({
     selector: 'transaction-list',
     template:`
+    	<transaction-detail [transaction]="selectedTransaction"></transaction-detail>
     	<table class="mdDataTable">
                 <thead>
                     <tr>
@@ -17,11 +19,11 @@ import {TransactionService} from './transaction.service';
                 </thead>
                 
                  <tbody>
-                    <tr *ngFor="#transaction of transactions">
+                    <tr *ngFor="#transaction of transactions" (click)="onSelect(transaction)">
                         <td class="column leftAlignedColumn">{{transaction.id}}</td>
                         <td class="column leftAlignedColumn">{{transaction.payeeName}}</td>
-                        <td class="column leftAlignedColumn">{{transaction.amount | currency}}</td>
-                        <td class="column leftAlignedColumn">{{transaction.balance| currency}}</td>
+                        <td class="column leftAlignedColumn">{{transaction.amount}}</td>
+                        <td class="column leftAlignedColumn">{{transaction.balance}}</td>
                     </tr>
                 </tbody>
                 
@@ -141,7 +143,8 @@ import {TransactionService} from './transaction.service';
     
     `],
     
-    providers: [TransactionService]
+    providers: [TransactionService],
+    directives: [TransactionDetailComponent]
 })
 
 
@@ -149,6 +152,7 @@ export class TransactionListComponent implements OnInit {
    
   constructor(private _transactionService: TransactionService) {}
   public transactions: Transaction[];
+  public selectedTransaction: Transaction;
   ngOnInit() {
 	  this.getTransactions();
 	}
@@ -156,4 +160,9 @@ export class TransactionListComponent implements OnInit {
 	  this._transactionService.getTransactions().then(transactions => this.transactions = transactions);
 	}
 	
+	onSelect(transaction: Transaction) { 
+		this.selectedTransaction= transaction; 
+	}	
+ 
+  
 }
