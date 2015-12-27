@@ -1,19 +1,19 @@
 import {Component} from 'angular2/core';
-import {Transaction} from './transaction';
-import {TransactionService} from './transaction.service';
+import {TransactionListComponent} from './transaction-list.component';
 
 @Component({
     selector: 'transactions',
     template:`
-
-    	<h1>Transaction</h1>
-
+    	<h1>Transactions! </h1>
+    	<transaction-list></transaction-list>
       `
-
+     ,
+	
+	directives: [TransactionListComponent]
 })
 
-
 export class TransactionComponent {
-  constructor(private _transactionService: TransactionService) {}
+  
+  
   
 }

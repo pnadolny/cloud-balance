@@ -1,6 +1,7 @@
 import {Component,OnInit} from 'angular2/core';
 import {Hero} from './hero';
 import {HeroDetailComponent} from './hero-detail.component';
+import {TransactionComponent} from './transaction.component';
 import {HeroService} from './hero.service';
 
 @Component({
@@ -14,6 +15,7 @@ import {HeroService} from './hero.service';
       </li>
       </ul>
       <my-hero-detail  [hero]="selectedHero"></my-hero-detail>
+      <transactions></transactions>
       `
       ,
       styles:[`
@@ -32,7 +34,7 @@ import {HeroService} from './hero.service';
         }
         .selected { background-color: #EEE; color: #369; }
       `],
-      directives: [HeroDetailComponent],
+      directives: [HeroDetailComponent,TransactionComponent],
 	  providers: [HeroService]
 })
 
