@@ -2,9 +2,11 @@ import {Component,OnInit} from 'angular2/core';
 import {Transaction} from './transaction';
 import {TransactionService} from './transaction.service';
 import {TransactionDetailComponent} from './transaction-detail.component';
+import {ToDate} from './pipes/pipes';
 
 @Component({
     selector: 'transaction-list',
+    pipes: [ToDate],
     template:`
     	<transaction-detail [transaction]="selectedTransaction"></transaction-detail>
     	<table class="mdDataTable">
@@ -21,9 +23,10 @@ import {TransactionDetailComponent} from './transaction-detail.component';
                  <tbody>
                     <tr *ngFor="#transaction of transactions" (click)="onSelect(transaction)">
                         <td class="column leftAlignedColumn">{{transaction.id}}</td>
+                        <td class="column leftAlignedColumn">{{transaction.date | toDate | date:'fullDate'}}</td>
                         <td class="column leftAlignedColumn">{{transaction.payeeName}}</td>
-                        <td class="column leftAlignedColumn">{{transaction.amount}}</td>
-                        <td class="column leftAlignedColumn">{{transaction.balance}}</td>
+                        <td class="column leftAlignedColumn">{{transaction.amount | currency:'USD':true:'4.2-2'}}</td>
+                        <td class="column leftAlignedColumn">{{transaction.balance | currency:'USD':true:'4.2-2'}}</td>
                     </tr>
                 </tbody>
                 
