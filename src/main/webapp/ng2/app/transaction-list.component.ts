@@ -13,6 +13,7 @@ import {ToDate} from './pipes/pipes';
                 <thead>
                     <tr>
                      	<th class="leftAlignedColumn">Id</th>
+                     	<th class="leftAlignedColumn">Date</th>
                      	<th class="leftAlignedColumn">Payee</th>
                      	<th class="leftAlignedColumn">Amount</th>
                      	<th class="leftAlignedColumn">Balance</th>
