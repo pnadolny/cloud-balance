@@ -10,7 +10,7 @@
     "angular-mocks": "1.4.7",
     "angular-route": "1.4.7",
     "angular-resource": "1.4.7",
-    "angular-material":"0.11.4",
+    "angular-material":"1.0.0",
     "ag-grid":"2.3.5",
     "moment":"2.10.6",
     "angular-hotkeys":"1.6.0",
