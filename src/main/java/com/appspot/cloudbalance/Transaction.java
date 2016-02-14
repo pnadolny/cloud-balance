@@ -19,112 +19,114 @@ import com.google.appengine.api.datastore.Query.FilterPredicate;
 
 public class Transaction {
 
-	public static final String KIND = "Transaction";
-	public static Entity createOrUpdateItem(String payeeName, String itemName,
-			String amount, String date, String memo, String type) {
+    public static final String KIND = "Transaction";
 
-		Date transactionDate = null;
-		try {
+    public static Entity createOrUpdateItem(String payeeName, String itemName,
+                                            String amount, String date, String memo, String type) {
 
-			transactionDate = new SimpleDateFormat(Constants.ISO_DATE_FORMAT).parse(date);
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+        Date transactionDate = null;
+        try {
 
-		Double transactionAmount = Double.valueOf(amount);
+            transactionDate = new SimpleDateFormat(Constants.ISO_DATE_FORMAT).parse(date);
+        } catch (ParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 
-		Entity payee = Payee.getPayee(payeeName);
-		Entity item =null;
-		if (itemName == null || "".equals(itemName)) {
-			item = new Entity(KIND, payee.getKey());
-			item.setProperty("date", transactionDate);
-			item.setProperty("memo", memo);
-			item.setProperty("payee", payeeName);
-			item.setProperty("amount", transactionAmount);
-			item.setProperty("marked", "n");
-		} else {
-			Key key = KeyFactory.createKey(payee.getKey(), KIND, Long.valueOf(itemName).longValue());
-			item = Util.findEntity(key);
-			if (amount != null && !"".equals(amount)) {
-				item.setProperty("amount", transactionAmount);
-				item.setProperty("date", transactionDate);
-				item.setProperty("memo",memo);
-			}
-		}
-		Util.persistEntity(item);
-		return item;
-	}
+        Double transactionAmount = Double.valueOf(amount);
 
-	public static Entity findTransaction(String payeeName, String itemName) {
-		Entity payee = Payee.getPayee(payeeName);
-		Key key = KeyFactory.createKey(payee.getKey(), KIND, Long.valueOf(itemName).longValue());
-		return Util.findEntity(key);
-	}
+        Entity payee = Payee.getPayee(payeeName);
+        Entity item = null;
+        if (itemName == null || "".equals(itemName)) {
+            item = new Entity(KIND, payee.getKey());
+            item.setProperty("date", transactionDate);
+            item.setProperty("memo", memo);
+            item.setProperty("payee", payeeName);
+            item.setProperty("amount", transactionAmount);
+            item.setProperty("marked", "n");
+        } else {
+            Key key = KeyFactory.createKey(payee.getKey(), KIND, Long.valueOf(itemName).longValue());
+            item = Util.findEntity(key);
+            if (amount != null && !"".equals(amount)) {
+                item.setProperty("amount", transactionAmount);
+                item.setProperty("date", transactionDate);
+                item.setProperty("memo", memo);
+            }
+        }
+        Util.persistEntity(item);
+        return item;
+    }
 
-
-	public static Iterable<Entity> getAllTransactions(Query.SortDirection direction) {
-		Iterable<Entity> entities = Util.listEntities(KIND, null, null,direction, null, null);
-		return entities;
-	}
-
-	public static List<Entity> getTransactions(String name) {
-		Query q = new Query(Transaction.KIND);
-
-		q.setAncestor(KeyFactory.createKey(KIND, name));
-		return Util.getDatastoreServiceInstance().prepare(q).asList(FetchOptions.Builder.withDefaults());
-	}
-	public static Iterable<Entity> getTransaction(String itemName) {
-		Iterable<Entity> entities = Util.listEntities(KIND, "memo", itemName,Query.SortDirection.DESCENDING, null, null);
-		return entities;
-	}
+    public static Entity findTransaction(String payeeName, String itemName) {
+        Entity payee = Payee.getPayee(payeeName);
+        Key key = KeyFactory.createKey(payee.getKey(), KIND, Long.valueOf(itemName).longValue());
+        return Util.findEntity(key);
+    }
 
 
-	public static Iterable<Entity> findTransactionsByMonth(int dayOfYear, String searchByMonth) {
+    public static Iterable<Entity> getAllTransactions(Query.SortDirection direction) {
+        Iterable<Entity> entities = Util.listEntities(KIND, null, null, direction, null, null);
+        return entities;
+    }
 
-		GregorianCalendar gcBegin = new GregorianCalendar();
-		gcBegin.set(GregorianCalendar.DAY_OF_YEAR, dayOfYear);
-		gcBegin.set(GregorianCalendar.MONTH, Integer.parseInt(searchByMonth));
-		gcBegin.set(GregorianCalendar.DAY_OF_MONTH, 1);
-		Filter dateMinFilter = new FilterPredicate("date",  FilterOperator.GREATER_THAN_OR_EQUAL, gcBegin.getTime());
+    public static List<Entity> getTransactions(String name) {
+        Query q = new Query(Transaction.KIND);
 
-		GregorianCalendar gcEnd= new GregorianCalendar();
-		gcEnd.set(GregorianCalendar.DAY_OF_YEAR, dayOfYear);
-		gcEnd.set(GregorianCalendar.MONTH, Integer.parseInt(searchByMonth));
-		gcEnd.set(GregorianCalendar.DAY_OF_MONTH, 31);
-		Filter dateMaxFilter =  new FilterPredicate("date", FilterOperator.LESS_THAN_OR_EQUAL,gcEnd.getTime());
+        q.setAncestor(KeyFactory.createKey(KIND, name));
+        return Util.getDatastoreServiceInstance().prepare(q).asList(FetchOptions.Builder.withDefaults());
+    }
 
-		Filter dateRangeFilter =
-		  CompositeFilterOperator.and(dateMinFilter, dateMaxFilter);
-		Query q = new Query(KIND).setFilter(dateRangeFilter);
-		q.addSort("date",Query.SortDirection.ASCENDING);
-		PreparedQuery pq = Util.getDatastoreServiceInstance().prepare(q);
-		return pq.asIterable();
-	}
+    public static Iterable<Entity> getTransaction(String itemName) {
+        Iterable<Entity> entities = Util.listEntities(KIND, "memo", itemName, Query.SortDirection.DESCENDING, null, null);
+        return entities;
+    }
 
-	public static String deleteItem(String payeeName, String itemKey) {
 
-		Entity entity = findTransaction(payeeName, itemKey);
-		if (entity != null) {
-			Util.deleteEntity(entity.getKey());
-			return Util.getJsonSuccessMessage("Transaction deleted successfully.");
-		} else {
-			return Util.getErrorMessage("Transaction not found");
-		}
-	}
+    public static Iterable<Entity> findTransactionsByMonth(int dayOfYear, String searchByMonth) {
 
-	public static String starItem(String payeeName, String itemKey) {
-		Entity entity = findTransaction(payeeName, itemKey);
-		if (entity != null) {
-			if ("y".equals(entity.getProperty("marked"))) {
-				entity.setProperty("marked", "n");
-			} else {
-				entity.setProperty("marked", "y");
-			}
-			Util.persistEntity(entity);
+        GregorianCalendar gcBegin = new GregorianCalendar();
+        gcBegin.set(GregorianCalendar.DAY_OF_YEAR, dayOfYear);
+        gcBegin.set(GregorianCalendar.MONTH, Integer.parseInt(searchByMonth));
+        gcBegin.set(GregorianCalendar.DAY_OF_MONTH, 1);
+        Filter dateMinFilter = new FilterPredicate("date", FilterOperator.GREATER_THAN_OR_EQUAL, gcBegin.getTime());
 
-			return ("Transaction starred successfully.");
-		} else
-			return ("Transaction not found");
-	}
+        GregorianCalendar gcEnd = new GregorianCalendar();
+        gcEnd.set(GregorianCalendar.DAY_OF_YEAR, dayOfYear);
+        gcEnd.set(GregorianCalendar.MONTH, Integer.parseInt(searchByMonth));
+        gcEnd.set(GregorianCalendar.DAY_OF_MONTH, 31);
+        Filter dateMaxFilter = new FilterPredicate("date", FilterOperator.LESS_THAN_OR_EQUAL, gcEnd.getTime());
+
+        Filter dateRangeFilter =
+                CompositeFilterOperator.and(dateMinFilter, dateMaxFilter);
+        Query q = new Query(KIND).setFilter(dateRangeFilter);
+        q.addSort("date", Query.SortDirection.ASCENDING);
+        PreparedQuery pq = Util.getDatastoreServiceInstance().prepare(q);
+        return pq.asIterable();
+    }
+
+    public static String deleteItem(String payeeName, String itemKey) {
+
+        Entity entity = findTransaction(payeeName, itemKey);
+        if (entity != null) {
+            Util.deleteEntity(entity.getKey());
+            return Util.getJsonSuccessMessage("Transaction deleted successfully.");
+        } else {
+            return Util.getErrorMessage("Transaction not found");
+        }
+    }
+
+    public static String starItem(String payeeName, String itemKey) {
+        Entity entity = findTransaction(payeeName, itemKey);
+        if (entity != null) {
+            if ("y".equals(entity.getProperty("marked"))) {
+                entity.setProperty("marked", "n");
+            } else {
+                entity.setProperty("marked", "y");
+            }
+            Util.persistEntity(entity);
+
+            return ("Transaction starred successfully.");
+        } else
+            return ("Transaction not found");
+    }
 }
