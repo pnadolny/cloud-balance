@@ -6,7 +6,7 @@
             </md-button>
             <md-input-container flex>
                 <label>Search</label>
-                <input ng-model="search" type="text" />
+                <input ng-model="search" type="text"/>
             </md-input-container>
         </div>
         <div layout="row" ng-show="!searching" layout-align="start center" class="md-card-header">
@@ -18,15 +18,16 @@
         </div>
         <table class="mdDataTable">
             <thead>
-                <tr>
-                    <th class="leftAlignedColumn">Name</th>
-                    <th class="leftAlignedColumn">Last</th>
-                    <th class="leftAlignedColumn">This Month</th>
-                    <th class="leftAlignedColumn">Total</th>
-                    <th class="rightAlignedColumn">Action</th>
-                </tr>
+            <tr>
+                <th class="leftAlignedColumn">Name</th>
+                <th class="leftAlignedColumn">Last</th>
+                <th class="leftAlignedColumn">This Month</th>
+                <th class="leftAlignedColumn">Total</th>
+                <th class="rightAlignedColumn">Action</th>
+            </tr>
             </thead>
-            <tr style="text-align: left;" ng-repeat="p in payees | filter:search:strict | orderBy:'type' | limitTo:pageSize">
+            <tr style="text-align: left;"
+                ng-repeat="p in payees | filter:search:strict | orderBy:'type' | limitTo:pageSize">
                 <td class="column leftAlignedColumn">
                     <div style="float: left; margin-right: 5px;" class="legend payee-type-{{p.type}}">{{p.type}}</div>
                     {{p.name}}
@@ -50,7 +51,9 @@
             </tbody>
         </table>
         <div layout-align="center center" layout="row">
-            <md-button ng-hide="payees.length<=pageSize" class="md-primary md-raised" ng-click="pageSize= pageSize + 25">Show more</md-button>
+            <md-button ng-hide="payees.length<=pageSize" class="md-primary md-raised"
+                       ng-click="pageSize= pageSize + 25">Show more
+            </md-button>
         </div>
     </md-card-content>
 </md-card>

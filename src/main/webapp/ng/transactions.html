@@ -6,7 +6,7 @@
             </md-button>
             <md-input-container flex>
                 <label>Search</label>
-                <input ng-model="search" type="text" />
+                <input ng-model="search" type="text"/>
             </md-input-container>
         </div>
 
@@ -38,39 +38,51 @@
         <div ng-show="layout == 'grid' ">
             <table class="mdDataTable">
                 <thead>
-                    <tr>
-                        <th class="leftAlignedColumn">Month</th>
-                        <th class="leftAlignedColumn">
-                            <div style="float: left; margin-right: 5px;" class="legend payee-type-i">I</div>Income</th>
-                        <th class="leftAlignedColumn">
+                <tr>
+                    <th class="leftAlignedColumn">Month</th>
+                    <th class="leftAlignedColumn">
+                        <div style="float: left; margin-right: 5px;" class="legend payee-type-i">I</div>
+                        Income
+                    </th>
+                    <th class="leftAlignedColumn">
 
-                            <div style="float: left; margin-right: 5px;" class="legend payee-type-s">S</div>Static</th>
-                        <th class="leftAlignedColumn">
-                            <div style="float: left; margin-right: 5px;" class="legend payee-type-d">D</div>Discretionary</th>
-                        <th class="leftAlignedColumn">
-                            <div style="float: left; margin-right: 5px;" class="legend payee-type-f">F</div>Future</th>
-                        <th class="leftAlignedColumn">
-                            <div style="float: left; margin-right: 5px;" class="legend payee-type-o">O</div>Other</th>
-                        <th class="leftAlignedColumn">Cash Flow</th>
-                        <th class="leftAlignedColumn">Average Cash Flow</th>
-                    </tr>
+                        <div style="float: left; margin-right: 5px;" class="legend payee-type-s">S</div>
+                        Static
+                    </th>
+                    <th class="leftAlignedColumn">
+                        <div style="float: left; margin-right: 5px;" class="legend payee-type-d">D</div>
+                        Discretionary
+                    </th>
+                    <th class="leftAlignedColumn">
+                        <div style="float: left; margin-right: 5px;" class="legend payee-type-f">F</div>
+                        Future
+                    </th>
+                    <th class="leftAlignedColumn">
+                        <div style="float: left; margin-right: 5px;" class="legend payee-type-o">O</div>
+                        Other
+                    </th>
+                    <th class="leftAlignedColumn">Cash Flow</th>
+                    <th class="leftAlignedColumn">Average Cash Flow</th>
+                </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="t in cashFlow | limitTo:cashFlowPageSize">
-                        <td class="column leftAlignedColumn">{{t.month}}</td>
-                        <td class="column leftAlignedColumn">{{t.income | currency}}</td>
-                        <td class="column leftAlignedColumn">{{t.static | currency}}</td>
-                        <td class="column leftAlignedColumn">{{t.discretionary | currency}}</td>
-                        <td class="column leftAlignedColumn">{{t.future | currency}}</td>
-                        <td class="column leftAlignedColumn">{{t.other | currency}}</td>
-                        <td class="column leftAlignedColumn">{{t.cashFlow | currency}}</td>
-                        <td class="column leftAlignedColumn">{{t.averageCashFlow | currency}}</td>
+                <tr ng-repeat="t in cashFlow | limitTo:cashFlowPageSize">
+                    <td class="column leftAlignedColumn">{{t.month}}</td>
+                    <td class="column leftAlignedColumn">{{t.income | currency}}</td>
+                    <td class="column leftAlignedColumn">{{t.static | currency}}</td>
+                    <td class="column leftAlignedColumn">{{t.discretionary | currency}}</td>
+                    <td class="column leftAlignedColumn">{{t.future | currency}}</td>
+                    <td class="column leftAlignedColumn">{{t.other | currency}}</td>
+                    <td class="column leftAlignedColumn">{{t.cashFlow | currency}}</td>
+                    <td class="column leftAlignedColumn">{{t.averageCashFlow | currency}}</td>
 
-                    </tr>
+                </tr>
                 </tbody>
             </table>
 
-            <md-button ng-hide="cashFlow.length<=cashFlowPageSize" class="md-primary md-raised" ng-click="cashFlowPageSize= cashFlowPageSize + 6">Show more</md-button>
+            <md-button ng-hide="cashFlow.length<=cashFlowPageSize" class="md-primary md-raised"
+                       ng-click="cashFlowPageSize= cashFlowPageSize + 6">Show more
+            </md-button>
 
         </div>
 
@@ -78,48 +90,51 @@
         <div ng-show="layout == 'list' ">
             <table class="mdDataTable" ng-show="layout == 'list' ">
                 <thead>
-                    <tr>
-                        <th class="leftAlignedColumn">Date</th>
-                        <th class="leftAlignedColumn">Payee</th>
-                        <th class="leftAlignedColumn">Amount</th>
-                        <th class="leftAlignedColumn">Balance</th>
-                        <th class="rightAlignedColumn">Action</th>
-                    </tr>
+                <tr>
+                    <th class="leftAlignedColumn">Date</th>
+                    <th class="leftAlignedColumn">Payee</th>
+                    <th class="leftAlignedColumn">Amount</th>
+                    <th class="leftAlignedColumn">Balance</th>
+                    <th class="rightAlignedColumn">Action</th>
+                </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="t in transactions  | addSortableDate | filter:search:strict | orderBy:'sortableDate':true | calcBalance | limitTo:pageSize ">
-                        <td class="column leftAlignedColumn">{{t.date | date:'MM/dd/yyyy'}}</td>
-                        <td class="column leftAlignedColumn">
-                            <div style="float: left; margin-right: 5px;" class="legend payee-type-{{t.type}}">{{t.type}}</div>
-                            <a ng-click="compose(t,false);">{{t.payee}}</a>
-                        </td>
-                        <td class="column leftAlignedColumn">{{t.amount | currency}}</td>
-                        <td class="column leftAlignedColumn">{{t.balance | currency}}</td>
+                <tr ng-repeat="t in transactions  | addSortableDate | filter:search:strict | orderBy:'sortableDate':true | calcBalance | limitTo:pageSize ">
+                    <td class="column leftAlignedColumn">{{t.date | date:'MM/dd/yyyy'}}</td>
+                    <td class="column leftAlignedColumn">
+                        <div style="float: left; margin-right: 5px;" class="legend payee-type-{{t.type}}">{{t.type}}
+                        </div>
+                        <a ng-click="compose(t,false);">{{t.payee}}</a>
+                    </td>
+                    <td class="column leftAlignedColumn">{{t.amount | currency}}</td>
+                    <td class="column leftAlignedColumn">{{t.balance | currency}}</td>
 
 
-                        <td class="column rightAlignedColumn">
-                            <md-button class="md-icon-button" aria-label="edit" ng-click="compose(t,false)">
-                                <md-icon md-font-set="material-icons">edit</md-icon>
-                                <md-tooltip>Edit...</md-tooltip>
-                            </md-button>
-                            <md-button class="md-icon-button" aria-label="delete" ng-click="remove(t,$event)">
-                                <md-icon md-font-set="material-icons">delete</md-icon>
-                                <md-tooltip>Delete</md-tooltip>
-                            </md-button>
-                            <md-button class="md-icon-button" aria-label="copy" ng-click="compose(t,true)">
-                                <md-icon md-font-set="material-icons">content_copy</md-icon>
-                                <md-tooltip>Copy...</md-tooltip>
-                            </md-button>
-                            <md-button class="md-icon-button" aria-label="copy" ng-click="copyToNextMonth(t)">
-                                <md-icon md-font-set="material-icons">filter_1</md-icon>
-                                <md-tooltip>Copy to next month</md-tooltip>
-                            </md-button>
-                        </td>
-                    </tr>
+                    <td class="column rightAlignedColumn">
+                        <md-button class="md-icon-button" aria-label="edit" ng-click="compose(t,false)">
+                            <md-icon md-font-set="material-icons">edit</md-icon>
+                            <md-tooltip>Edit...</md-tooltip>
+                        </md-button>
+                        <md-button class="md-icon-button" aria-label="delete" ng-click="remove(t,$event)">
+                            <md-icon md-font-set="material-icons">delete</md-icon>
+                            <md-tooltip>Delete</md-tooltip>
+                        </md-button>
+                        <md-button class="md-icon-button" aria-label="copy" ng-click="compose(t,true)">
+                            <md-icon md-font-set="material-icons">content_copy</md-icon>
+                            <md-tooltip>Copy...</md-tooltip>
+                        </md-button>
+                        <md-button class="md-icon-button" aria-label="copy" ng-click="copyToNextMonth(t)">
+                            <md-icon md-font-set="material-icons">filter_1</md-icon>
+                            <md-tooltip>Copy to next month</md-tooltip>
+                        </md-button>
+                    </td>
+                </tr>
                 </tbody>
             </table>
             <div layout-align="center center" layout="row">
-                <md-button ng-hide="transactions.length<=pageSize" class="md-primary md-raised" ng-click="pageSize= pageSize + 25">Show more</md-button>
+                <md-button ng-hide="transactions.length<=pageSize" class="md-primary md-raised"
+                           ng-click="pageSize= pageSize + 25">Show more
+                </md-button>
             </div>
             <p> Press ? for shortcuts</p>
         </div>
