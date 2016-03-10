@@ -3,15 +3,9 @@ package com.appspot.cloudbalance;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.TimeZone;
 import java.text.DateFormat;
 
 import javax.servlet.ServletException;
@@ -55,9 +49,13 @@ public class TransactionServlet  {
 	public String doGet(@QueryParam("transaction-searchby") String searchBy,
 			@QueryParam("q") String searchFor, @QueryParam("p") String searchParent) {
 
+
 		if (searchFor == null || searchFor.equals("")) {
 			Iterable<Entity> payees = Payee.getAllPayees();
+
+
 			List<Entity> transactions = new ArrayList<Entity>();
+
 			for (Entity payee :payees) {
 				logger.log(Level.INFO,payee.getKey().getName());
 				Query q = new Query(Transaction.KIND);

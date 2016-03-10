@@ -1,5 +1,7 @@
 <md-card>
     <md-card-content>
+
+
         <div ng-show="searching" layout="row" layout-align="start center" class="md-card-header">
             <md-button class="md-icon-button" aria-label="Back" ng-click="searching=false;search='';">
                 <md-icon md-font-set="material-icons">arrow_back</md-icon>
@@ -11,7 +13,7 @@
         </div>
 
 
-        <div ng-show="!searching" layout="row" layout-align="start center">
+        <div ng-show="!searching" layout="row" layout-align="start center" class="md-card-header">
             <p ng-show="layout == 'list'">Transactions</p>
             <p ng-show="layout == 'grid'">Cash Flow</p>
 
@@ -104,7 +106,7 @@
                     <td class="column leftAlignedColumn">
                         <div style="float: left; margin-right: 5px;" class="legend payee-type-{{t.type}}">{{t.type}}
                         </div>
-                        <a ng-click="compose(t,false);">{{t.payee}}</a>
+                        <div>{{t.payee}}</div>
                     </td>
                     <td class="column leftAlignedColumn">{{t.amount | currency}}</td>
                     <td class="column leftAlignedColumn">{{t.balance | currency}}</td>

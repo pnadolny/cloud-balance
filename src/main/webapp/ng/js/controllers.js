@@ -74,6 +74,8 @@ cloudBalanceControllers.controller('PayeeController', ['$scope', '$log', 'Payee'
 
                 } else {
 
+                    $scope.payees.splice(index, 1);
+
                     $mdToast.show(
                         $mdToast.simple()
                             .content(result.success.message)
@@ -81,7 +83,6 @@ cloudBalanceControllers.controller('PayeeController', ['$scope', '$log', 'Payee'
 
 
                 }
-                $scope.payees.splice(index, 1);
 
             }, function (message) {
 
@@ -108,6 +109,8 @@ cloudBalanceControllers.controller('PayeeController', ['$scope', '$log', 'Payee'
             $mdDialog.show({
                 templateUrl: 'payee-dialog.html',
                 controller: ModalPayeeInstanceCtrl,
+                fullscreen: true,
+
                 resolve: {
                     payee: function () {
                         return payee;
@@ -140,8 +143,8 @@ cloudBalanceControllers.controller('PayeeController', ['$scope', '$log', 'Payee'
     }
 ]);
 
-cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$resource', '$scope', '$log', 'hotkeys', '$filter', 'Transaction', 'Payee', '$mdDialog', '$mdToast',
-    function ($resource, $scope, $log, hotkeys, $filter, Transaction, Payee, $mdDialog, $mdToast) {
+cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$resource', '$scope', '$log', 'hotkeys', '$filter', 'Transaction', 'Payee', '$mdDialog', '$mdToast','$mdMedia',
+    function ($resource, $scope, $log, hotkeys, $filter, Transaction, Payee, $mdDialog, $mdToast, $mdMedia) {
 
         init();
 
@@ -420,10 +423,12 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
                     }
                 }
 
+                var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
                 $mdDialog.show({
                     templateUrl: 'transaction-dialog.html',
                     controller: transactionController,
+                    fullscreen: true,
                     resolve: {
                         transaction: function () {
 

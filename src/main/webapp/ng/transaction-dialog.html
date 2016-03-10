@@ -1,21 +1,29 @@
 <md-dialog aria-label="Transaction">
 
-        <form name="transactionForm" novalidate>
+    <form name="transactionForm" novalidate>
 
 
-            <md-toolbar>
-                <div class="md-toolbar-tools">
-                    <h2>Transaction</h2>
-                </div>
-                <span flex></span>
-            </md-toolbar>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>Transaction</h2>
+            </div>
+            <span flex></span>
+        </md-toolbar>
 
 
-            <md-dialog-content>
+        <md-dialog-content>
+
+            <div layout="row" layout-padding>
 
                 <md-datepicker name="date" required ng-model="transaction.date"></md-datepicker>
 
-                <md-input-container class="md-block">
+            </div>
+
+
+            <md-content layout-gt-sm="row" layout-padding>
+
+
+                <md-input-container class="md-block" flex>
                     <label>Amount</label>
                     <input name="amount" ng-pattern="/^-{0,1}\d*\.{0,1}\d+$/" required ng-model="transaction.amount"
                            ng-model-options="{updateOn: 'blur'}" autocomplete="off"
@@ -26,14 +34,11 @@
                     </div>
                 </md-input-container>
 
-                <md-input-container class="md-block" ng-show="transaction.name.length>0">
-                    <label>Payee</label>
-                    <input ng-model="transaction.payee" readonly>
-                </md-input-container>
 
-                <md-input-container class="md-block" ng-show="transaction.name ==null">
+
+                <md-input-container class="md-block">
                     <label>Payee</label>
-                    <md-select name="payee" ng-model="transaction.payee" required>
+                    <md-select name="payee" ng-model="transaction.payee" required ng-readonly="transaction.name.length>0">
                         <md-option ng-repeat="payee in payees" value="{{payee.name}}">{{payee.name}}</md-option>
                     </md-select>
                     <ng-messages for="transactionForm.payee.$error">
@@ -49,14 +54,19 @@
                     </ng-messages>
                 </md-input-container>
 
-                <div class="md-actions">
-                    <md-button class="md-raised md-primary"
-                               ng-disabled="transactionForm.$invalid || !transactionForm.$dirty" ng-click="ok()">Save
-                    </md-button>
-                    <md-button class="md-raised md-primary" ng-click="cancel()">Cancel</md-button>
-                </div>
-            </md-dialog-content>
-        </form>
+
+            </md-content>
+
+
+        </md-dialog-content>
+
+        <md-dialog-actions>
+            <md-button class="md-raised md-primary"
+                       ng-disabled="transactionForm.$invalid || !transactionForm.$dirty" ng-click="ok()">Save
+            </md-button>
+            <md-button class="md-raised md-primary" ng-click="cancel()">Cancel</md-button>
+        </md-dialog-actions>
+    </form>
 
 
 </md-dialog>

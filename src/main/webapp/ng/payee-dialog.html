@@ -26,13 +26,14 @@
                     <md-radio-button value="o">Other</md-radio-button>
                 </md-radio-group>
             </md-content>
-            <div class="md-actions">
-                <md-button class="md-raised md-primary" ng-disabled="payeeForm.$invalid || !payeeForm.$dirty"
-                           ng-click="ok()">Save
-                </md-button>
-                <md-button class="md-raised md-primary" ng-click="cancel()">Cancel</md-button>
-            </div>
+
         </md-dialog-content>
 
+        <md-dialog-actions>
+            <md-button class="md-raised md-primary" ng-disabled="payeeForm.$invalid || !payeeForm.$dirty"
+                       ng-click="ok()">Save
+            </md-button>
+            <md-button class="md-raised md-primary" ng-click="cancel()">Cancel</md-button>
+        </md-dialog-actions>
     </form>
 </md-dialog>
