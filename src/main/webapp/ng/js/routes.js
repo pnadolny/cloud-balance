@@ -17,8 +17,8 @@ angular.module('cloudBalance.routes', ['ngRoute'])
             templateUrl: 'payees.html',
             controller: 'PayeeController',
             resolve: {
-                payees: function (Payees) {
-                    return Payees.query().$promise;
+                payees: function (Payee) {
+                    return Payee.query().$promise;
                 }
             }
         })
