@@ -39,17 +39,14 @@ var ModalPayeeInstanceCtrl = function ($scope, payee, $mdDialog) {
 };
 
 
-cloudBalanceControllers.controller('PayeeController', ['$scope', '$log', 'Payee', '$mdDialog', '$mdToast', 'hotkeys',
-    function ($scope, $log, Payee, $mdDialog, $mdToast, hotkeys) {
+cloudBalanceControllers.controller('PayeeController', ['$scope', '$log', 'Payee', '$mdDialog', '$mdToast', 'hotkeys','payees',
+    function ($scope, $log, Payee, $mdDialog, $mdToast, hotkeys, payees) {
 
         init();
 
         function init() {
             $scope.pageSize = 25;
-            $scope.payees = [];
-            Payee.query(function (response) {
-                $scope.payees = response;
-            });
+            $scope.payees = payees;
         }
 
         hotkeys.bindTo($scope).add({
@@ -143,8 +140,9 @@ cloudBalanceControllers.controller('PayeeController', ['$scope', '$log', 'Payee'
     }
 ]);
 
-cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$resource', '$scope', '$log', 'hotkeys', '$filter', 'Transaction', 'Payee', '$mdDialog', '$mdToast','$mdMedia',
-    function ($resource, $scope, $log, hotkeys, $filter, Transaction, Payee, $mdDialog, $mdToast, $mdMedia) {
+cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$resource', '$scope', '$log', 'hotkeys',
+    '$filter', 'Transaction', 'Payee', '$mdDialog', '$mdToast','$mdMedia', 'transactions',
+    function ($resource, $scope, $log, hotkeys, $filter, Transaction, Payee, $mdDialog, $mdToast, $mdMedia, transactions) {
 
         init();
 
@@ -158,11 +156,7 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
             $scope.balance = 0;
 
 
-            $scope.transactions = [];
-
-            Transaction.query(function (response) {
-                $scope.transactions = response;
-            });
+            $scope.transactions = transactions;
 
             $scope.$watch(
                 function () {
@@ -423,8 +417,6 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
                     }
                 }
 
-                var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
-
                 $mdDialog.show({
                     templateUrl: 'transaction-dialog.html',
                     controller: transactionController,
@@ -466,7 +458,7 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
                         }
                     }
                     Transaction.save(transaction, successFn, failFn);
-                    $mdToast.show($mdToast.simple().content('Item saved'));
+                    $mdToast.show($mdToast.simple().content('Transaction saved'));
 
 
                 }, function () {

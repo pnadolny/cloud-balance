@@ -11,18 +11,14 @@
         </md-toolbar>
 
 
-        <md-dialog-content>
+        <md-dialog-content layout-padding>
 
-            <div layout="row" layout-padding>
 
+            <md-content>
                 <md-datepicker name="date" required ng-model="transaction.date"></md-datepicker>
+            </md-content>
 
-            </div>
-
-
-            <md-content layout-gt-sm="row" layout-padding>
-
-
+            <md-content>
                 <md-input-container class="md-block" flex>
                     <label>Amount</label>
                     <input name="amount" ng-pattern="/^-{0,1}\d*\.{0,1}\d+$/" required ng-model="transaction.amount"
@@ -33,12 +29,13 @@
                         <div ng-message="pattern">Must be a number.</div>
                     </div>
                 </md-input-container>
+            </md-content>
 
-
-
+            <md-content>
                 <md-input-container class="md-block">
                     <label>Payee</label>
-                    <md-select name="payee" ng-model="transaction.payee" required ng-readonly="transaction.name.length>0">
+                    <md-select name="payee" ng-model="transaction.payee" required
+                               ng-disabled="transaction.name!=null">
                         <md-option ng-repeat="payee in payees" value="{{payee.name}}">{{payee.name}}</md-option>
                     </md-select>
                     <ng-messages for="transactionForm.payee.$error">
@@ -46,6 +43,9 @@
                     </ng-messages>
                 </md-input-container>
 
+            </md-content>
+
+            <md-content>
                 <md-input-container class="md-block">
                     <label>Memo</label>
                     <input type="text" ng-pattern="/^[a-zA-Z0-9-() ]*$/" ng-model="transaction.memo" name="memo"/>
@@ -53,8 +53,6 @@
                         <div ng-message="pattern">Memo contains illegal characters.</div>
                     </ng-messages>
                 </md-input-container>
-
-
             </md-content>
 
 
