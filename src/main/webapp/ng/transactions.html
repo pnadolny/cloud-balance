@@ -14,8 +14,8 @@
 
 
         <div ng-show="!searching" layout="row" layout-align="start center" class="md-card-header">
-            <p ng-show="layout == 'list'">Transactions</p>
-            <p ng-show="layout == 'grid'">Cash Flow</p>
+            <h2 ng-show="layout == 'list'">Transactions</h2>
+            <h2 ng-show="layout == 'grid'">Cash Flow</h2>
 
             <span flex></span>
 
@@ -89,7 +89,9 @@
         </div>
 
 
-        <div ng-show="layout == 'list' ">
+
+        <div ng-show="layout == 'list' " style="height:500px;overflow-x:auto">
+
             <table class="mdDataTable" ng-show="layout == 'list' ">
                 <thead>
                 <tr>
@@ -101,7 +103,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr ng-repeat="t in transactions  | addSortableDate | filter:search:strict | orderBy:'sortableDate':true | calcBalance | limitTo:pageSize ">
+                <tr ng-repeat="t in transactions  | addSortableDate | filter:search:strict | orderBy:'sortableDate':true | calcBalance  ">
                     <td class="column leftAlignedColumn">{{t.date | date:'MM/dd/yyyy'}}</td>
                     <td class="column leftAlignedColumn">
                         <div style="float: left; margin-right: 5px;" class="legend payee-type-{{t.type}}">{{t.type}}
@@ -133,13 +135,19 @@
                 </tr>
                 </tbody>
             </table>
-            <div layout-align="center center" layout="row">
-                <md-button ng-hide="transactions.length<=pageSize" class="md-primary md-raised"
-                           ng-click="pageSize= pageSize + 25">Show more
-                </md-button>
-            </div>
-            <p> Press ? for shortcuts</p>
         </div>
+
+        <div layout="row">
+
+            <p> Press ? for shortcuts</p>
+            <p flex>
+
+            </p>
+            <p>{{transactions.length}} records</p>
+
+        </div>
+
+
     </md-card-content>
 
 </md-card>

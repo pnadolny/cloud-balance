@@ -88,7 +88,7 @@ cloudBalanceControllers.controller('PayeeController', ['$scope', '$log', 'Payee'
                         .content(message)
                 );
             });
-        }
+        };
 
         $scope.compose = function (payee) {
 
@@ -123,13 +123,13 @@ cloudBalanceControllers.controller('PayeeController', ['$scope', '$log', 'Payee'
                             .content(message)
                     );
 
-                }
+                };
                 var successFn = function (data) {
 
                     Payee.query(function (response) {
                         $scope.payees = response;
                     });
-                }
+                };
                 Payee.save(payee, successFn, failFn);
 
             }, function () {
@@ -149,7 +149,6 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
         function init() {
 
             $scope.cashFlowPageSize = 6;
-            $scope.pageSize = 25;
             $scope.layout = 'list';
 
             $scope.cashFlow = [];
@@ -178,7 +177,7 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
                 }, true
             );
 
-        };
+        }
 
         hotkeys.bindTo($scope).add({
             combo: 'b',
@@ -186,7 +185,7 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
             callback: function (event, hotkey) {
 
 
-                var message = 'Your balance is ' + $filter('currency')($scope.currentBalance(), '$') + ' and your available balance is ' + $filter('currency')($scope.availableBalance(), '$')
+                var message = 'Your balance is ' + $filter('currency')($scope.currentBalance(), '$') + ' and your available balance is ' + $filter('currency')($scope.availableBalance(), '$');
                 $mdToast.show(
                     $mdToast.simple()
                         .content(message)
@@ -496,7 +495,7 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
             copy.date = moment(copy.date).add(1, 'month').toDate();
             var failFn = function (status) {
 
-            }
+            };
             var successFn = function (resp) {
 
                 $mdToast.show($mdToast.simple().content('Copied to next month'));
@@ -507,12 +506,12 @@ cloudBalanceControllers.controller('SwitchableGridTransactionController', ['$res
                 }
 
 
-            }
+            };
 
             Transaction.save(copy, successFn, failFn);
 
 
-        }
+        };
         $scope.remove = function (t, ev) {
 
             var confirm = $mdDialog.confirm()
