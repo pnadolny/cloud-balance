@@ -1,22 +1,17 @@
 'use strict';
 
 angular.module("cloudBalanceApp", ['ngResource', 'ngAnimate', 'ngMessages',
-'chieffancypants.loadingBar',
+    'chieffancypants.loadingBar',
     'cloudBalance.services', 'ngMaterial',
     'cloudBalance.controllers', 'cloudBalance.filters', 'cloudBalance.routes',
     'cloudBalance.directives', 'cfp.hotkeys'
-]).config(function($httpProvider) {
+]).config(function ($httpProvider) {
 
-    $httpProvider.defaults.transformResponse.push(function(responseData) {
-        convertDateStringsToDates(responseData);
-        return responseData;
-    });
-}
-
-    .config(function(cfpLoadingBarProvider) {
-        cfpLoadingBarProvider.includeSpinner = true;
-    })
-
+        $httpProvider.defaults.transformResponse.push(function (responseData) {
+            convertDateStringsToDates(responseData);
+            return responseData;
+        });
+    }
 );
 
 
