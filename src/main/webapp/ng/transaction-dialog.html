@@ -34,7 +34,7 @@
             <md-content>
                 <md-input-container class="md-block">
                     <label>Payee</label>
-                    <md-select name="payee" ng-model="transaction.payee" required
+                    <md-select name="payee" ng-model="transaction.payee"
                                ng-disabled="transaction.name!=null">
                         <md-option ng-repeat="payee in payees" value="{{payee.name}}">{{payee.name}}</md-option>
                     </md-select>
@@ -54,7 +54,6 @@
                     </ng-messages>
                 </md-input-container>
             </md-content>
-
 
         </md-dialog-content>
 
