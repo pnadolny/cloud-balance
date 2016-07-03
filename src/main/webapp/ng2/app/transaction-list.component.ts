@@ -1,4 +1,5 @@
-import {Component,OnInit} from 'angular2/core';
+import {Component,OnInit} from '@angular/core';
+
 import {Transaction} from './transaction';
 import {TransactionService} from './transaction.service';
 import {TransactionDetailComponent} from './transaction-detail.component';

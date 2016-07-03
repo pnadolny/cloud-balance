@@ -27,145 +27,143 @@ import com.google.gson.Gson;
 
 @Path("transaction")
 @Produces("application/json")
-public class TransactionServlet  {
+public class TransactionServlet {
 
-  protected static String formatDate(Date d) {
+    private static final Logger logger = Logger.getLogger(TransactionServlet.class
+            .getCanonicalName());
 
-                          TimeZone tz = TimeZone.getTimeZone("UTC");
+    protected static String formatDate(Date d) {
 
-                          DateFormat df = new SimpleDateFormat(Constants.ISO_DATE_FORMAT);
+        TimeZone tz = TimeZone.getTimeZone("UTC");
 
-                          df.setTimeZone(tz);
+        DateFormat df = new SimpleDateFormat(Constants.ISO_DATE_FORMAT);
 
-                          return df.format(d);
+        df.setTimeZone(tz);
 
-              }
+        return df.format(d);
 
+    }
 
-	private static final Logger logger = Logger.getLogger(TransactionServlet.class
-			.getCanonicalName());
+    private static String writeJSON(Iterable<Entity> entities, Map<String, String> moreValues, Iterable<Entity> parents, String valueToNormalize) {
+        logger.log(Level.INFO, "creating JSON format object");
+        StringBuilder sb = new StringBuilder();
+        int i = 0;
+        sb.append("[");
+        for (Entity result : entities) {
+            Map<String, Object> properties = result.getProperties();
+            sb.append("{");
+            if (result.getKey().getName() == null)
+                sb.append("\"name\" : \"" + result.getKey().getId() + "\",");
+            else
+                sb.append("\"name\" : \"" + result.getKey().getName() + "\",");
+            for (String key : properties.keySet()) {
+                if (properties.get(key) == null) {
+                    sb.append("\"" + key + "\" : \"\",");
+                    continue;
+                }
+                if ("java.util.Date".equals(properties.get(key).getClass()
+                        .getCanonicalName())) {
 
-	@GET
-	public String doGet(@QueryParam("transaction-searchby") String searchBy,
-			@QueryParam("q") String searchFor, @QueryParam("p") String searchParent) {
+                    sb.append("\""
+                            + key
+                            + "\" : \""
+                            + formatDate((Date) properties.get(key)) + "\",");
+                } else {
+                    sb.append("\"" + key + "\" : \"" + properties.get(key)
+                            + "\",");
+                }
 
+            }
+            if (moreValues != null) {
+                for (String key : moreValues.keySet()) {
+                    if (properties.get(key) == null) {
+                        sb.append("\"" + key + "\" : \"\",");
+                        continue;
+                    }
 
-		if (searchFor == null || searchFor.equals("")) {
-			Iterable<Entity> payees = Payee.getAllPayees();
+                    sb.append("\"" + key + "\" : \"" + moreValues.get(key)
+                            + "\",");
+                }
+            }
 
+            for (Entity p : parents) {
 
-			List<Entity> transactions = new ArrayList<Entity>();
+                if (p.getKey().equals(result.getParent())) {
+                    sb.append("\"" + valueToNormalize + "\" : \"" + p.getProperty(valueToNormalize)
+                            + "\",");
+                }
+            }
 
-			for (Entity payee :payees) {
-				logger.log(Level.INFO,payee.getKey().getName());
-				Query q = new Query(Transaction.KIND);
-				q.setAncestor(payee.getKey());
-				for (Entity e: Util.getDatastoreServiceInstance().prepare(q).asIterable(FetchOptions.Builder.withDefaults())) {
-					transactions.add(e);
-				}
-			}
-			Collections.sort(transactions, new Comparator<Entity>() {
-				@Override
-				public int compare(Entity arg0, Entity arg1) {
-					Date d1 = (Date)arg0.getProperty("date");
-					Date d2 = (Date)arg1.getProperty("date");
-		    		return d1.compareTo(d2);
-				}});
-				return writeJSON(transactions,null,payees,"type");
-		} else if (searchBy == null && searchFor!=null) {
-			return Util.writeJSON(Transaction.findTransaction(searchParent,searchFor));
-		}
-		return "";
-	}
+            sb.deleteCharAt(sb.lastIndexOf(","));
+            sb.append("},");
+            i++;
+        }
+        if (i > 0) {
+            sb.deleteCharAt(sb.lastIndexOf(","));
+        }
+        sb.append("]");
+        logger.log(Level.INFO, sb.toString());
+        return sb.toString();
+    }
 
-	private static String writeJSON(Iterable<Entity> entities, Map<String,String> moreValues, Iterable<Entity> parents, String valueToNormalize) {
-		logger.log(Level.INFO, "creating JSON format object");
-		StringBuilder sb = new StringBuilder();
-		int i = 0;
-		sb.append("[");
-		for (Entity result : entities) {
-			Map<String, Object> properties = result.getProperties();
-			sb.append("{");
-			if (result.getKey().getName() == null)
-				sb.append("\"name\" : \"" + result.getKey().getId() + "\",");
-			else
-				sb.append("\"name\" : \"" + result.getKey().getName() + "\",");
-			for (String key : properties.keySet()) {
-				if (properties.get(key)==null) {
-					sb.append("\"" + key + "\" : \"\",");
-					continue;
-				}
-				if ("java.util.Date".equals(properties.get(key).getClass()
-						.getCanonicalName())) {
-
-					sb.append("\""
-							+ key
-							+ "\" : \""
-							+ formatDate((Date)properties.get(key)) + "\",");
-				} else {
-					sb.append("\"" + key + "\" : \"" + properties.get(key)
-							+ "\",");
-				}
-
-			}
-			if (moreValues!=null) {
-			for (String key : moreValues.keySet()) {
-				if (properties.get(key)==null) {
-					sb.append("\"" + key + "\" : \"\",");
-					continue;
-				}
-
-				sb.append("\"" + key + "\" : \"" + moreValues.get(key)
-						+ "\",");
-			}
-			}
-
-			for (Entity p: parents) {
-
-				if (p.getKey().equals(result.getParent())) {
-					sb.append("\"" + valueToNormalize + "\" : \"" + p.getProperty(valueToNormalize)
-							+ "\",");
-				}
-			}
-
-			sb.deleteCharAt(sb.lastIndexOf(","));
-			sb.append("},");
-			i++;
-		}
-		if (i > 0) {
-			sb.deleteCharAt(sb.lastIndexOf(","));
-		}
-		sb.append("]");
-		logger.log(Level.INFO, sb.toString());
-		return sb.toString();
-	}
-
-	@PUT
-	public String doPut(@QueryParam("name") String itemName, @QueryParam("memo") String memo,
-			@QueryParam("payee") String payeeName, @QueryParam("amount") String amount, @QueryParam("date") String date,
-			@QueryParam("transaction-type") String type)
-			 {
+    @GET
+    public String doGet(@QueryParam("transaction-searchby") String searchBy,
+                        @QueryParam("q") String searchFor, @QueryParam("p") String searchParent) {
 
 
-		Entity e = Transaction.createOrUpdateItem(payeeName, itemName, amount, date,memo,type);
-		logger.log(Level.INFO, String.format("Creating transaction key with id of %s and name of %s", new Object[] {e.getKey().getId(), e.getKey().getName()}));
+        if (searchFor == null || searchFor.equals("")) {
+            Iterable<Entity> payees = Payee.getAllPayees();
 
-		Gson gson = new Gson();
-		return gson.toJson(e);
 
-	}
+            List<Entity> transactions = new ArrayList<Entity>();
 
-	@DELETE
-	public String doDelete(@QueryParam("id") String itemKey, @QueryParam("parentid") String payeeName)
-			throws ServletException, IOException {
-		try {
-			return Transaction.deleteItem(payeeName, itemKey);
-		} catch (Exception e) {
-			return Util.getErrorMessage(e);
-		}
+            for (Entity payee : payees) {
+                logger.log(Level.INFO, payee.getKey().getName());
+                Query q = new Query(Transaction.KIND);
+                q.setAncestor(payee.getKey());
+                for (Entity e : Util.getDatastoreServiceInstance().prepare(q).asIterable(FetchOptions.Builder.withDefaults())) {
+                    transactions.add(e);
+                }
+            }
+            Collections.sort(transactions, new Comparator<Entity>() {
+                @Override
+                public int compare(Entity arg0, Entity arg1) {
+                    Date d1 = (Date) arg0.getProperty("date");
+                    Date d2 = (Date) arg1.getProperty("date");
+                    return d1.compareTo(d2);
+                }
+            });
+            return writeJSON(transactions, null, payees, "type");
+        } else if (searchBy == null && searchFor != null) {
+            return Util.writeJSON(Transaction.findTransaction(searchParent, searchFor));
+        }
+        return "";
+    }
 
-	}
+    @PUT
+    public String doPut(@QueryParam("name") String itemName, @QueryParam("memo") String memo,
+                        @QueryParam("payee") String payeeName, @QueryParam("amount") String amount, @QueryParam("date") String date,
+                        @QueryParam("transaction-type") String type) {
 
+
+        Entity e = Transaction.createOrUpdateItem(payeeName, itemName, amount, date, memo, type);
+        logger.log(Level.INFO, String.format("Creating transaction key with id of %s and name of %s", new Object[]{e.getKey().getId(), e.getKey().getName()}));
+
+        Gson gson = new Gson();
+        return gson.toJson(e);
+
+    }
+
+    @DELETE
+    public String doDelete(@QueryParam("id") String itemKey, @QueryParam("parentid") String payeeName)
+            throws ServletException, IOException {
+        try {
+            return Transaction.deleteItem(payeeName, itemKey);
+        } catch (Exception e) {
+            return Util.getErrorMessage(e);
+        }
+
+    }
 
 
 }
