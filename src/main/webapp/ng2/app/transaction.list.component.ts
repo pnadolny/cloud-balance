@@ -24,9 +24,19 @@ export class TransactionListComponent implements OnInit {
       this.getTransactions();
   }
 	getTransactions() {
-	  this._transactionService.getTransactions().then(transactions => this.transactions = transactions);
+        this._transactionService.getTransactions().then(transactions => this.transactions = transactions);
 	}
-	
+
+    computeBalance() {
+        var balance = 0;
+            for (var i = 0; i < this.transactions.length; i++) {
+                balance = balance + this.transactions[i].amount;
+                this.transactions[i].balance = balance;
+            }
+
+    }
+
+
 	onSelect(transaction: Transaction) { 
 		this.selectedTransaction= transaction; 
 	}	
