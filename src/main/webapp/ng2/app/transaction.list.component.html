@@ -1,0 +1,21 @@
+<transaction-detail [transaction]="selectedTransaction"></transaction-detail>
+<table class="mdDataTable">
+    <thead>
+    <tr>
+        <th class="leftAlignedColumn">Id</th>
+        <th class="leftAlignedColumn">Date</th>
+        <th class="leftAlignedColumn">Payee</th>
+        <th class="leftAlignedColumn">Amount</th>
+        <th class="leftAlignedColumn">Balance</th>
+    </tr>
+
+    </thead>
+
+    <tbody>
+    <tr *ngFor="let transaction of transactions" (click)="onSelect(transaction)">
+        <td class="column leftAlignedColumn">{{transaction.amount}}</td>
+    </tr>
+    </tbody>
+
+
+</table>

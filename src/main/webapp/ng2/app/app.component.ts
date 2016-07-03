@@ -5,12 +5,8 @@ import {TransactionComponent} from './transaction.component';
 
 @Component({
     selector: 'my-app',
-    template:`
-      <h1>{{title}}</h1>
-      <transactions></transactions>
-      `
-      ,
-      directives: [TransactionComponent],
+    templateUrl:'app/app.component.html',
+    directives: [TransactionComponent],
 })
 
 export class AppComponent {

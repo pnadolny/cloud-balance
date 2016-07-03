@@ -1,13 +1,10 @@
 import { Component } from '@angular/core';
 
-import {TransactionListComponent} from './transaction-list.component';
+import {TransactionListComponent} from './transaction.list.component';
 
 @Component({
     selector: 'transactions',
-    template:`
-    	<transaction-list></transaction-list>
-      `
-     ,
+    templateUrl:'app/transaction.component.html',
 	directives: [TransactionListComponent]
 })
 
