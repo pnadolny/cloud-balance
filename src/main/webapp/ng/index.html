@@ -5,15 +5,13 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cloud Balance</title>
-    <link rel="stylesheet" href="../node_modules/angular-material/angular-material.min.css">
-    <link rel="stylesheet" href="../node_modules/angular-loading-bar/build/loading-bar.css">
 
-
-    <!-- Angular Material CSS using GitCDN to load directly from `bower-material/master` -->
-    <link rel="stylesheet" href="https://gitcdn.link/repo/angular/bower-material/master/angular-material.css">
-    <link rel="stylesheet" href="../node_modules/angular-hotkeys/build/hotkeys.css">
-    <link rel="stylesheet" href="css/default.css" />
-    <link rel="stylesheet" href="css/md-data-table.css" />
+    <link rel='stylesheet' href='//cdnjs.cloudflare.com/ajax/libs/angular-loading-bar/0.9.0/loading-bar.min.css'
+          type='text/css' media='all'/>
+    <link rel="stylesheet" href="https://cdn.gitcdn.link/cdn/angular/bower-material/v1.1.1/angular-material.css">
+    <link rel="stylesheet" href="css/hotkeys.min.css">
+    <link rel="stylesheet" href="css/default.css"/>
+    <link rel="stylesheet" href="css/md-data-table.css"/>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
         [ng\:cloak],
@@ -24,76 +22,78 @@
         .x-ng-cloak {
             display: none !important;
         }
+
         body {
-          background-color: #81838B;
+            background-color: #81838B;
         }
     </style>
 </head>
 
 <body ng-cloak layout="row" ng-controller="UserController">
 
-    <noscript>
-        <div style="width: 22em; position: absolute; left: 50%; margin-left: -11em; color: red; background-color: white; border: 1px solid red; padding: 4px; font-family: sans-serif">
-            Your web browser must have JavaScript enabled in order for this application to display correctly.
-        </div>
-    </noscript>
-
-     <md-sidenav layout="column" flex class="md-sidenav-left md-whiteframe-z2" md-component-id="left" layout-fill>
-        <md-toolbar class="md-medium">
-            <div class="md-toolbar-tools">
-                <span flex></span>
-            </div>
-        </md-toolbar>
-        <md-button ng-href="#/transactions">
-            Transactions
-        </md-button>
-        <md-divider></md-divider>
-        <md-button ng-href="#/payees">
-            Payees
-        </md-button>
-        <md-divider></md-divider>
-    </md-sidenav>
-
-    <div flex layout="column">
-        <md-toolbar layout="row">
-            <div class="md-toolbar-tools">
-                <md-button ng-click="toggleSidenav('left')" class="md-icon-button">
-                    <md-icon aria-label="Menu" md-font-set="material-icons">menu</md-icon>
-                </md-button>
-                <p>Cloud Balance</p>
-                <span flex></span>
-                <md-button ng-href="#">{{emailAddress}}</md-button>
-                <md-button id="signout"></md-button>
-            </div>
-        </md-toolbar>
-        <div layout="column" flex style="overflow-y: scroll; padding:0px 0px 0px 0px">
-            <div id="content" ng-view flex></div>
-        </div>
+<noscript>
+    <div style="width: 22em; position: absolute; left: 50%; margin-left: -11em; color: red; background-color: white; border: 1px solid red; padding: 4px; font-family: sans-serif">
+        Your web browser muhttps://material.angularjs.org/1.1.1/docs.cssst have JavaScript enabled in order for this
+        application to display correctly.
     </div>
+</noscript>
+
+<md-sidenav layout="column" flex class="md-sidenav-left md-whiteframe-z2" md-component-id="left" layout-fill>
+    <md-toolbar class="md-medium">
+        <div class="md-toolbar-tools">
+            <span flex></span>
+        </div>
+    </md-toolbar>
+    <md-button ng-href="#/transactions">
+        Transactions
+    </md-button>
+    <md-divider></md-divider>
+    <md-button ng-href="#/payees">
+        Payees
+    </md-button>
+    <md-divider></md-divider>
+</md-sidenav>
+
+<div flex layout="column">
+    <md-toolbar layout="row">
+        <div class="md-toolbar-tools">
+            <md-button ng-click="toggleSidenav('left')" class="md-icon-button">
+                <md-icon aria-label="Menu" md-font-set="material-icons">menu</md-icon>
+            </md-button>
+            <p>Cloud Balance</p>
+            <span flex></span>
+            <md-button ng-href="#">{{emailAddress}}</md-button>
+            <md-button id="signout"></md-button>
+        </div>
+    </md-toolbar>
+    <div layout="column" flex style="overflow-y: scroll; padding:0px 0px 0px 0px">
+        <div id="content" ng-view flex></div>
+    </div>
+</div>
 
 
-    <!-- Angular Dependencies -->
-   <script src="../node_modules/angular/angular.min.js"></script>
-   <script src="../node_modules/angular-route/angular-route.min.js"></script>
-   <script src="../node_modules/angular-resource/angular-resource.min.js"></script>
-   <script src="../node_modules/angular-messages/angular-messages.min.js"></script>
-   <script src="../node_modules/angular-aria/angular-aria.min.js"></script>
-   <script src="../node_modules/angular-animate/angular-animate.min.js"></script>
-   <!-- Other Dependencies -->
-    <script src="../node_modules/angular-loading-bar/build/loading-bar.min.js"></script>
-    <script src="../node_modules/moment/min/moment.min.js"></script>
-    <script src="../node_modules/angular-hotkeys/build/hotkeys.min.js"></script>
+<!-- Angular Dependencies -->
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-route.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-resource.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
+<script type='text/javascript'
+        src='//cdnjs.cloudflare.com/ajax/libs/angular-loading-bar/0.9.0/loading-bar.min.js'></script>
+
+<script src="js/moment.min.js"></script>
+<script src="js/hotkeys.min.js"></script>
 
 
-    <!-- Angular Material Javascript using GitCDN to load directly from `bower-material/master` -->
-    <script src="https://gitcdn.link/repo/angular/bower-material/master/angular-material.js"></script>
+<script src="https://cdn.gitcdn.link/cdn/angular/bower-material/v1.1.1/angular-material.js"></script>
 
-    <script src="js/app.js"></script>
-    <script src="js/services.js"></script>
-    <script src="js/controllers.js"></script>
-    <script src="js/filters.js"></script>
-    <script src="js/routes.js"></script>
-    <script src="js/directives.js"></script>
+<script src="js/app.js"></script>
+<script src="js/services.js"></script>
+<script src="js/controllers.js"></script>
+<script src="js/filters.js"></script>
+<script src="js/routes.js"></script>
+<script src="js/directives.js"></script>
 
 
 </body>

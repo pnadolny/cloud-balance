@@ -102,7 +102,6 @@ public class TransactionServlet {
             sb.deleteCharAt(sb.lastIndexOf(","));
         }
         sb.append("]");
-        logger.log(Level.INFO, sb.toString());
         return sb.toString();
     }
 

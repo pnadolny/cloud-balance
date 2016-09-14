@@ -4,20 +4,14 @@ import {Transaction} from './transaction';
 
 @Component({
     selector: 'transaction-detail',
-    template:`
-    
-     <div *ngIf="transaction">
-	    <div>
-	      <label>id: </label>
-	      <input [(ngModel)]="transaction.amount" placeholder="name"/>
-	    </div>
-     </div>
-    
-      `,
+    templateUrl:'app/transaction.detail.component.html',
     inputs: ['transaction']
 })
 
 export class TransactionDetailComponent {
  	public transaction: Transaction;
- 	
+
+    save() {
+        alert('x');
+    }
 }

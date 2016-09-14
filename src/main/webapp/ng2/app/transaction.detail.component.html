@@ -1,0 +1,7 @@
+<div *ngIf="transaction">
+    <div>
+        <label>id: </label>
+        <input [(ngModel)]="transaction.amount"/>
+        <button type="button" (click)="save()">Click Me!</button>
+    </div>
+</div>

@@ -10,7 +10,7 @@ import {TransactionComponent} from './transaction.component';
 })
 
 export class AppComponent {
-	public title = 'Cloud Balance';
+	public title = 'Cloud Balance v2';
 }
 
 

@@ -5,5 +5,7 @@ export interface Transaction {
   date: date;
   amount: number;
   type: string;
+  balance: number;
+
 }
 
