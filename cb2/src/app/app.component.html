@@ -1,30 +1,32 @@
-<h1>
-  {{title}}
-</h1>
+<nav class="navbar navbar-light bg-faded">
+  <h1 class="navbar-brand mb-0">{{title}}</h1>
+</nav>
 
-<table class="mdDataTable">
-  <thead>
-  <tr>
-    <th class="leftAlignedColumn">Date</th>
-    <th class="leftAlignedColumn">Payee</th>
-    <th class="leftAlignedColumn">Type</th>
-    <th class="leftAlignedColumn">Amount</th>
-    <th class="leftAlignedColumn">Balance</th>
-  </tr>
+<div class="table-responsive">
+  <table class="table table-striped table-hover table-sm">
+    <thead class="thead-inverse">
+    <tr>
+      <th class="leftAlignedColumn">Date</th>
+      <th class="leftAlignedColumn">Payee</th>
+      <th class="leftAlignedColumn">Type</th>
+      <th class="leftAlignedColumn">Amount</th>
+      <th class="leftAlignedColumn">Balance</th>
+    </tr>
 
-  </thead>
+    </thead>
 
-  <tbody>
-  <tr *ngFor="let transaction of transactions" (click)="onSelect(transaction)">
-    <td class="column leftAlignedColumn">{{transaction.date}}</td>
-    <td class="column leftAlignedColumn">{{transaction.payee}}</td>
-    <td class="column leftAlignedColumn">{{transaction.type}}</td>
-    <td class="column leftAlignedColumn">{{transaction.amount}}</td>
-    <td class="column leftAlignedColumn">{{transaction.balance}}</td>
+    <tbody>
+    <tr *ngFor="let transaction of transactions" (click)="onSelect(transaction)">
+      <td class="column leftAlignedColumn">{{transaction.date | date:'shortDate'}}</td>
+      <td class="column leftAlignedColumn">{{transaction.payee}}</td>
+      <td class="column leftAlignedColumn">{{transaction.type}}</td>
+      <td class="column leftAlignedColumn">{{transaction.amount}}</td>
+      <td class="column leftAlignedColumn">{{transaction.balance}}</td>
 
-  </tr>
-  </tbody>
+    </tr>
+    </tbody>
 
 
-</table>
+  </table>
 
+</div>
