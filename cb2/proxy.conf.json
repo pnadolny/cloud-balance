@@ -1,9 +1,5 @@
 {
-  "/webservices": {
-    "target": "http://localhost:8080",
-    "secure": false
-  },
-  "/webservices2.0": {
+  "/ng/resources": {
     "target": "http://localhost:8080",
     "secure": false
   }
