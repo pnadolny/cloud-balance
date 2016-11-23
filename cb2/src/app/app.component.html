@@ -2,6 +2,16 @@
   <h1 class="navbar-brand mb-0">{{title}}</h1>
 </nav>
 
+<div *ngIf="transaction">
+
+  <input type="text" [(ngModel)]="transaction.amount">
+
+  <button class="btn btn-link" (click)="transaction=null">Close</button>
+  <button class="btn btn-link" (click)="save(transaction)">Save</button>
+
+
+</div>
+
 <div class="table-responsive">
   <table class="table table-striped table-hover table-sm">
     <thead class="thead-inverse">
@@ -24,6 +34,7 @@
       <td>{{transaction.type}}</td>
       <td>{{transaction.amount}}</td>
       <td>{{transaction.balance}}</td>
+      <button class="btn btn-link" (click)="edit(transaction)">Edit</button>
       <button class="btn btn-link" (click)="delete(transaction)">Delete</button>
     </tr>
     </tbody>

@@ -14,6 +14,8 @@ import {List} from "immutable";
 export class AppComponent implements OnInit {
   title = 'Transactions';
   _transactions: BehaviorSubject<List<Transaction>> = new BehaviorSubject(List([]));
+  transaction: Transaction;
+
 
 
   constructor(private appService: AppService) {
@@ -23,8 +25,28 @@ export class AppComponent implements OnInit {
 
     this.appService.get().subscribe(result => {
       let transactions = (result.json() as Transaction[]);
-      this._transactions.next(List(transactions));
+
+      let t = List<Transaction>(transactions);
+      this._transactions.next(t);
     });
+
+
+    this._transactions.subscribe(transactions => {
+
+      transactions.reverse();
+
+      for (let t of transactions.toArray()) {
+
+          let tt = t as Transaction;
+
+          console.log(tt.amount);
+
+      }
+
+
+
+
+    })
   }
 
   get transactions() {
@@ -42,6 +64,19 @@ export class AppComponent implements OnInit {
 
     })
 
+  }
+  edit(transaction: Transaction) {
+    this.transaction = transaction;
+  }
+
+  save(transaction: Transaction) {
+
+    this.appService.save(transaction).subscribe(response => {
+
+
+      console.log(response);
+
+    })
   }
 
 }

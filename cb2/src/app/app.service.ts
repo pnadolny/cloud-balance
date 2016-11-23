@@ -29,5 +29,13 @@ export class AppService {
 
   }
 
+  save(transaction: Transaction): Observable<any> {
+
+    let url = this.transactionUrl + '?name=' + `${transaction.name}` + '&memo=' + `${transaction.memo}` + '&payee=' + `${transaction.payee}` + '&amount=' + `${transaction.amount}` + '&date=' + `${transaction.date}` + '&transaction-type=' + `${transaction.type}`;
+
+
+    return this.http.put(url,null);
+
+  }
 
 }
