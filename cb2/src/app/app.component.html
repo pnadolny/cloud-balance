@@ -6,23 +6,25 @@
   <table class="table table-striped table-hover table-sm">
     <thead class="thead-inverse">
     <tr>
-      <th class="leftAlignedColumn">Date</th>
-      <th class="leftAlignedColumn">Payee</th>
-      <th class="leftAlignedColumn">Type</th>
-      <th class="leftAlignedColumn">Amount</th>
-      <th class="leftAlignedColumn">Balance</th>
+      <th>Date</th>
+      <th>Payee</th>
+      <th>Type</th>
+      <th>Amount</th>
+      <th>Balance</th>
+      <th>Actions</th>
+
     </tr>
 
     </thead>
 
     <tbody>
-    <tr *ngFor="let transaction of transactions" (click)="onSelect(transaction)">
-      <td class="column leftAlignedColumn">{{transaction.date | date:'shortDate'}}</td>
-      <td class="column leftAlignedColumn">{{transaction.payee}}</td>
-      <td class="column leftAlignedColumn">{{transaction.type}}</td>
-      <td class="column leftAlignedColumn">{{transaction.amount}}</td>
-      <td class="column leftAlignedColumn">{{transaction.balance}}</td>
-
+    <tr *ngFor="let transaction of transactions | async">
+      <td>{{transaction.date | date:'shortDate'}}</td>
+      <td>{{transaction.payee}}</td>
+      <td>{{transaction.type}}</td>
+      <td>{{transaction.amount}}</td>
+      <td>{{transaction.balance}}</td>
+      <button class="btn btn-link" (click)="delete(transaction)">Delete</button>
     </tr>
     </tbody>
 
