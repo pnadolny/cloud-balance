@@ -4,7 +4,7 @@ import {Transaction, Entity} from "./app.model";
 import {BehaviorSubject} from "rxjs";
 import {asObservable} from "./asObservable";
 import {List} from "immutable";
-import * as moment from 'moment';
+import * as moment from "moment";
 
 
 @Component({
@@ -16,7 +16,7 @@ export class AppComponent implements OnInit {
   title = 'Transactions';
   _transactions: BehaviorSubject<List<Transaction>> = new BehaviorSubject(List([]));
   transaction: Transaction;
-
+  UTC: string = "'YYYY-MM-DD HH:mm:ss.SSS-05:00')";
 
 
   constructor(private appService: AppService) {
@@ -27,17 +27,22 @@ export class AppComponent implements OnInit {
     this.appService.get().subscribe(result => {
       let transactions = (result.json() as Transaction[]);
       let t = List<Transaction>(transactions);
-      this._transactions.next(t);
+      this._transactions.next(this.sort(t));
     });
 
 
     this._transactions.subscribe(transactions => {
       let balance = 0.00;
-      for (let t of transactions.toArray()) {
-          balance = Number.parseFloat(t.amount) + balance;
-          t.balance = balance;
-     }
+      for (let t of transactions.reverse().toArray()) {
+        balance = Number.parseFloat(t.amount) + balance;
+        t.balance = balance;
+      }
+
     })
+  }
+
+  get count() {
+    return this._transactions.getValue().count();
   }
 
   get transactions() {
@@ -52,26 +57,38 @@ export class AppComponent implements OnInit {
     })
   }
 
+
+  sort(list: List<Transaction>): List<Transaction> {
+    let l = list.sort((n1, n2) => {
+      if (n1.date == n2.date) {
+        return 0;
+      }
+      if (moment.utc(n1.date, this.UTC).isBefore(moment.utc(n2.date, this.UTC))) {
+        return 1;
+      } else {
+        return -1;
+      }
+    });
+    return l.toList();
+  }
+
+
   copy(transaction: Transaction, nextMonth: boolean) {
     let copy = new Transaction();
-    copy.name="";
+    copy.name = "";
     copy.type = transaction.type;
     copy.date = transaction.date;
-
     if (nextMonth) {
-
-      copy.date = moment.utc(copy.date,"'YYYY-MM-DD HH:mm:ss.SSS-05:00')").add(1,'month').toISOString();
-
+      copy.date = moment.utc(copy.date, "'YYYY-MM-DD HH:mm:ss.SSS-05:00')").add(1, 'month').toISOString();
     }
-
     copy.amount = transaction.amount;
     copy.memo = transaction.memo;
     copy.payee = transaction.payee;
     this.appService.save(copy).subscribe(response => {
       let entity = (response.json() as Entity);
-      copy.name = "" + entity.key.id;
-      this._transactions.next(this._transactions.getValue().push(copy));
-      console.log(response);
+      copy.name = "" + entity.key.id
+      this._transactions.next(this.sort(this._transactions.getValue().push(copy)));
+
     })
   }
 
@@ -82,15 +99,15 @@ export class AppComponent implements OnInit {
   save(transaction: Transaction) {
     this.appService.save(transaction).subscribe(response => {
       let entity = (response.json() as Entity);
-      if (transaction.name ==null) {
-        transaction.name = ""+entity.key.id;
+      if (transaction.name == null) {
+        transaction.name = "" + entity.key.id;
         this._transactions.next(this._transactions.getValue().push(transaction));
-     } else {
+      } else {
         this._transactions.next(this._transactions.getValue())
       }
       this.transaction = null;
       console.log(response);
-    },() => {
+    }, () => {
 
 
     })

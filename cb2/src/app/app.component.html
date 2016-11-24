@@ -1,5 +1,7 @@
+
+
 <nav class="navbar navbar-light bg-faded">
-  <h1 class="navbar-brand mb-0">{{title}}</h1>
+  <h1 class="navbar-brand mb-0">{{title}} - {{count}}</h1>
 </nav>
 
 <div *ngIf="transaction">
@@ -32,8 +34,8 @@
       <td>{{transaction.date | date:'shortDate'}}</td>
       <td>{{transaction.payee}}</td>
       <td>{{transaction.type}}</td>
-      <td>{{transaction.amount}}</td>
-      <td>{{transaction.balance}}</td>
+      <td>{{transaction.amount | currency:'USD':true}}</td>
+      <td>{{transaction.balance | currency:'USD':true}}</td>
       <button class="btn btn-link" (click)="edit(transaction)">Edit</button>
       <button class="btn btn-link" (click)="delete(transaction)">Delete</button>
       <button class="btn btn-link" (click)="copy(transaction)">Copy</button>
