@@ -36,6 +36,9 @@
       <td>{{transaction.balance}}</td>
       <button class="btn btn-link" (click)="edit(transaction)">Edit</button>
       <button class="btn btn-link" (click)="delete(transaction)">Delete</button>
+      <button class="btn btn-link" (click)="copy(transaction)">Copy</button>
+      <button class="btn btn-link" (click)="copy(transaction,true)">Copy 1 Month</button>
+
     </tr>
     </tbody>
 
