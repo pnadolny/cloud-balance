@@ -114,6 +114,10 @@ export class AppComponent implements OnInit {
     })
   }
 
+  new() {
+    this.transaction = new Transaction();
+
+  }
   edit(transaction: Transaction) {
 
     transaction.date = moment(transaction.date).format('YYYY-MM-DD');
@@ -124,12 +128,12 @@ export class AppComponent implements OnInit {
   save(transaction: Transaction) {
     transaction.date = moment.utc(transaction.date, "'YYYY-MM-DD HH:mm:ss.SSS-00:00')").toISOString();
 
+    if (transaction.name==null) {
+      transaction.name = "";
+    }
     this.appService.save(transaction).subscribe(response => {
       let entity = (response.json() as Entity);
-
-
-
-      if (transaction.name == null) {
+      if (transaction.name == "") {
         transaction.name = "" + entity.key.id;
         this._transactions.next(this._transactions.getValue().push(transaction));
       } else {

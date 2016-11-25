@@ -4,6 +4,8 @@
   <h1 class="navbar-brand mb-0">{{title}} - {{count}}</h1>
 </nav>
 
+<button class="btn btn-link" (click)="new()">New</button>
+
 <div *ngIf="transaction">
 
   <md-input placeholder="Amount" [(ngModel)]="transaction.amount" align="end">
