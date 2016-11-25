@@ -1,34 +1,43 @@
 import {Component, OnInit} from "@angular/core";
 import {AppService} from "./app.service";
-import {Transaction, Entity} from "./app.model";
+import {Transaction, Entity, Response, Repo, Payee} from "./app.model";
 import {BehaviorSubject} from "rxjs";
 import {asObservable} from "./asObservable";
 import {List} from "immutable";
 import * as moment from "moment";
 
-
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
+
 })
 export class AppComponent implements OnInit {
   title = 'Transactions';
   _transactions: BehaviorSubject<List<Transaction>> = new BehaviorSubject(List([]));
+  _payees: BehaviorSubject<List<Payee>> = new BehaviorSubject(List([]));
+
+
   transaction: Transaction;
   UTC: string = "'YYYY-MM-DD HH:mm:ss.SSS-05:00')";
 
-
-  constructor(private appService: AppService) {
+  constructor(private appService: AppService,private repo: Repo) {
   }
 
   ngOnInit() {
+
 
     this.appService.get().subscribe(result => {
       let transactions = (result.json() as Transaction[]);
       let t = List<Transaction>(transactions);
       this._transactions.next(this.sort(t));
     });
+
+    this.appService.getPayees().subscribe((result => {
+      let payees = (result.json() as Payee[]);
+      let payeeList = List<Payee>(payees);
+      this._payees.next(payeeList);
+    }))
 
 
     this._transactions.subscribe(transactions => {
@@ -45,15 +54,28 @@ export class AppComponent implements OnInit {
     return this._transactions.getValue().count();
   }
 
+  get payees() {
+    return asObservable(this._payees);
+
+  }
   get transactions() {
     return asObservable(this._transactions);
   }
 
   delete(transaction: Transaction) {
     this.appService.delete(transaction).subscribe(res => {
+
+      let response = res.json() as Response;
+
+
       let transactions: List<Transaction> = this._transactions.getValue();
       let index = transactions.findIndex((r) => r.name == transaction.name);
       this._transactions.next(transactions.delete(index));
+
+
+
+    },error => {
+
     })
   }
 
@@ -93,6 +115,7 @@ export class AppComponent implements OnInit {
   }
 
   edit(transaction: Transaction) {
+    //transaction.date = moment.utc(transaction.date, "'YYYY-MM-DD HH:mm:ss.SSS-05:00')").toISOString();
     this.transaction = transaction;
   }
 

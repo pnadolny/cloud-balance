@@ -4,6 +4,7 @@ import "rxjs/add/operator/toPromise";
 import {Observable} from "rxjs";
 import {Transaction} from "./app.model";
 
+import * as moment from "moment";
 
 @Injectable()
 export class AppService {
@@ -12,6 +13,22 @@ export class AppService {
   constructor(private http: Http){}
 
   private transactionUrl = '../ng/resources/transaction';
+
+  private payeeUrl = '../ng/resources/payee';
+
+  getPayees(): Observable<any> {
+
+
+    let year = moment().format('YYYY');
+
+    let options = new RequestOptions({
+      search: new URLSearchParams('year='+year)
+
+    });
+
+
+    return this.http.get( this.payeeUrl,options)
+  }
 
   get(): Observable<any> {
 

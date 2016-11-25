@@ -6,7 +6,21 @@
 
 <div *ngIf="transaction">
 
-  <input type="text" [(ngModel)]="transaction.amount">
+  <md-input placeholder="Amount" [(ngModel)]="transaction.amount" align="end">
+    <span md-prefix>$&nbsp;</span>
+    <span md-suffix>.00</span>
+  </md-input>
+
+
+  <md-input type="date" placeholder="Date" [(ngModel)]="transaction.date" align="end">
+  </md-input>
+
+  <select class="form-control" id="payee"
+          [(ngModel)]="transaction.payee">
+    <option *ngFor="let payee of payees  | async" [value]="payee.name">{{payee.name}}
+    </option>
+  </select>
+
 
   <button class="btn btn-link" (click)="transaction=null">Close</button>
   <button class="btn btn-link" (click)="save(transaction)">Save</button>
@@ -30,16 +44,18 @@
     </thead>
 
     <tbody>
-    <tr *ngFor="let transaction of transactions | async">
+    <tr *ngFor="let transaction of transactions | async; let i = index">
       <td>{{transaction.date | date:'shortDate'}}</td>
       <td>{{transaction.payee}}</td>
       <td>{{transaction.type}}</td>
       <td>{{transaction.amount | currency:'USD':true}}</td>
       <td>{{transaction.balance | currency:'USD':true}}</td>
-      <button class="btn btn-link" (click)="edit(transaction)">Edit</button>
-      <button class="btn btn-link" (click)="delete(transaction)">Delete</button>
-      <button class="btn btn-link" (click)="copy(transaction)">Copy</button>
-      <button class="btn btn-link" (click)="copy(transaction,true)">Copy 1 Month</button>
+
+      <md-icon (click)="edit(transaction)">edit</md-icon>
+    <md-icon (click)="delete(transaction)">delete</md-icon>
+      <md-icon (click)="copy(transaction)">content_copy</md-icon>
+      <md-icon (click)="copy(transaction,true)">filter_1</md-icon>
+
 
     </tr>
     </tbody>
