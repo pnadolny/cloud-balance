@@ -7,10 +7,11 @@ import { AppComponent } from './app.component';
 import {AppService} from "./app.service";
 import { MaterialModule} from '@angular/material';
 import {Repo} from "./app.model";
+import {TransactionDialog} from "./edit-transaction";
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,TransactionDialog
   ],
   imports: [
     BrowserModule,
@@ -18,6 +19,7 @@ import {Repo} from "./app.model";
     HttpModule,MaterialModule.forRoot()
   ],
   providers: [AppService,Repo],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [TransactionDialog]
 })
 export class AppModule { }

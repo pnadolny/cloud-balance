@@ -5,6 +5,8 @@ import {BehaviorSubject} from "rxjs";
 import {asObservable} from "./asObservable";
 import {List} from "immutable";
 import * as moment from "moment";
+import {MdDialogRef, MdDialog} from "@angular/material";
+import {TransactionDialog} from "./edit-transaction";
 
 @Component({
   selector: 'app-root',
@@ -18,14 +20,13 @@ export class AppComponent implements OnInit {
   _payees: BehaviorSubject<List<Payee>> = new BehaviorSubject(List([]));
   transaction: Transaction;
   payee: Payee;
-
   cashFlow: CashFlow[] = new Array<CashFlow>();
-
-
-
   UTC: string = "YYYY-MM-DD HH:mm:ss.SSS-05:00";
 
-  constructor(private appService: AppService, private repo: Repo) {
+  dialogRef: MdDialogRef<TransactionDialog>;
+
+
+  constructor(private appService: AppService, private repo: Repo, public dialog: MdDialog) {
   }
 
   ngOnInit() {
@@ -52,6 +53,31 @@ export class AppComponent implements OnInit {
       }
       this.computeCashFlow();
     })
+  }
+
+  editTransaction(transaction: Transaction, isNew?: boolean) {
+
+    this.dialogRef = this.dialog.open(TransactionDialog, {
+      disableClose: false
+    });
+
+    if (isNew) {
+      transaction = new Transaction();
+      transaction.date = moment().format('YYYY-MM-DD');
+
+    }
+    this.dialogRef.componentInstance.transaction = transaction;
+    this.dialogRef.componentInstance.payees = this._payees.getValue();
+    this.dialogRef.componentInstance.transaction.date = moment(transaction.date).format('YYYY-MM-DD');
+    this.dialogRef.afterClosed().subscribe(result => {
+
+      console.log('result: ' + result);
+      if (result) {
+        this.save(result as Transaction);
+      }
+
+      this.dialogRef = null;
+    });
   }
 
   computeCashFlow() {
@@ -87,14 +113,12 @@ export class AppComponent implements OnInit {
           break;
         default:
           cf.other
-           = cf.other + amount;
+            = cf.other + amount;
       }
       currentMonth = cf.month;
 
 
     }
-
-
 
 
   }
@@ -159,44 +183,35 @@ export class AppComponent implements OnInit {
     })
   }
 
-  new() {
-    this.transaction = new Transaction();
-    this.transaction.date = moment().format('YYYY-MM-DD');
-
-  }
-
   newPayee() {
     this.payee = new Payee();
 
   }
+
   savePayee(payee: Payee) {
 
-    this.payee= null;
+    this.appService.savePayee(payee).subscribe(res => {
+
+
+    })
+
+    this.payee = null;
 
 
   }
+
   editPayee(payee: Payee) {
 
     this.payee = payee;
   }
 
-  edit(transaction: Transaction) {
-
-    transaction.date = moment(transaction.date).format('YYYY-MM-DD');
-
-    this.transaction = transaction;
-  }
 
   findType(payee: string): string {
-
     for (let p of this._payees.getValue().toArray()) {
-
       if (p.name == payee) {
-
         return p.type;
       }
     }
-
   }
 
   save(transaction: Transaction) {
@@ -208,10 +223,7 @@ export class AppComponent implements OnInit {
       let entity = (response.json() as Entity);
       if (transaction.name == "") {
         transaction.name = "" + entity.key.id;
-
         transaction.type = this.findType(transaction.payee);
-
-
         this._transactions.next(this.sort(this._transactions.getValue().push(transaction)));
       } else {
         this._transactions.next(this._transactions.getValue())

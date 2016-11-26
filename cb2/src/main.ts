@@ -9,4 +9,8 @@ if (environment.production) {
   enableProdMode();
 }
 
-platformBrowserDynamic().bootstrapModule(AppModule);
+platformBrowserDynamic().bootstrapModule(AppModule).then(success => {
+  console.log('Bootstrap success!')
+}, err => {
+  console.error(err);
+})

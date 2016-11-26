@@ -2,9 +2,10 @@ import {Injectable} from "@angular/core";
 import {Http, Headers, Response, RequestOptions, URLSearchParams} from "@angular/http";
 import "rxjs/add/operator/toPromise";
 import {Observable} from "rxjs";
-import {Transaction} from "./app.model";
+import {Transaction, Payee} from "./app.model";
 
 import * as moment from "moment";
+import {OutOfBoundsError} from "@angular/core/src/di/reflective_errors";
 
 @Injectable()
 export class AppService {
@@ -46,6 +47,13 @@ export class AppService {
 
   }
 
+  savePayee(payee: Payee): Observable<any> {
+
+    let url = this.payeeUrl + '?name=' + `${payee.name}` + '&type=' + `${payee.type}`;
+
+    return this.http.put(url,null);
+
+  }
   save(transaction: Transaction): Observable<any> {
 
     let url = this.transactionUrl + '?name=' + `${transaction.name}` + '&memo=' + `${transaction.memo}` + '&payee=' + `${transaction.payee}` + '&amount=' + `${transaction.amount}` + '&date=' + `${transaction.date}` + '&transaction-type=' + `${transaction.type}`;
