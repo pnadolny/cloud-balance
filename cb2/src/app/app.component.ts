@@ -16,10 +16,9 @@ export class AppComponent implements OnInit {
   title = 'Transactions';
   _transactions: BehaviorSubject<List<Transaction>> = new BehaviorSubject(List([]));
   _payees: BehaviorSubject<List<Payee>> = new BehaviorSubject(List([]));
+transaction: Transaction;
 
-
-  transaction: Transaction;
-  UTC: string = "'YYYY-MM-DD HH:mm:ss.SSS-05:00')";
+  UTC: string = "YYYY-MM-DD HH:mm:ss.SSS-05:00";
 
   constructor(private appService: AppService,private repo: Repo) {
   }
@@ -101,7 +100,7 @@ export class AppComponent implements OnInit {
     copy.type = transaction.type;
     copy.date = transaction.date;
     if (nextMonth) {
-      copy.date = moment.utc(copy.date, "'YYYY-MM-DD HH:mm:ss.SSS-05:00')").add(1, 'month').toISOString();
+      copy.date = moment.utc(copy.date, this.UTC).add(1, 'month').toISOString();
     }
     copy.amount = transaction.amount;
     copy.memo = transaction.memo;
@@ -126,8 +125,7 @@ export class AppComponent implements OnInit {
   }
 
   save(transaction: Transaction) {
-    transaction.date = moment.utc(transaction.date, "'YYYY-MM-DD HH:mm:ss.SSS-00:00')").toISOString();
-
+    transaction.date = moment.utc(transaction.date, this.UTC).add(6,'hour').toISOString();
     if (transaction.name==null) {
       transaction.name = "";
     }
@@ -135,7 +133,7 @@ export class AppComponent implements OnInit {
       let entity = (response.json() as Entity);
       if (transaction.name == "") {
         transaction.name = "" + entity.key.id;
-        this._transactions.next(this._transactions.getValue().push(transaction));
+        this._transactions.next(this.sort(this._transactions.getValue().push(transaction)));
       } else {
         this._transactions.next(this._transactions.getValue())
       }
