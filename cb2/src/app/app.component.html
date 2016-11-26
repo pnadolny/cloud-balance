@@ -12,10 +12,6 @@
   <md-tab label="Transactions">
 
 
-    <md-card>
-
-      <md-card-content>
-
 
         <div *ngIf="transaction">
           <md-input placeholder="Amount" [(ngModel)]="transaction.amount" align="end">
@@ -32,6 +28,7 @@
           <button md-button (click)="transaction=null">Close</button>
           <button md-button (click)="save(transaction)">Save</button>
         </div>
+
 
         <button md-button (click)="new()">New</button>
         <div class="table-responsive">
@@ -71,10 +68,6 @@
 
         </div>
 
-
-      </md-card-content>
-
-    </md-card>
 
 
   </md-tab>
