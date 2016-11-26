@@ -1,6 +1,6 @@
 import {Component, OnInit} from "@angular/core";
 import {AppService} from "./app.service";
-import {Transaction, Entity, Response, Repo, Payee} from "./app.model";
+import {Transaction, Entity, Response, Repo, Payee, CashFlow} from "./app.model";
 import {BehaviorSubject} from "rxjs";
 import {asObservable} from "./asObservable";
 import {List} from "immutable";
@@ -16,11 +16,15 @@ export class AppComponent implements OnInit {
   title = 'Transactions';
   _transactions: BehaviorSubject<List<Transaction>> = new BehaviorSubject(List([]));
   _payees: BehaviorSubject<List<Payee>> = new BehaviorSubject(List([]));
-transaction: Transaction;
+  transaction: Transaction;
+
+  cashFlow: CashFlow[] = new Array<CashFlow>();
+
+
 
   UTC: string = "YYYY-MM-DD HH:mm:ss.SSS-05:00";
 
-  constructor(private appService: AppService,private repo: Repo) {
+  constructor(private appService: AppService, private repo: Repo) {
   }
 
   ngOnInit() {
@@ -45,9 +49,55 @@ transaction: Transaction;
         balance = Number.parseFloat(t.amount) + balance;
         t.balance = balance;
       }
-
+      this.computeCashFlow();
     })
   }
+
+  computeCashFlow() {
+
+    console.log('Computing...');
+    this.cashFlow = new Array<CashFlow>();
+    let currentMonth: string = "x";
+    let cf: CashFlow = new CashFlow();
+    for (let t of this._transactions.getValue().toArray()) {
+
+      if (currentMonth != moment(t.date).format("MMM")) {
+        console.log('New m...');
+        cf = new CashFlow();
+        this.cashFlow.push(cf);
+      }
+
+      let amount = Number(t.amount);
+      console.log(amount);
+      cf.month = moment(t.date).format("MMM");
+      cf.monthlyCashFlow = cf.monthlyCashFlow + amount;
+      switch (t.type) {
+        case "i":
+          cf.income = cf.income + amount;
+          break;
+        case "s":
+          cf.static = cf.static + amount;
+          break;
+        case "d":
+          cf.discretionary = cf.discretionary + amount;
+          break;
+        case "f":
+          cf.future = cf.future + amount;
+          break;
+        default:
+          cf.other
+           = cf.other + amount;
+      }
+      currentMonth = cf.month;
+
+
+    }
+
+
+
+
+  }
+
 
   get count() {
     return this._transactions.getValue().count();
@@ -57,23 +107,18 @@ transaction: Transaction;
     return asObservable(this._payees);
 
   }
+
   get transactions() {
     return asObservable(this._transactions);
   }
 
   delete(transaction: Transaction) {
     this.appService.delete(transaction).subscribe(res => {
-
       let response = res.json() as Response;
-
-
       let transactions: List<Transaction> = this._transactions.getValue();
       let index = transactions.findIndex((r) => r.name == transaction.name);
       this._transactions.next(transactions.delete(index));
-
-
-
-    },error => {
+    }, error => {
 
     })
   }
@@ -117,6 +162,7 @@ transaction: Transaction;
     this.transaction = new Transaction();
 
   }
+
   edit(transaction: Transaction) {
 
     transaction.date = moment(transaction.date).format('YYYY-MM-DD');
@@ -124,15 +170,31 @@ transaction: Transaction;
     this.transaction = transaction;
   }
 
+  findType(payee: string): string {
+
+    for (let p of this._payees.getValue().toArray()) {
+
+      if (p.name == payee) {
+
+        return p.type;
+      }
+    }
+
+  }
+
   save(transaction: Transaction) {
-    transaction.date = moment.utc(transaction.date, this.UTC).add(6,'hour').toISOString();
-    if (transaction.name==null) {
+    transaction.date = moment.utc(transaction.date, this.UTC).add(6, 'hour').toISOString();
+    if (transaction.name == null) {
       transaction.name = "";
     }
     this.appService.save(transaction).subscribe(response => {
       let entity = (response.json() as Entity);
       if (transaction.name == "") {
         transaction.name = "" + entity.key.id;
+
+        transaction.type = this.findType(transaction.payee);
+
+
         this._transactions.next(this.sort(this._transactions.getValue().push(transaction)));
       } else {
         this._transactions.next(this._transactions.getValue())

@@ -1,4 +1,6 @@
 import {Injectable} from "@angular/core";
+
+
 export class Transaction {
   name: string;
   payee: string;
@@ -12,7 +14,20 @@ export class Transaction {
 
 export class Entity {
   key: Key;
+  propertyMap: PropertyMap;
 
+}
+
+export class CashFlow {
+  month: string;
+  income: number =0;
+  future: number= 0;
+  static: number =0;
+  other: number= 0;
+  cashFlow: number =0;
+  discretionary: number =0;
+  averageCashFlow: number= 0;
+  monthlyCashFlow: number = 0;
 
 }
 
@@ -38,6 +53,11 @@ export class Response {
   success: Success;
 
 }
+
+export class PropertyMap {
+
+}
+
 export class Success {
 
   message: string;
