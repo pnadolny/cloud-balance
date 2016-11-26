@@ -72,8 +72,35 @@
 
   </md-tab>
   <md-tab label="Payees">
-    <h1>Some more tab content</h1>
-    <p>...</p>
+    <table class="table table-striped table-hover table-sm">
+      <thead class="thead-inverse">
+      <tr>
+        <th>Name</th>
+        <th>Last</th>
+        <th>This Month</th>
+        <th>Total</th>
+        <th>Action</th>
+
+      </tr>
+
+      </thead>
+
+      <tbody>
+      <tr *ngFor="let payee of payees | async; let i = index">
+        <td>{{payee.name}}</td>
+        <td>{{payee.lastAmount| currency:'USD':true }}</td>
+        <td>{{payee.thisMonth | currency:'USD':true}}</td>
+        <td>{{payee.total | currency:'USD':true}}</td>
+      <md-icon (click)="edit(payee)">edit</md-icon>
+        <md-icon (click)="delete(payee)">delete_forever</md-icon>
+
+
+      </tr>
+      </tbody>
+
+
+    </table>
+
   </md-tab>
 </md-tab-group>
 
