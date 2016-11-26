@@ -17,6 +17,7 @@ export class AppComponent implements OnInit {
   _transactions: BehaviorSubject<List<Transaction>> = new BehaviorSubject(List([]));
   _payees: BehaviorSubject<List<Payee>> = new BehaviorSubject(List([]));
   transaction: Transaction;
+  payee: Payee;
 
   cashFlow: CashFlow[] = new Array<CashFlow>();
 
@@ -160,7 +161,23 @@ export class AppComponent implements OnInit {
 
   new() {
     this.transaction = new Transaction();
+    this.transaction.date = moment().format('YYYY-MM-DD');
 
+  }
+
+  newPayee() {
+    this.payee = new Payee();
+
+  }
+  savePayee(payee: Payee) {
+
+    this.payee= null;
+
+
+  }
+  editPayee(payee: Payee) {
+
+    this.payee = payee;
   }
 
   edit(transaction: Transaction) {
