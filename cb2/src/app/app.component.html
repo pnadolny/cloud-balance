@@ -9,7 +9,7 @@
 
 
 <md-tab-group>
-  <md-tab label="Transactions">
+  <md-tab label="Transactions ({{count}})">
 
 
 
@@ -50,7 +50,7 @@
             <tr *ngFor="let transaction of transactions | async; let i = index">
               <td>{{transaction.date | date:'shortDate'}}</td>
               <td>{{transaction.payee}}</td>
-              <td>{{transaction.type}}</td>
+              <td><span class="tag tag-default tag-pill payee-type-{{transaction.type}}">{{transaction.type | uppercase}}</span></td>
               <td>{{transaction.amount | currency:'USD':true}}</td>
               <td>{{transaction.balance | currency:'USD':true}}</td>
 
@@ -71,11 +71,17 @@
 
 
   </md-tab>
+  <md-tab label="Cash Flow">
+
+
+  </md-tab>
+
   <md-tab label="Payees">
     <table class="table table-striped table-hover table-sm">
       <thead class="thead-inverse">
       <tr>
         <th>Name</th>
+        <th>Type</th>
         <th>Last</th>
         <th>This Month</th>
         <th>Total</th>
@@ -88,6 +94,7 @@
       <tbody>
       <tr *ngFor="let payee of payees | async; let i = index">
         <td>{{payee.name}}</td>
+        <td><span class="tag tag-default tag-pill payee-type-{{payee.type}}">{{payee.type}}</span></td>
         <td>{{payee.lastAmount| currency:'USD':true }}</td>
         <td>{{payee.thisMonth | currency:'USD':true}}</td>
         <td>{{payee.total | currency:'USD':true}}</td>
