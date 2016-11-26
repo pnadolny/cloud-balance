@@ -1,68 +1,88 @@
+<md-toolbar color="primary">
+  <span>Cloud Balance</span>
+  <span class="flex-right"></span>
+  <span>
+      <md-icon>more_vert</md-icon>
+   </span>
+
+</md-toolbar>
 
 
-<nav class="navbar navbar-light bg-faded">
-  <h1 class="navbar-brand mb-0">{{title}} - {{count}}</h1>
-</nav>
-
-<button class="btn btn-link" (click)="new()">New</button>
-
-<div *ngIf="transaction">
-
-  <md-input placeholder="Amount" [(ngModel)]="transaction.amount" align="end">
-    <span md-prefix>$&nbsp;</span>
-    <span md-suffix>.00</span>
-  </md-input>
+<md-tab-group>
+  <md-tab label="Transactions">
 
 
-  <md-input type="date" placeholder="Date" [(ngModel)]="transaction.date" align="end">
-  </md-input>
+    <md-card>
 
-  <select class="form-control" id="payee"
-          [(ngModel)]="transaction.payee">
-    <option *ngFor="let payee of payees  | async" [value]="payee.name">{{payee.name}}
-    </option>
-  </select>
+      <md-card-content>
 
 
-  <button class="btn btn-link" (click)="transaction=null">Close</button>
-  <button class="btn btn-link" (click)="save(transaction)">Save</button>
+        <div *ngIf="transaction">
+          <md-input placeholder="Amount" [(ngModel)]="transaction.amount" align="end">
+            <span md-prefix>$&nbsp;</span>
+          </md-input>
+          <md-input type="date" placeholder="Date" [(ngModel)]="transaction.date" align="end">
+          </md-input>
+
+          <select class="form-control" id="payee"
+                  [(ngModel)]="transaction.payee">
+            <option *ngFor="let payee of payees  | async" [value]="payee.name">{{payee.name}}
+            </option>
+          </select>
+          <button md-button (click)="transaction=null">Close</button>
+          <button md-button (click)="save(transaction)">Save</button>
+        </div>
+
+        <button md-button (click)="new()">New</button>
+        <div class="table-responsive">
+          <table class="table table-striped table-hover table-sm">
+            <thead class="thead-inverse">
+            <tr>
+              <th>Date</th>
+              <th>Payee</th>
+              <th>Type</th>
+              <th>Amount</th>
+              <th>Balance</th>
+              <th>Actions</th>
+
+            </tr>
+
+            </thead>
+
+            <tbody>
+            <tr *ngFor="let transaction of transactions | async; let i = index">
+              <td>{{transaction.date | date:'shortDate'}}</td>
+              <td>{{transaction.payee}}</td>
+              <td>{{transaction.type}}</td>
+              <td>{{transaction.amount | currency:'USD':true}}</td>
+              <td>{{transaction.balance | currency:'USD':true}}</td>
+
+              <md-icon (click)="edit(transaction)">edit</md-icon>
+              <md-icon (click)="delete(transaction)">delete_forever</md-icon>
+              <md-icon (click)="copy(transaction)">content_copy</md-icon>
+              <md-icon (click)="copy(transaction,true)">filter_1</md-icon>
 
 
-</div>
-
-<div class="table-responsive">
-  <table class="table table-striped table-hover table-sm">
-    <thead class="thead-inverse">
-    <tr>
-      <th>Date</th>
-      <th>Payee</th>
-      <th>Type</th>
-      <th>Amount</th>
-      <th>Balance</th>
-      <th>Actions</th>
-
-    </tr>
-
-    </thead>
-
-    <tbody>
-    <tr *ngFor="let transaction of transactions | async; let i = index">
-      <td>{{transaction.date | date:'shortDate'}}</td>
-      <td>{{transaction.payee}}</td>
-      <td>{{transaction.type}}</td>
-      <td>{{transaction.amount | currency:'USD':true}}</td>
-      <td>{{transaction.balance | currency:'USD':true}}</td>
-
-      <md-icon (click)="edit(transaction)">edit</md-icon>
-    <md-icon (click)="delete(transaction)">delete</md-icon>
-      <md-icon (click)="copy(transaction)">content_copy</md-icon>
-      <md-icon (click)="copy(transaction,true)">filter_1</md-icon>
+            </tr>
+            </tbody>
 
 
-    </tr>
-    </tbody>
+          </table>
+
+        </div>
 
 
-  </table>
+      </md-card-content>
 
-</div>
+    </md-card>
+
+
+  </md-tab>
+  <md-tab label="Payees">
+    <h1>Some more tab content</h1>
+    <p>...</p>
+  </md-tab>
+</md-tab-group>
+
+
+
