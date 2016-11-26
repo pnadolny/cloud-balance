@@ -10,28 +10,7 @@
 
 <md-tab-group>
   <md-tab label="Transactions ({{count}})">
-
-
-    <div *ngIf="transaction">
-      <md-input placeholder="Amount" [(ngModel)]="transaction.amount" align="end">
-        <span md-prefix>$&nbsp;</span>
-      </md-input>
-      <md-input type="date" placeholder="Date" [(ngModel)]="transaction.date" align="end">
-      </md-input>
-
-      <select class="form-control" id="payee"
-              [(ngModel)]="transaction.payee">
-        <option *ngFor="let payee of payees  | async" [value]="payee.name">{{payee.name}}
-        </option>
-      </select>
-      <button md-button (click)="transaction=null">Close</button>
-      <button md-button (click)="save(transaction)">Save</button>
-    </div>
-
-
     <button md-button (click)="editTransaction(null,true)">New</button>
-
-
     <div class="table-responsive">
       <table class="table table-striped table-hover table-sm">
         <thead class="thead-inverse">
@@ -115,21 +94,10 @@
 
     <div *ngIf="payee">
 
-      <md-input  placeholder="Name" [readonly]="payee.name" [(ngModel)]="payee.name" align="end">
-      </md-input>
-
-
-      <select class="form-control" id="payeetype"
-              [(ngModel)]="payee.type">
-        <option *ngFor="let t of repo.types" [value]="t.id">{{t.value}}
-        </option>
-      </select>
-      <button md-button (click)="payee=null">Close</button>
-      <button md-button (click)="savePayee(payee)">Save</button>
     </div>
 
 
-    <button md-button (click)="newPayee()">New</button>
+    <button md-button (click)="editPayee(null,true)">New</button>
 
 
 

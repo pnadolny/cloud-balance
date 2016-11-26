@@ -7,6 +7,7 @@ import {List} from "immutable";
 import * as moment from "moment";
 import {MdDialogRef, MdDialog} from "@angular/material";
 import {TransactionDialog} from "./edit-transaction";
+import {PayeeDialog} from "./edit-payee";
 
 @Component({
   selector: 'app-root',
@@ -18,12 +19,12 @@ export class AppComponent implements OnInit {
   title = 'Transactions';
   _transactions: BehaviorSubject<List<Transaction>> = new BehaviorSubject(List([]));
   _payees: BehaviorSubject<List<Payee>> = new BehaviorSubject(List([]));
-  transaction: Transaction;
-  payee: Payee;
   cashFlow: CashFlow[] = new Array<CashFlow>();
   UTC: string = "YYYY-MM-DD HH:mm:ss.SSS-05:00";
 
   dialogRef: MdDialogRef<TransactionDialog>;
+  payeeDialog: MdDialogRef<PayeeDialog>;
+
 
 
   constructor(private appService: AppService, private repo: Repo, public dialog: MdDialog) {
@@ -53,6 +54,35 @@ export class AppComponent implements OnInit {
       }
       this.computeCashFlow();
     })
+  }
+
+  editPayee(payee: Payee, isNew?: boolean) {
+
+    this.payeeDialog = this.dialog.open(PayeeDialog, {
+      disableClose: false
+    });
+
+    if (isNew) {
+      payee = new Payee();
+
+    }
+    this.payeeDialog.componentInstance.payee = payee;
+    this.payeeDialog.componentInstance.nameReadonly = !isNew;
+    this.payeeDialog.afterClosed().subscribe(result => {
+      console.log('result: ' + result);
+      if (result) {
+
+        this.appService.savePayee(result as Payee).subscribe(res => {
+          if (isNew) {
+            this._payees.next(this._payees.getValue().push(payee));
+          }
+
+        })
+
+      }
+      this.payeeDialog = null;
+    });
+
   }
 
   editTransaction(transaction: Transaction, isNew?: boolean) {
@@ -183,27 +213,6 @@ export class AppComponent implements OnInit {
     })
   }
 
-  newPayee() {
-    this.payee = new Payee();
-
-  }
-
-  savePayee(payee: Payee) {
-
-    this.appService.savePayee(payee).subscribe(res => {
-
-
-    })
-
-    this.payee = null;
-
-
-  }
-
-  editPayee(payee: Payee) {
-
-    this.payee = payee;
-  }
 
 
   findType(payee: string): string {
@@ -228,8 +237,6 @@ export class AppComponent implements OnInit {
       } else {
         this._transactions.next(this._transactions.getValue())
       }
-      this.transaction = null;
-      console.log(response);
     }, () => {
 
 

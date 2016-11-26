@@ -8,10 +8,11 @@ import {AppService} from "./app.service";
 import { MaterialModule} from '@angular/material';
 import {Repo} from "./app.model";
 import {TransactionDialog} from "./edit-transaction";
+import {PayeeDialog} from "./edit-payee";
 
 @NgModule({
   declarations: [
-    AppComponent,TransactionDialog
+    AppComponent,TransactionDialog,PayeeDialog
   ],
   imports: [
     BrowserModule,
@@ -20,6 +21,6 @@ import {TransactionDialog} from "./edit-transaction";
   ],
   providers: [AppService,Repo],
   bootstrap: [AppComponent],
-  entryComponents: [TransactionDialog]
+  entryComponents: [TransactionDialog,PayeeDialog]
 })
 export class AppModule { }
