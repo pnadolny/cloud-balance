@@ -94,9 +94,16 @@ export class AppComponent implements OnInit {
     if (isNew) {
       transaction = new Transaction();
       transaction.date = moment().format('YYYY-MM-DD');
+      this.dialogRef.componentInstance.transaction = transaction;
+
+    } else {
+      var cloneObj = new Transaction();
+      for (var attribut in transaction) {
+        cloneObj[attribut] = transaction[attribut];
+      }
+      this.dialogRef.componentInstance.transaction = cloneObj;
 
     }
-    this.dialogRef.componentInstance.transaction = transaction;
     this.dialogRef.componentInstance.payees = this._payees.getValue();
 
     this.dialogRef.componentInstance.transaction.date = moment.utc(transaction.date, this.UTC).format('YYYY-MM-DD');
@@ -105,8 +112,11 @@ export class AppComponent implements OnInit {
       console.log('result: ' + result);
       if (result) {
         this.save(result as Transaction);
+        for (var attribut in result) {
+          transaction[attribut] = result[attribut];
+        }
+        transaction = result as Transaction;
       }
-
       this.dialogRef = null;
     });
   }
