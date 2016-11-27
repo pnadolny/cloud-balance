@@ -10,7 +10,7 @@
 <md-tab-group>
 
   <md-tab label="Transactions&nbsp;({{count}})">
-    <button md-button color="primary" (click)="editTransaction(null,true)">
+    <button md-tooltip="Create a Transaction" tooltip-position="below" md-button color="primary" (click)="editTransaction(null,true)">
       <md-icon >create</md-icon>&nbsp;Create
     </button>
     <input  #searchTransactions placeholder="Search" type="text" (keyup)="search(searchTransactions.value)">
@@ -28,7 +28,7 @@
         </thead>
         <tbody>
         <tr *ngFor="let transaction of transactions | async; let i = index" [class.selected]="transaction.today">
-          <td>{{transaction.date | date:'shortDate'}} {{transaction.today}}</td>
+          <td>{{transaction.date | date:'shortDate'}}</td>
           <td><span
             class="tag tag-default tag-pill payee-type-{{transaction.type}}">{{transaction.type | uppercase}}</span>&nbsp;{{transaction.payee}}
           </td>
@@ -75,15 +75,14 @@
   </md-tab>
 
   <md-tab label="Payees&nbsp;({{payeeCount}})">
-    <button md-button color="primary" (click)="editPayee(null,true)">
+    <button md-tooltip="Create a Payee" tooltip-position="below" md-button color="primary" (click)="editPayee(null,true)">
       <md-icon >create</md-icon>&nbsp;Create
     </button>
     <table class="table table-striped table-hover table-sm">
       <thead class="thead-inverse">
       <tr>
         <th>Name</th>
-        <th>Last</th>
-        <th>This Month</th>
+        <th>{{currentMonth}}</th>
         <th>Total</th>
         <th>Action</th>
       </tr>
@@ -91,11 +90,10 @@
       <tbody>
       <tr *ngFor="let payee of payees | async; let i = index">
         <td><span class="tag tag-default tag-pill payee-type-{{payee.type}}">{{payee.type | uppercase}}</span>&nbsp;{{payee.name}}</td>
-        <td>{{payee.lastAmount| currency:'USD':true }}</td>
         <td>{{payee.thisMonth | currency:'USD':true}}</td>
         <td>{{payee.total | currency:'USD':true}}</td>
         <td>
-        <md-icon (click)="editPayee(payee)">edit</md-icon>&nbsp;
+          <md-icon (click)="editPayee(payee)">edit</md-icon>&nbsp;
         <md-icon (click)="deletePayee(payee)">delete_forever</md-icon></td>
       </tr>
       </tbody>

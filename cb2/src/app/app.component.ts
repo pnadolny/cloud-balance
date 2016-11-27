@@ -27,7 +27,6 @@ export class AppComponent implements OnInit {
   payeeDialog: MdDialogRef<PayeeDialog>;
 
   searchTerms = new Subject<string>();
-  _transactionsTemp: List<Transaction> ;
 
 
   constructor(private appService: AppService, private repo: Repo, public dialog: MdDialog) {
@@ -36,6 +35,7 @@ export class AppComponent implements OnInit {
   search(value: string) {
     this.searchTerms.next(value);
   }
+
 
   ngOnInit() {
 
@@ -179,6 +179,12 @@ export class AppComponent implements OnInit {
 
   }
 
+  get currentMonth() {
+    return moment().format('MMMM');
+  }
+  get lastMonth() {
+    return moment().subtract(1,'month').format('MMMM')
+  }
   get payeeCount() {
     return this._payees.getValue().count();
 
