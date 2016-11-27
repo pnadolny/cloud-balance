@@ -4,19 +4,15 @@
   <span>
       <md-icon>more_vert</md-icon>
    </span>
-
 </md-toolbar>
 
 
 <md-tab-group>
+
   <md-tab label="Transactions&nbsp;({{count}})">
-
-    <div>
-      <button md-button (click)="editTransaction(null,true)">New</button>
-      <span class="flex-right">Balance</span>
-
-
-    </div>
+    <button md-button color="primary" (click)="editTransaction(null,true)">
+      <md-icon >create</md-icon>&nbsp;Create
+    </button>
 
     <div class="table-responsive">
       <table class="table table-striped table-hover table-sm">
@@ -27,52 +23,42 @@
           <th>Amount</th>
           <th>Balance</th>
           <th>Actions</th>
-
         </tr>
-
         </thead>
-
         <tbody>
         <tr *ngFor="let transaction of transactions | async; let i = index">
           <td>{{transaction.date | date:'shortDate'}}</td>
           <td><span
-            class="tag tag-default tag-pill payee-type-{{transaction.type}}">{{transaction.type | uppercase}}</span>&nbsp;{{transaction.payee}}</td>
+            class="tag tag-default tag-pill payee-type-{{transaction.type}}">{{transaction.type | uppercase}}</span>&nbsp;{{transaction.payee}}
+          </td>
           <td>{{transaction.amount | currency:'USD':true}}</td>
           <td>{{transaction.balance | currency:'USD':true}}</td>
-
-          <md-icon (click)="editTransaction(transaction)">edit</md-icon>
-          <md-icon (click)="delete(transaction)">delete_forever</md-icon>
-          <md-icon (click)="copy(transaction)">content_copy</md-icon>
-          <md-icon (click)="copy(transaction,true)">filter_1</md-icon>
-
-
+          <td>
+          <md-icon (click)="editTransaction(transaction)">edit</md-icon>&nbsp;
+          <md-icon (click)="delete(transaction)">delete_forever</md-icon>&nbsp;
+          <md-icon (click)="copy(transaction)">content_copy</md-icon>&nbsp;
+          <md-icon (click)="copy(transaction,true)">filter_1</md-icon>&nbsp;
+          </td>
         </tr>
         </tbody>
-
-
       </table>
-
     </div>
-
-
   </md-tab>
-  <md-tab label="Cash Flow">
 
+
+  <md-tab label="Cash Flow">
     <table class="table table-striped table-hover table-sm">
       <thead class="thead-inverse">
       <tr>
         <th>Month</th>
-        <th>Income</th>
-        <th>Static</th>
-        <th>Discretionary</th>
-        <th>Future</th>
-        <th>Other</th>
+        <th><span class="tag tag-default tag-pill payee-type-i">I</span>&nbsp;Income</th>
+        <th><span class="tag tag-default tag-pill payee-type-s">S</span>&nbsp;Static</th>
+        <th><span class="tag tag-default tag-pill payee-type-d">D</span>&nbsp;Discretionary</th>
+        <th><span class="tag tag-default tag-pill payee-type-f">F</span>&nbsp;Future</th>
+        <th><span class="tag tag-default tag-pill payee-type-o">O</span>&nbsp;Other</th>
         <th>Cash Flow</th>
-
       </tr>
-
       </thead>
-
       <tbody>
       <tr *ngFor="let cf of cashFlow ">
         <td>{{cf.month}}</td>
@@ -82,60 +68,37 @@
         <td>{{cf.future | currency:'USD':true }}</td>
         <td>{{cf.other | currency:'USD':true }}</td>
         <td>{{cf.monthlyCashFlow | currency:'USD':true }}</td>
-
       </tr>
       </tbody>
-
-
     </table>
-
-
-
-
   </md-tab>
 
   <md-tab label="Payees&nbsp;({{payeeCount}})">
-
-    <div *ngIf="payee">
-
-    </div>
-
-
-    <button md-button (click)="editPayee(null,true)">New</button>
-
-
-
+    <button md-button color="primary" (click)="editPayee(null,true)">
+      <md-icon >create</md-icon>&nbsp;Create
+    </button>
     <table class="table table-striped table-hover table-sm">
       <thead class="thead-inverse">
       <tr>
         <th>Name</th>
-        <th>Type</th>
         <th>Last</th>
         <th>This Month</th>
         <th>Total</th>
         <th>Action</th>
-
       </tr>
-
       </thead>
-
       <tbody>
       <tr *ngFor="let payee of payees | async; let i = index">
-        <td>{{payee.name}}</td>
-        <td><span class="tag tag-default tag-pill payee-type-{{payee.type}}">{{payee.type | uppercase}}</span></td>
+        <td><span class="tag tag-default tag-pill payee-type-{{payee.type}}">{{payee.type | uppercase}}</span>&nbsp;{{payee.name}}</td>
         <td>{{payee.lastAmount| currency:'USD':true }}</td>
         <td>{{payee.thisMonth | currency:'USD':true}}</td>
         <td>{{payee.total | currency:'USD':true}}</td>
-        <md-icon (click)="editPayee(payee)">edit</md-icon>
-        <md-icon (click)="deletePayee(payee)">delete_forever</md-icon>
-
-
+        <td>
+        <md-icon (click)="editPayee(payee)">edit</md-icon>&nbsp;
+        <md-icon (click)="deletePayee(payee)">delete_forever</md-icon></td>
       </tr>
       </tbody>
-
-
     </table>
-
   </md-tab>
 </md-tab-group>
 

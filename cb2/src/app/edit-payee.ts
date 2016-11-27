@@ -6,10 +6,11 @@ import {Payee, Repo} from "./app.model";
 @Component({
   selector: 'payee-dialog',
   template: `
-
-
-      <md-input  placeholder="Name" [readonly]="nameReadonly" [(ngModel)]="payee.name" align="begin">
+      
+      <md-input  placeholder="Name" [readonly]="nameReadonly" [(ngModel)]="payee.name" align="begin" #payeeName>
+      <md-hint align="end">{{payeeName.characterCount}} / 100</md-hint>
       </md-input>
+      <br>
 
 
       <select class="form-control" id="payeetype"
@@ -20,14 +21,16 @@ import {Payee, Repo} from "./app.model";
 
   <button md-button (click)="dialogRef.close(payee)">Save</button>
   <button md-button (click)="dialogRef.close(null)">Cancel</button>
+  
   `
 })
 
 export class PayeeDialog {
 
   payee: Payee;
-  nameReadonly: boolean =false;
+  nameReadonly: boolean = false;
 
 
-  constructor(public dialogRef: MdDialogRef<PayeeDialog>, private repo: Repo) { }
+  constructor(public dialogRef: MdDialogRef<PayeeDialog>, private repo: Repo) {
+  }
 }
