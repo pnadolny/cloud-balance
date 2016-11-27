@@ -47,6 +47,10 @@ export class AppService {
 
   }
 
+  deletePayee(payee: Payee): Observable<any> {
+    return this.http.delete(this.payeeUrl + '?id=' + `${payee.name}`);
+
+  }
   savePayee(payee: Payee): Observable<any> {
 
     let url = this.payeeUrl + '?name=' + `${payee.name}` + '&type=' + `${payee.type}`;

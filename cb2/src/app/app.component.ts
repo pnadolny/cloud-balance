@@ -98,7 +98,8 @@ export class AppComponent implements OnInit {
     }
     this.dialogRef.componentInstance.transaction = transaction;
     this.dialogRef.componentInstance.payees = this._payees.getValue();
-    this.dialogRef.componentInstance.transaction.date = moment(transaction.date).format('YYYY-MM-DD');
+
+    this.dialogRef.componentInstance.transaction.date = moment.utc(transaction.date, this.UTC).format('YYYY-MM-DD');
     this.dialogRef.afterClosed().subscribe(result => {
 
       console.log('result: ' + result);
@@ -153,6 +154,10 @@ export class AppComponent implements OnInit {
 
   }
 
+  get payeeCount() {
+    return this._payees.getValue().count();
+
+  }
 
   get count() {
     return this._transactions.getValue().count();
@@ -178,6 +183,29 @@ export class AppComponent implements OnInit {
     })
   }
 
+  deletePayee(payee: Payee) {
+    this.appService.deletePayee(payee).subscribe(response => {
+
+
+      let r = response.json() as Response;
+
+      if (r.error) {
+        console.error(r.error.message);
+      } else {
+        let payees: List<Payee> = this._payees.getValue();
+        let index = payees.findIndex((p) => p.name == payee.name
+
+        );
+        this._payees.next(payees.delete(index));
+
+      }
+
+
+      console.log(r);
+
+    })
+
+  }
 
   sort(list: List<Transaction>): List<Transaction> {
     let l = list.sort((n1, n2) => {

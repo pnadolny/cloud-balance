@@ -17,6 +17,10 @@ export class Entity {
   propertyMap: PropertyMap;
 
 }
+export class Error {
+  message: String;
+
+}
 
 export class CashFlow {
   month: string;
@@ -51,6 +55,7 @@ export class Key {
 export class Response {
 
   success: Success;
+  error: Error;
 
 }
 
