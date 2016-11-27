@@ -1,7 +1,7 @@
 import {Component, OnInit} from "@angular/core";
 import {AppService} from "./app.service";
 import {Transaction, Entity, Response, Repo, Payee, CashFlow} from "./app.model";
-import {BehaviorSubject} from "rxjs";
+import {BehaviorSubject, Subject} from "rxjs";
 import {asObservable} from "./asObservable";
 import {List} from "immutable";
 import * as moment from "moment";
@@ -21,16 +21,28 @@ export class AppComponent implements OnInit {
   _payees: BehaviorSubject<List<Payee>> = new BehaviorSubject(List([]));
   cashFlow: CashFlow[] = new Array<CashFlow>();
   UTC: string = "YYYY-MM-DD HH:mm:ss.SSS-05:00";
+  loadingSubject = new Subject<boolean>();
 
   dialogRef: MdDialogRef<TransactionDialog>;
   payeeDialog: MdDialogRef<PayeeDialog>;
 
+  searchTerms = new Subject<string>();
+  _transactionsTemp: List<Transaction> ;
 
 
   constructor(private appService: AppService, private repo: Repo, public dialog: MdDialog) {
   }
 
+  search(value: string) {
+    this.searchTerms.next(value);
+  }
+
   ngOnInit() {
+
+
+    this.searchTerms.debounceTime(300).distinctUntilChanged().subscribe(term => {
+      this._transactions.next(this._transactions.getValue().filter(value => value.payee.startsWith(term)).toList());
+    })
 
 
     this.appService.get().subscribe(result => {
@@ -49,6 +61,9 @@ export class AppComponent implements OnInit {
     this._transactions.subscribe(transactions => {
       let balance = 0.00;
       for (let t of transactions.reverse().toArray()) {
+
+        t.today = moment().dayOfYear() == moment.utc(t.date,this.UTC).dayOfYear();
+
         balance = Number.parseFloat(t.amount) + balance;
         t.balance = balance;
       }

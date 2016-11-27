@@ -9,6 +9,7 @@ export class Transaction {
   type: string;
   balance: number;
   memo: string;
+  today: boolean;
 
 }
 

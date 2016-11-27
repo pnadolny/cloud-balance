@@ -13,6 +13,7 @@
     <button md-button color="primary" (click)="editTransaction(null,true)">
       <md-icon >create</md-icon>&nbsp;Create
     </button>
+    <input  #searchTransactions placeholder="Search" type="text" (keyup)="search(searchTransactions.value)">
 
     <div class="table-responsive">
       <table class="table table-striped table-hover table-sm">
@@ -26,8 +27,8 @@
         </tr>
         </thead>
         <tbody>
-        <tr *ngFor="let transaction of transactions | async; let i = index">
-          <td>{{transaction.date | date:'shortDate'}}</td>
+        <tr *ngFor="let transaction of transactions | async; let i = index" [class.selected]="transaction.today">
+          <td>{{transaction.date | date:'shortDate'}} {{transaction.today}}</td>
           <td><span
             class="tag tag-default tag-pill payee-type-{{transaction.type}}">{{transaction.type | uppercase}}</span>&nbsp;{{transaction.payee}}
           </td>
