@@ -150,6 +150,7 @@ export class AppComponent implements OnInit {
         this.cashFlow.push(cf);
       }
 
+      cf.thisMonth =moment().format('MMM') == moment(t.date).format('MMM');
       let amount = Number(t.amount);
       console.log(amount);
       cf.month = moment(t.date).format("MMM");

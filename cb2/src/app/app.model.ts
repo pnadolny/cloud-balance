@@ -33,6 +33,7 @@ export class CashFlow {
   discretionary: number =0;
   averageCashFlow: number= 0;
   monthlyCashFlow: number = 0;
+  thisMonth: boolean;
 
 }
 

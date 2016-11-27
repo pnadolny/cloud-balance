@@ -61,7 +61,7 @@
       </tr>
       </thead>
       <tbody>
-      <tr *ngFor="let cf of cashFlow ">
+      <tr *ngFor="let cf of cashFlow " [class.selected]="cf.thisMonth">
         <td>{{cf.month}}</td>
         <td>{{cf.income | currency:'USD':true }}</td>
         <td>{{cf.static | currency:'USD':true }}</td>
