@@ -5,7 +5,7 @@ import {BehaviorSubject, Subject} from "rxjs";
 import {asObservable} from "./asObservable";
 import {List} from "immutable";
 import * as moment from "moment";
-import {MdDialogRef, MdDialog} from "@angular/material";
+import {MdDialogRef, MdDialog, MdSnackBar, MdSnackBarConfig} from "@angular/material";
 import {TransactionDialog} from "./edit-transaction";
 import {PayeeDialog} from "./edit-payee";
 
@@ -29,7 +29,7 @@ export class AppComponent implements OnInit {
   searchTerms = new Subject<string>();
 
 
-  constructor(private appService: AppService, private repo: Repo, public dialog: MdDialog) {
+  constructor(private appService: AppService, private repo: Repo, public dialog: MdDialog, private snackBar: MdSnackBar) {
   }
 
   search(value: string) {
@@ -62,7 +62,7 @@ export class AppComponent implements OnInit {
       let balance = 0.00;
       for (let t of transactions.reverse().toArray()) {
 
-        t.today = moment().dayOfYear() == moment.utc(t.date,this.UTC).dayOfYear();
+        t.today = moment().dayOfYear() == moment.utc(t.date, this.UTC).dayOfYear();
 
         balance = Number.parseFloat(t.amount) + balance;
         t.balance = balance;
@@ -136,9 +136,19 @@ export class AppComponent implements OnInit {
     });
   }
 
+  computeCashFlowMap() {
+
+
+      this._transactions.getValue().toArray().map(transaction => {
+        if (moment(transaction.date).isBefore(moment().add(1,'day'))) {
+
+        }
+      })
+
+    }
+
   computeCashFlow() {
 
-    console.log('Computing...');
     this.cashFlow = new Array<CashFlow>();
     let currentMonth: string = "x";
     let cf: CashFlow = new CashFlow();
@@ -150,7 +160,7 @@ export class AppComponent implements OnInit {
         this.cashFlow.push(cf);
       }
 
-      cf.thisMonth =moment().format('MMM') == moment(t.date).format('MMM');
+      cf.thisMonth = moment().format('MMM') == moment(t.date).format('MMM');
       let amount = Number(t.amount);
       console.log(amount);
       cf.month = moment(t.date).format("MMM");
@@ -183,9 +193,11 @@ export class AppComponent implements OnInit {
   get currentMonth() {
     return moment().format('MMMM');
   }
+
   get lastMonth() {
-    return moment().subtract(1,'month').format('MMMM')
+    return moment().subtract(1, 'month').format('MMMM')
   }
+
   get payeeCount() {
     return this._payees.getValue().count();
 
@@ -211,22 +223,21 @@ export class AppComponent implements OnInit {
       let index = transactions.findIndex((r) => r.name == transaction.name);
       this._transactions.next(transactions.delete(index));
     }, error => {
+      this.snackBar.open('Crap..' + error, 'Ok');
 
     })
   }
 
   deletePayee(payee: Payee) {
     this.appService.deletePayee(payee).subscribe(response => {
-
-
       let r = response.json() as Response;
-
       if (r.error) {
         console.error(r.error.message);
+        let config =  new MdSnackBarConfig();
+        this.snackBar.open('Crap..' + r.error.message, 'Ok',config);
       } else {
         let payees: List<Payee> = this._payees.getValue();
         let index = payees.findIndex((p) => p.name == payee.name
-
         );
         this._payees.next(payees.delete(index));
 
@@ -272,7 +283,6 @@ export class AppComponent implements OnInit {
 
     })
   }
-
 
 
   findType(payee: string): string {
