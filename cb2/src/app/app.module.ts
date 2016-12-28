@@ -9,6 +9,7 @@ import { MaterialModule} from '@angular/material';
 import {Repo} from "./app.model";
 import {TransactionDialog} from "./edit-transaction";
 import {PayeeDialog} from "./edit-payee";
+import 'hammerjs';
 
 @NgModule({
   declarations: [

@@ -120,7 +120,6 @@ export class AppComponent implements OnInit {
 
     }
     this.dialogRef.componentInstance.payees = this._payees.getValue();
-
     this.dialogRef.componentInstance.transaction.date = moment.utc(transaction.date, this.UTC).format('YYYY-MM-DD');
     this.dialogRef.afterClosed().subscribe(result => {
 
@@ -131,6 +130,9 @@ export class AppComponent implements OnInit {
           transaction[attribut] = result[attribut];
         }
         transaction = result as Transaction;
+      //  let t = List<Transaction>(this._transactions);
+     //   this._transactions.next(this.sort(t));
+
       }
       this.dialogRef = null;
     });
@@ -305,7 +307,7 @@ export class AppComponent implements OnInit {
         transaction.type = this.findType(transaction.payee);
         this._transactions.next(this.sort(this._transactions.getValue().push(transaction)));
       } else {
-        this._transactions.next(this._transactions.getValue())
+        this._transactions.next(this.sort(this._transactions.getValue()))
       }
     }, () => {
 
