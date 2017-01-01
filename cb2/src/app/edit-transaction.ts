@@ -6,8 +6,14 @@ import {List} from "immutable";
 
 @Component({
   selector: 'transaction-dialog',
+  styles: ['div {display: flex;flex-direction: column;flex-grow: 1;}'],
   template: `
 
+
+
+
+
+  <div>
   <md-input placeholder="Amount" [(ngModel)]="transaction.amount" align="end">
         <span md-prefix>$&nbsp;</span>
       </md-input>
@@ -20,8 +26,10 @@ import {List} from "immutable";
         </option>
       </select>
     
-  <button md-button (click)="dialogRef.close(transaction)">Save</button>
+  </div>
+    <button md-button (click)="dialogRef.close(transaction)">Save</button>
   <button md-button (click)="dialogRef.close(null)">Cancel</button>
+
   `
 })
 

@@ -1,6 +1,6 @@
 import {Component, OnInit} from "@angular/core";
 import {AppService} from "./app.service";
-import {Transaction, Entity, Response, Repo, Payee, CashFlow} from "./app.model";
+import {Transaction, Entity, Response, Repo, Payee, CashFlow, Filters} from "./app.model";
 import {BehaviorSubject, Subject} from "rxjs";
 import {asObservable} from "./asObservable";
 import {List} from "immutable";
@@ -22,27 +22,14 @@ export class AppComponent implements OnInit {
   cashFlow: CashFlow[] = new Array<CashFlow>();
   UTC: string = "YYYY-MM-DD HH:mm:ss.SSS-05:00";
   loadingSubject = new Subject<boolean>();
-
   dialogRef: MdDialogRef<TransactionDialog>;
   payeeDialog: MdDialogRef<PayeeDialog>;
-
-  searchTerms = new Subject<string>();
-
+  _filters: Filters;
 
   constructor(private appService: AppService, private repo: Repo, public dialog: MdDialog, private snackBar: MdSnackBar) {
   }
 
-  search(value: string) {
-    this.searchTerms.next(value);
-  }
-
-
   ngOnInit() {
-
-
-    this.searchTerms.debounceTime(300).distinctUntilChanged().subscribe(term => {
-      this._transactions.next(this._transactions.getValue().filter(value => value.payee.startsWith(term)).toList());
-    })
 
 
     this.appService.get().subscribe(result => {
@@ -214,8 +201,21 @@ export class AppComponent implements OnInit {
 
   }
 
+  handleFiltersChange(filters: Filters): void {
+    this._filters = filters;
+  }
+
   get transactions() {
-    return asObservable(this._transactions);
+    const filters = this._filters;
+    if (filters) {
+      return new BehaviorSubject(this._transactions.getValue().filter(t => {
+        const payeePass = filters.payee ? t.payee.indexOf(filters.payee) > -1 : true;
+        return payeePass;
+      }).toList());
+    } else {
+      return asObservable(this._transactions);
+    }
+
   }
 
   delete(transaction: Transaction) {

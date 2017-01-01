@@ -1,5 +1,8 @@
 import {Injectable} from "@angular/core";
 
+export interface Filters {
+  payee: string;
+}
 
 export class Transaction {
   name: string;
