@@ -25,6 +25,8 @@ import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.Query;
 import com.google.gson.Gson;
 
+import static com.appspot.cloudbalance.Payee.DEFAULT_ACCOUNT;
+
 @Path("transaction")
 @Produces("application/json")
 public class TransactionServlet {
@@ -32,111 +34,45 @@ public class TransactionServlet {
     private static final Logger logger = Logger.getLogger(TransactionServlet.class
             .getCanonicalName());
 
-    protected static String formatDate(Date d) {
 
-        TimeZone tz = TimeZone.getTimeZone("UTC");
-
-        DateFormat df = new SimpleDateFormat(Constants.ISO_DATE_FORMAT);
-
-        df.setTimeZone(tz);
-
-        return df.format(d);
-
-    }
-
-    private static String writeJSON(Iterable<Entity> entities, Map<String, String> moreValues, Iterable<Entity> parents, String valueToNormalize) {
-        logger.log(Level.INFO, "creating JSON format object");
-        StringBuilder sb = new StringBuilder();
-        int i = 0;
-        sb.append("[");
-        for (Entity result : entities) {
-            Map<String, Object> properties = result.getProperties();
-            sb.append("{");
-            if (result.getKey().getName() == null)
-                sb.append("\"name\" : \"" + result.getKey().getId() + "\",");
-            else
-                sb.append("\"name\" : \"" + result.getKey().getName() + "\",");
-            for (String key : properties.keySet()) {
-                if (properties.get(key) == null) {
-                    sb.append("\"" + key + "\" : \"\",");
-                    continue;
-                }
-                if ("java.util.Date".equals(properties.get(key).getClass()
-                        .getCanonicalName())) {
-
-                    sb.append("\""
-                            + key
-                            + "\" : \""
-                            + formatDate((Date) properties.get(key)) + "\",");
-                } else {
-                    sb.append("\"" + key + "\" : \"" + properties.get(key)
-                            + "\",");
-                }
-
-            }
-            if (moreValues != null) {
-                for (String key : moreValues.keySet()) {
-                    if (properties.get(key) == null) {
-                        sb.append("\"" + key + "\" : \"\",");
-                        continue;
-                    }
-
-                    sb.append("\"" + key + "\" : \"" + moreValues.get(key)
-                            + "\",");
-                }
-            }
-
-            for (Entity p : parents) {
-
-                if (p.getKey().equals(result.getParent())) {
-                    sb.append("\"" + valueToNormalize + "\" : \"" + p.getProperty(valueToNormalize)
-                            + "\",");
-                }
-            }
-
-            sb.deleteCharAt(sb.lastIndexOf(","));
-            sb.append("},");
-            i++;
-        }
-        if (i > 0) {
-            sb.deleteCharAt(sb.lastIndexOf(","));
-        }
-        sb.append("]");
-        return sb.toString();
+    private class Tx {
+        Long name;
+        String payee;
+        Double amount;
+        String type;
+        String date;
     }
 
     @GET
     public String doGet(@QueryParam("transaction-searchby") String searchBy,
                         @QueryParam("q") String searchFor, @QueryParam("p") String searchParent) {
 
-
-        if (searchFor == null || searchFor.equals("")) {
-            Iterable<Entity> payees = Payee.getAllPayees();
-
-
-            List<Entity> transactions = new ArrayList<Entity>();
-
-            for (Entity payee : payees) {
-                logger.log(Level.INFO, payee.getKey().getName());
-                Query q = new Query(Transaction.KIND);
-                q.setAncestor(payee.getKey());
-                for (Entity e : Util.getDatastoreServiceInstance().prepare(q).asIterable(FetchOptions.Builder.withDefaults())) {
-                    transactions.add(e);
-                }
-            }
-            Collections.sort(transactions, new Comparator<Entity>() {
-                @Override
-                public int compare(Entity arg0, Entity arg1) {
-                    Date d1 = (Date) arg0.getProperty("date");
-                    Date d2 = (Date) arg1.getProperty("date");
-                    return d1.compareTo(d2);
-                }
-            });
-            return writeJSON(transactions, null, payees, "type");
-        } else if (searchBy == null && searchFor != null) {
-            return Util.writeJSON(Transaction.findTransaction(searchParent, searchFor));
+        Iterable<Entity> payees = Payee.getAllPayees();
+        Iterable<Entity> transactionEntities = Transaction.getAllTransactions(Query.SortDirection.ASCENDING);
+        Map<String, String> m = new HashMap<>();
+        for (Entity p : payees) {
+            m.put(p.getKey().getName(), (String) p.getProperty("type"));
         }
-        return "";
+        List<Tx> transactions = new ArrayList<Tx>();
+        for (Entity e : transactionEntities) {
+            if (e.getParent()==null) {
+                continue;
+            }
+            if (e.getParent().getParent()==null) {
+                continue;
+            }
+            if (!DEFAULT_ACCOUNT.equals(e.getParent().getParent().getName())) {
+                continue;
+            }
+            Tx tx = new Tx();
+            tx.name = e.getKey().getId();
+            tx.date = formatDate((Date) e.getProperty("date"));
+            tx.amount = (Double) e.getProperty("amount");
+            tx.payee = (String) e.getProperty("payee");
+            tx.type = m.get(tx.payee);
+            transactions.add(tx);
+        }
+        return new Gson().toJson(transactions);
     }
 
     @PUT
@@ -162,6 +98,13 @@ public class TransactionServlet {
             return Util.getErrorMessage(e);
         }
 
+    }
+
+    protected static String formatDate(Date d) {
+        TimeZone tz = TimeZone.getTimeZone("UTC");
+        DateFormat df = new SimpleDateFormat(Constants.ISO_DATE_FORMAT);
+        df.setTimeZone(tz);
+        return df.format(d);
     }
 
 
