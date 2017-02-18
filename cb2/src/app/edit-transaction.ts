@@ -21,7 +21,7 @@ import {List} from "immutable";
       </md-input>
 
       <select class="form-control" id="payee"
-              [(ngModel)]="transaction.payee">
+              [(ngModel)]="transaction.payee" [disabled]="transaction.name!=null">
         <option *ngFor="let payee of payees" [value]="payee.name">{{payee.name}}
         </option>
       </select>

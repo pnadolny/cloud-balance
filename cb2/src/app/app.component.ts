@@ -224,6 +224,8 @@ export class AppComponent implements OnInit {
       let transactions: List<Transaction> = this._transactions.getValue();
       let index = transactions.findIndex((r) => r.name == transaction.name);
       this._transactions.next(transactions.delete(index));
+      this.snackBar.open('Deleted', 'Ok');
+
     }, error => {
       this.snackBar.open('Crap..' + error, 'Ok');
 
