@@ -1,0 +1,23 @@
+<div>
+
+  <md-input-container>
+    <input mdInput placeholder="Amount" [(ngModel)]="transaction.amount">
+    <span md-prefix>$&nbsp;</span>
+  </md-input-container>
+  <md-input-container>
+    <input mdInput type="date" placeholder="Date" [(ngModel)]="transaction.date">
+  </md-input-container>
+
+
+  <md-select placeholder="Payee" [(ngModel)]="transaction.payee" name="payee" [disabled]="transaction.name!=null">
+    <md-option *ngFor="let payee of payees" [value]="payee.name">
+      {{payee.name}}
+    </md-option>
+  </md-select>
+
+</div>
+<md-dialog-actions>
+
+<button md-button (click)="dialogRef.close(transaction)">Save</button>
+<button md-button (click)="dialogRef.close(null)">Cancel</button>
+</md-dialog-actions>

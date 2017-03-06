@@ -14,8 +14,13 @@ export class AppService {
   constructor(private http: Http){}
 
   private transactionUrl = '../ng/resources/transaction';
-
   private payeeUrl = '../ng/resources/payee';
+  private userUrl = '/ng/resources/user';
+
+  getUser(): Observable<any> {
+
+    return this.http.get(this.userUrl);
+  }
 
   getPayees(): Observable<any> {
 

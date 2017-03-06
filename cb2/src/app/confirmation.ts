@@ -10,9 +10,14 @@ import {MdDialogRef} from "@angular/material";
   <div>
   Are you sure?  
   </div>
-    <button md-button (click)="dialogRef.close('yes')">Yes</button>
+  
+  <md-dialog-actions>
+  <button md-button (click)="dialogRef.close('yes')">Yes</button>
   <button md-button (click)="dialogRef.close(null)">No</button>
 
+  </md-dialog-actions>
+  
+  
   `
 })
 

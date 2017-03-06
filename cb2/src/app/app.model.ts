@@ -4,6 +4,14 @@ export interface Filters {
   payee: string;
 }
 
+export class User {
+
+  email: string;
+  logoutUrl: string;
+
+
+}
+
 export class Transaction {
   name: string;
   payee: string;

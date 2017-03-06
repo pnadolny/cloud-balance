@@ -1,0 +1,15 @@
+<div>
+  <md-input-container>
+    <input mdInput placeholder="Payee Name" [readonly]="nameReadonly" [(ngModel)]="payee.name" #payeeName>
+  </md-input-container>
+
+  <md-select placeholder="Type" id="payeetype" [(ngModel)]="payee.type">
+    <md-option *ngFor="let t of repo.types" [value]="t.id">{{t.value}}
+    </md-option>
+  </md-select>
+</div>
+<md-dialog-actions>
+
+<button md-button (click)="dialogRef.close(payee)">Save</button>
+<button md-button (click)="dialogRef.close(null)">Cancel</button>
+</md-dialog-actions>

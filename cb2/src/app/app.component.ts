@@ -1,6 +1,6 @@
 import {Component, OnInit} from "@angular/core";
 import {AppService} from "./app.service";
-import {Transaction, Entity, Response, Repo, Payee, CashFlow, Filters} from "./app.model";
+import {Transaction, Entity, Response, Repo, Payee, CashFlow, Filters, User} from "./app.model";
 import {BehaviorSubject, Subject} from "rxjs";
 import {asObservable} from "./asObservable";
 import {List} from "immutable";
@@ -26,6 +26,7 @@ export class AppComponent implements OnInit {
   dialogRef: MdDialogRef<TransactionDialog>;
   payeeDialog: MdDialogRef<PayeeDialog>;
   confirmationDialog: MdDialogRef<ConfirmationDialog>;
+  email: string;
 
   _filters: Filters;
 
@@ -34,6 +35,10 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
 
+    this.appService.getUser().subscribe(result => {
+      let user = (result.json() as User[]);
+      this.email = user[0].email;
+   })
 
     this.appService.get().subscribe(result => {
       let transactions = (result.json() as Transaction[]);
@@ -152,14 +157,12 @@ export class AppComponent implements OnInit {
     for (let t of this._transactions.getValue().toArray()) {
 
       if (currentMonth != moment(t.date).format("MMM")) {
-        console.log('New m...');
         cf = new CashFlow();
         this.cashFlow.push(cf);
       }
 
       cf.thisMonth = moment().format('MMM') == moment(t.date).format('MMM');
       let amount = Number(t.amount);
-      console.log(amount);
       cf.month = moment(t.date).format("MMM");
       cf.monthlyCashFlow = cf.monthlyCashFlow + amount;
       switch (t.type) {
@@ -234,16 +237,15 @@ export class AppComponent implements OnInit {
     });
 
 
-    this.dialogRef.afterClosed().subscribe(result => {
+    this.confirmationDialog.afterClosed().subscribe(result => {
 
       if (result) {
 
         this.appService.delete(transaction).subscribe(res => {
-          let response = res.json() as Response;
           let transactions: List<Transaction> = this._transactions.getValue();
           let index = transactions.findIndex((r) => r.name == transaction.name);
           this._transactions.next(transactions.delete(index));
-          this.snackBar.open('Deleted', 'Ok');
+          this.snackBar.open('Deleted','', {duration:500});
 
         }, error => {
           this.snackBar.open('Crap..' + error, 'Ok');
@@ -310,6 +312,8 @@ export class AppComponent implements OnInit {
       let entity = (response.json() as Entity);
       copy.name = "" + entity.key.id
       this._transactions.next(this.sort(this._transactions.getValue().push(copy)));
+      this.snackBar.open('Copied','', {duration:500});
+
 
     })
   }
