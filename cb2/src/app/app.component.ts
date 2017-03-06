@@ -8,6 +8,7 @@ import * as moment from "moment";
 import {MdDialogRef, MdDialog, MdSnackBar, MdSnackBarConfig} from "@angular/material";
 import {TransactionDialog} from "./edit-transaction";
 import {PayeeDialog} from "./edit-payee";
+import {ConfirmationDialog} from "./confirmation";
 
 @Component({
   selector: 'app-root',
@@ -24,6 +25,8 @@ export class AppComponent implements OnInit {
   loadingSubject = new Subject<boolean>();
   dialogRef: MdDialogRef<TransactionDialog>;
   payeeDialog: MdDialogRef<PayeeDialog>;
+  confirmationDialog: MdDialogRef<ConfirmationDialog>;
+
   _filters: Filters;
 
   constructor(private appService: AppService, private repo: Repo, public dialog: MdDialog, private snackBar: MdSnackBar) {
@@ -45,17 +48,22 @@ export class AppComponent implements OnInit {
     }))
 
 
+    // Balance and set Today flag
     this._transactions.subscribe(transactions => {
       let balance = 0.00;
       for (let t of transactions.reverse().toArray()) {
-
         t.today = moment().dayOfYear() == moment.utc(t.date, this.UTC).dayOfYear();
-
         balance = Number.parseFloat(t.amount) + balance;
         t.balance = balance;
       }
+    })
+
+    // Cash Flow
+    this._transactions.subscribe(() => {
       this.computeCashFlow();
     })
+
+
   }
 
   editPayee(payee: Payee, isNew?: boolean) {
@@ -219,17 +227,35 @@ export class AppComponent implements OnInit {
   }
 
   delete(transaction: Transaction) {
-    this.appService.delete(transaction).subscribe(res => {
-      let response = res.json() as Response;
-      let transactions: List<Transaction> = this._transactions.getValue();
-      let index = transactions.findIndex((r) => r.name == transaction.name);
-      this._transactions.next(transactions.delete(index));
-      this.snackBar.open('Deleted', 'Ok');
 
-    }, error => {
-      this.snackBar.open('Crap..' + error, 'Ok');
 
-    })
+    this.confirmationDialog = this.dialog.open(ConfirmationDialog, {
+      disableClose: false
+    });
+
+
+    this.dialogRef.afterClosed().subscribe(result => {
+
+      if (result) {
+
+        this.appService.delete(transaction).subscribe(res => {
+          let response = res.json() as Response;
+          let transactions: List<Transaction> = this._transactions.getValue();
+          let index = transactions.findIndex((r) => r.name == transaction.name);
+          this._transactions.next(transactions.delete(index));
+          this.snackBar.open('Deleted', 'Ok');
+
+        }, error => {
+          this.snackBar.open('Crap..' + error, 'Ok');
+
+        })
+
+      }
+
+    });
+
+
+
   }
 
   deletePayee(payee: Payee) {
@@ -311,7 +337,14 @@ export class AppComponent implements OnInit {
       } else {
         this._transactions.next(this.sort(this._transactions.getValue()))
       }
-    }, () => {
+    }, err => {
+
+        this.snackBar.open('Bummer..' + err.error.message, 'Ok',err.message);
+
+      },
+
+      () => {
+      this.snackBar.open('Done saving..', 'Ok');
 
 
     })

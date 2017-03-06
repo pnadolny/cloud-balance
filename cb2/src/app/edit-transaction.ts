@@ -14,12 +14,17 @@ import {List} from "immutable";
 
 
   <div>
-  <md-input placeholder="Amount" [(ngModel)]="transaction.amount" align="end">
-        <span md-prefix>$&nbsp;</span>
-      </md-input>
-      <md-input type="date" placeholder="Date" [(ngModel)]="transaction.date" align="end">
-      </md-input>
-
+  
+    <md-input-container>
+      <input mdInput placeholder="Amount" [(ngModel)]="transaction.amount" align="end">
+       <span md-prefix>$&nbsp;</span>
+    </md-input-container>
+  
+   <md-input-container>
+      <input mdInput type="date" placeholder="Date" [(ngModel)]="transaction.date" align="end">
+   
+   </md-input-container>
+   
       <select class="form-control" id="payee"
               [(ngModel)]="transaction.payee" [disabled]="transaction.name!=null">
         <option *ngFor="let payee of payees" [value]="payee.name">{{payee.name}}

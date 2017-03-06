@@ -9,9 +9,12 @@ import {Payee, Repo} from "./app.model";
 
   template: `
      <div>
-      <md-input  placeholder="Name" [readonly]="nameReadonly" [(ngModel)]="payee.name" align="begin" #payeeName>
-      <md-hint align="end">{{payeeName.characterCount}} / 100</md-hint>
-      </md-input>
+     
+     <md-input-container>
+      <md-hint align="end">{{payeeName.value.length}} / 100</md-hint>
+      <input mdInput [readonly]="nameReadonly" [(ngModel)]="payee.name" align="begin" #payeeName>
+     </md-input-container>
+
       <br>
 
 
@@ -34,5 +37,7 @@ export class PayeeDialog {
 
 
   constructor(public dialogRef: MdDialogRef<PayeeDialog>, private repo: Repo) {
+
+
   }
 }

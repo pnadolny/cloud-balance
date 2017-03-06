@@ -12,20 +12,20 @@ import {PayeeDialog} from "./edit-payee";
 import 'hammerjs';
 import { FiltersCmp } from './filters/filters.component';
 import {createFiltersObject} from "./create_filters_object";
-
+import {ConfirmationDialog} from "./confirmation";
 
 @NgModule({
   declarations: [
-    AppComponent,TransactionDialog,PayeeDialog,FiltersCmp
+    AppComponent,TransactionDialog,PayeeDialog,FiltersCmp,ConfirmationDialog
   ],
   imports: [
     BrowserModule,
     ReactiveFormsModule,
     FormsModule,
-    HttpModule,MaterialModule.forRoot()
+    HttpModule,MaterialModule
   ],
   providers: [AppService,Repo, {provide: 'createFiltersObject', useValue: createFiltersObject}],
   bootstrap: [AppComponent],
-  entryComponents: [TransactionDialog,PayeeDialog]
+  entryComponents: [TransactionDialog,PayeeDialog,ConfirmationDialog]
 })
 export class AppModule { }
