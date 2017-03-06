@@ -2,7 +2,7 @@
   <span>Cloud Balance</span>
 
   <span class="flex-right"></span>
-  <span>{{email}}</span>
+  <span>{{emailAddress}}</span>
 
 </md-toolbar>
 
@@ -10,6 +10,8 @@
 <md-tab-group>
 
   <md-tab label="Transactions&nbsp;({{count}})">
+
+
     <button md-tooltip="Create a Transaction" tooltip-position="below" md-button color="primary" (click)="editTransaction(null,true)">
       <md-icon >create</md-icon>&nbsp;Create
     </button>
@@ -36,10 +38,12 @@
           <td>{{transaction.amount | currency:'USD':true}}</td>
           <td>{{transaction.balance | currency:'USD':true}}</td>
           <td>
+            <div>
           <md-icon (click)="editTransaction(transaction)">edit</md-icon>&nbsp;
           <md-icon (click)="delete(transaction)">delete_forever</md-icon>&nbsp;
           <md-icon (click)="copy(transaction)">content_copy</md-icon>&nbsp;
           <md-icon (click)="copy(transaction,true)">filter_1</md-icon>&nbsp;
+            </div>
           </td>
         </tr>
         </tbody>
@@ -101,6 +105,5 @@
     </table>
   </md-tab>
 </md-tab-group>
-
 
 

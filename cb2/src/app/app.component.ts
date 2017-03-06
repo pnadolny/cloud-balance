@@ -26,8 +26,7 @@ export class AppComponent implements OnInit {
   dialogRef: MdDialogRef<TransactionDialog>;
   payeeDialog: MdDialogRef<PayeeDialog>;
   confirmationDialog: MdDialogRef<ConfirmationDialog>;
-  email: string;
-
+  email = new BehaviorSubject('Loading...');
   _filters: Filters;
 
   constructor(private appService: AppService, private repo: Repo, public dialog: MdDialog, private snackBar: MdSnackBar) {
@@ -37,7 +36,7 @@ export class AppComponent implements OnInit {
 
     this.appService.getUser().subscribe(result => {
       let user = (result.json() as User[]);
-      this.email = user[0].email;
+      this.email.next(user[0].email);
    })
 
     this.appService.get().subscribe(result => {
@@ -207,6 +206,10 @@ export class AppComponent implements OnInit {
     return this._transactions.getValue().count();
   }
 
+  get emailAddress() {
+    return this.email.getValue();
+  }
+
   get payees() {
     return asObservable(this._payees);
 
@@ -220,7 +223,7 @@ export class AppComponent implements OnInit {
     const filters = this._filters;
     if (filters) {
       return new BehaviorSubject(this._transactions.getValue().filter(t => {
-        const payeePass = filters.payee ? t.payee.indexOf(filters.payee) > -1 : true;
+        const payeePass = filters.payee ? t.payee.toUpperCase().indexOf(filters.payee.toUpperCase()) > -1 : true;
         return payeePass;
       }).toList());
     } else {
