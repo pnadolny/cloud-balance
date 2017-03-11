@@ -10,27 +10,26 @@ An application to manage a cash account, transactions, and compute your cash flo
 
 ## Language
 - [Java][2]
+- [TypeScript][13]
  
 ## Frameworks
-- [Angular JS][4]
+- [Angular][4]
 - [Angular Material][12]
-- [AngularHotkeys.js][6]
+- [Angular CLI][15]
+- [RxJs][16]
 - [Moment.js][7]
-- [Maven 3.1.0 or higher][9]
+- [Maven][9]
+- [npm][14]
 
 
 
-## Setup Instructions (Maven)
-
-1. Check out the app and run mvn appengine:deverserver
-2. Point your browser to http://localhost:8080
 
 
 
 [1]: https://developers.google.com/appengine
 [2]: http://java.com/en/
 [3]: https://localhost:8888/
-[4]: https://angularjs.org/
+[4]: https://angular.io/
 [5]: http://getbootstrap.com/2.3.2/
 [6]: http://chieffancypants.github.io/angular-hotkeys/
 [7]: http://momentjs.com/
@@ -38,6 +37,8 @@ An application to manage a cash account, transactions, and compute your cash flo
 [9]: http://maven.apache.org/
 [10]: http://angular-ui.github.io/bootstrap/
 [11]: http://imsky.github.io/holder
-[12]: https://material.angularjs.org/
-
-
+[12]: https://material.angular.io/
+[13]: https://www.typescriptlang.org/
+[14]: https://www.npmjs.com/
+[15]: https://github.com/angular/angular-cli
+[16]: https://github.com/Reactive-Extensions/RxJS
