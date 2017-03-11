@@ -148,24 +148,11 @@ export class AppComponent implements OnInit {
           transaction[attribut] = result[attribut];
         }
         transaction = result as Transaction;
-        //  let t = List<Transaction>(this._transactions);
-        //   this._transactions.next(this.sort(t));
-
       }
       this.dialogRef = null;
     });
   }
 
-  computeCashFlowMap() {
-
-
-    this._transactions.getValue().toArray().map(transaction => {
-      if (moment(transaction.date).isBefore(moment().add(1, 'day'))) {
-
-      }
-    })
-
-  }
 
   computeCashFlow() {
 
