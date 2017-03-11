@@ -65,23 +65,25 @@ export class AppComponent implements OnInit {
         balance = Number.parseFloat(t.amount) + balance;
         t.balance = balance;
       }
-    })
-
-    // Today's balance
-    this._transactions.subscribe(transactions => {
       let currentBalance;
       var dayOfYear = moment().dayOfYear();
+      let year = moment().format('YYYY');
+
+      console.log(dayOfYear);
       for (let t of transactions.reverse().toArray()) {
-        if (moment.utc(t.date, this.UTC).dayOfYear() > dayOfYear) {
-          break;
+        if (year == moment.utc(t.date, this.UTC).format('YYYY')) {
+          if (moment.utc(t.date, this.UTC).dayOfYear() > dayOfYear) {
+            break;
+          }
         }
         currentBalance = t.balance;
       }
       this.todaysBalance = currentBalance;
+      console.log(this.todaysBalance);
+
     })
 
-
-    // Cash Flow
+    // Cash Flows
     this._transactions.subscribe(() => {
       this.computeCashFlow();
     })
