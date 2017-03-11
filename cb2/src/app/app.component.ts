@@ -17,27 +17,32 @@ import {ConfirmationDialog} from "./confirmation";
 
 })
 export class AppComponent implements OnInit {
-  title = 'Transactions';
+
+  UTC: string = "YYYY-MM-DD HH:mm:ss.SSS-05:00";
+
   _transactions: BehaviorSubject<List<Transaction>> = new BehaviorSubject(List([]));
   _payees: BehaviorSubject<List<Payee>> = new BehaviorSubject(List([]));
+  _filters: Filters;
+
   cashFlow: CashFlow[] = new Array<CashFlow>();
-  UTC: string = "YYYY-MM-DD HH:mm:ss.SSS-05:00";
-  loadingSubject = new Subject<boolean>();
+  email = new BehaviorSubject('Loading...');
+  todaysBalance = 0.00;
+
   dialogRef: MdDialogRef<TransactionDialog>;
   payeeDialog: MdDialogRef<PayeeDialog>;
   confirmationDialog: MdDialogRef<ConfirmationDialog>;
-  email = new BehaviorSubject('Loading...');
-  _filters: Filters;
+
 
   constructor(private appService: AppService, private repo: Repo, public dialog: MdDialog, private snackBar: MdSnackBar) {
   }
 
   ngOnInit() {
 
+
     this.appService.getUser().subscribe(result => {
       let user = (result.json() as User[]);
       this.email.next(user[0].email);
-   })
+    })
 
     this.appService.get().subscribe(result => {
       let transactions = (result.json() as Transaction[]);
@@ -61,6 +66,20 @@ export class AppComponent implements OnInit {
         t.balance = balance;
       }
     })
+
+    // Today's balance
+    this._transactions.subscribe(transactions => {
+      let currentBalance;
+      var dayOfYear = moment().dayOfYear();
+      for (let t of transactions.reverse().toArray()) {
+        if (moment.utc(t.date, this.UTC).dayOfYear() > dayOfYear) {
+          break;
+        }
+        currentBalance = t.balance;
+      }
+      this.todaysBalance = currentBalance;
+    })
+
 
     // Cash Flow
     this._transactions.subscribe(() => {
@@ -129,8 +148,8 @@ export class AppComponent implements OnInit {
           transaction[attribut] = result[attribut];
         }
         transaction = result as Transaction;
-      //  let t = List<Transaction>(this._transactions);
-     //   this._transactions.next(this.sort(t));
+        //  let t = List<Transaction>(this._transactions);
+        //   this._transactions.next(this.sort(t));
 
       }
       this.dialogRef = null;
@@ -140,13 +159,13 @@ export class AppComponent implements OnInit {
   computeCashFlowMap() {
 
 
-      this._transactions.getValue().toArray().map(transaction => {
-        if (moment(transaction.date).isBefore(moment().add(1,'day'))) {
+    this._transactions.getValue().toArray().map(transaction => {
+      if (moment(transaction.date).isBefore(moment().add(1, 'day'))) {
 
-        }
-      })
+      }
+    })
 
-    }
+  }
 
   computeCashFlow() {
 
@@ -248,7 +267,7 @@ export class AppComponent implements OnInit {
           let transactions: List<Transaction> = this._transactions.getValue();
           let index = transactions.findIndex((r) => r.name == transaction.name);
           this._transactions.next(transactions.delete(index));
-          this.snackBar.open('Deleted','', {duration:500});
+          this.snackBar.open('Deleted', '', {duration: 500});
 
         }, error => {
           this.snackBar.open('Crap..' + error, 'Ok');
@@ -260,7 +279,6 @@ export class AppComponent implements OnInit {
     });
 
 
-
   }
 
   deletePayee(payee: Payee) {
@@ -268,8 +286,8 @@ export class AppComponent implements OnInit {
       let r = response.json() as Response;
       if (r.error) {
         console.error(r.error.message);
-        let config =  new MdSnackBarConfig();
-        this.snackBar.open('Crap..' + r.error.message, 'Ok',config);
+        let config = new MdSnackBarConfig();
+        this.snackBar.open('Crap..' + r.error.message, 'Ok', config);
       } else {
         let payees: List<Payee> = this._payees.getValue();
         let index = payees.findIndex((p) => p.name == payee.name
@@ -315,7 +333,7 @@ export class AppComponent implements OnInit {
       let entity = (response.json() as Entity);
       copy.name = "" + entity.key.id
       this._transactions.next(this.sort(this._transactions.getValue().push(copy)));
-      this.snackBar.open('Copied','', {duration:500});
+      this.snackBar.open('Copied', '', {duration: 500});
 
 
     })
@@ -336,25 +354,25 @@ export class AppComponent implements OnInit {
       transaction.name = "";
     }
     this.appService.save(transaction).subscribe(response => {
-      let entity = (response.json() as Entity);
-      if (transaction.name == "") {
-        transaction.name = "" + entity.key.id;
-        transaction.type = this.findType(transaction.payee);
-        this._transactions.next(this.sort(this._transactions.getValue().push(transaction)));
-      } else {
-        this._transactions.next(this.sort(this._transactions.getValue()))
-      }
-    }, err => {
+        let entity = (response.json() as Entity);
+        if (transaction.name == "") {
+          transaction.name = "" + entity.key.id;
+          transaction.type = this.findType(transaction.payee);
+          this._transactions.next(this.sort(this._transactions.getValue().push(transaction)));
+        } else {
+          this._transactions.next(this.sort(this._transactions.getValue()))
+        }
+      }, err => {
 
-        this.snackBar.open('Bummer..' + err.error.message, 'Ok',err.message);
+        this.snackBar.open('Bummer..' + err.error.message, 'Ok', err.message);
 
       },
 
       () => {
-      this.snackBar.open('Done saving..', 'Ok');
+        this.snackBar.open('Done saving..', 'Ok');
 
 
-    })
+      })
   }
 
 }

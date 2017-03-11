@@ -1,9 +1,9 @@
 <md-toolbar color="primary">
   <span>Cloud Balance</span>
-
+  <span class="flex-right"></span>
+  <span>{{todaysBalance | currency:'USD':true}}</span>
   <span class="flex-right"></span>
   <span>{{emailAddress}}</span>
-
 </md-toolbar>
 
 
@@ -12,8 +12,10 @@
   <md-tab label="Transactions&nbsp;({{count}})">
 
 
-    <button md-tooltip="Create a Transaction" tooltip-position="below" md-button color="primary" (click)="editTransaction(null,true)">
-      <md-icon >create</md-icon>&nbsp;Create
+    <button md-tooltip="Create a Transaction" tooltip-position="below" md-button color="primary"
+            (click)="editTransaction(null,true)">
+      <md-icon>create</md-icon>
+      &nbsp;Create
     </button>
 
     <filters-cmp (change)="handleFiltersChange($event)"></filters-cmp>
@@ -39,10 +41,14 @@
           <td>{{transaction.balance | currency:'USD':true}}</td>
           <td>
             <div>
-          <md-icon (click)="editTransaction(transaction)">edit</md-icon>&nbsp;
-          <md-icon (click)="delete(transaction)">delete_forever</md-icon>&nbsp;
-          <md-icon (click)="copy(transaction)">content_copy</md-icon>&nbsp;
-          <md-icon (click)="copy(transaction,true)">filter_1</md-icon>&nbsp;
+              <md-icon (click)="editTransaction(transaction)">edit</md-icon>
+              &nbsp;
+              <md-icon (click)="delete(transaction)">delete_forever</md-icon>
+              &nbsp;
+              <md-icon (click)="copy(transaction)">content_copy</md-icon>
+              &nbsp;
+              <md-icon (click)="copy(transaction,true)">filter_1</md-icon>
+              &nbsp;
             </div>
           </td>
         </tr>
@@ -80,8 +86,10 @@
   </md-tab>
 
   <md-tab label="Payees&nbsp;({{payeeCount}})">
-    <button md-tooltip="Create a Payee" tooltip-position="below" md-button color="primary" (click)="editPayee(null,true)">
-      <md-icon >create</md-icon>&nbsp;Create
+    <button md-tooltip="Create a Payee" tooltip-position="below" md-button color="primary"
+            (click)="editPayee(null,true)">
+      <md-icon>create</md-icon>
+      &nbsp;Create
     </button>
     <table class="table table-striped table-hover table-sm">
       <thead class="thead-inverse">
@@ -94,12 +102,15 @@
       </thead>
       <tbody>
       <tr *ngFor="let payee of payees | async; let i = index">
-        <td><span class="tag tag-default tag-pill payee-type-{{payee.type}}">{{payee.type | uppercase}}</span>&nbsp;{{payee.name}}</td>
+        <td><span class="tag tag-default tag-pill payee-type-{{payee.type}}">{{payee.type | uppercase}}</span>&nbsp;{{payee.name}}
+        </td>
         <td>{{payee.thisMonth | currency:'USD':true}}</td>
         <td>{{payee.total | currency:'USD':true}}</td>
         <td>
-          <md-icon (click)="editPayee(payee)">edit</md-icon>&nbsp;
-        <md-icon (click)="deletePayee(payee)">delete_forever</md-icon></td>
+          <md-icon (click)="editPayee(payee)">edit</md-icon>
+          &nbsp;
+          <md-icon (click)="deletePayee(payee)">delete_forever</md-icon>
+        </td>
       </tr>
       </tbody>
     </table>
