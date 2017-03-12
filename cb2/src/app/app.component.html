@@ -1,9 +1,21 @@
 <md-toolbar color="primary">
-  <span>Cloud Balance</span>
+  <span>Cloud Balance<br><div style="font-weight: 300;
+    font-size: 12px;">{{emailAddress}}</div></span>
+
+
   <span class="flex-right"></span>
-  <span>{{todaysBalance | currency:'USD':true}}</span>
+
+  <span>{{balanceBeforeIncome | currency:'USD':true}}<br><div style="font-weight: 300;
+    font-size: 12px;">Balance before <span class="tag tag-default tag-pill payee-type-i">I</span></div></span>
+
   <span class="flex-right"></span>
-  <span>{{emailAddress}}</span>
+
+  <span>{{todaysBalance | currency:'USD':true}}<br><div style="font-weight: 300;
+    font-size: 12px;">Balance</div></span>
+
+
+
+
 </md-toolbar>
 
 

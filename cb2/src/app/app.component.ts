@@ -26,7 +26,8 @@ export class AppComponent implements OnInit {
 
   cashFlow: CashFlow[] = new Array<CashFlow>();
   email = new BehaviorSubject('Loading...');
-  todaysBalance = 0.00;
+  todaysBalance: number = 0.00;
+  balanceBeforeIncome: number = 0.00;
 
   dialogRef: MdDialogRef<TransactionDialog>;
   payeeDialog: MdDialogRef<PayeeDialog>;
@@ -65,10 +66,11 @@ export class AppComponent implements OnInit {
         balance = Number.parseFloat(t.amount) + balance;
         t.balance = balance;
       }
+
+
       let currentBalance;
       var dayOfYear = moment().dayOfYear();
       let year = moment().format('YYYY');
-
       console.log(dayOfYear);
       for (let t of transactions.reverse().toArray()) {
         if (year == moment.utc(t.date, this.UTC).format('YYYY')) {
@@ -80,6 +82,21 @@ export class AppComponent implements OnInit {
       }
       this.todaysBalance = currentBalance;
       console.log(this.todaysBalance);
+
+
+      for (let t of transactions.reverse().toArray()) {
+        if (year == moment.utc(t.date, this.UTC).format('YYYY')) {
+          if (moment.utc(t.date, this.UTC).dayOfYear() > dayOfYear) {
+            if (t.type == 'i') {
+
+              break;
+            }
+          }
+        }
+        this.balanceBeforeIncome = t.balance;
+      }
+
+
 
     })
 
