@@ -14,23 +14,23 @@
     font-size: 12px;">Balance</div></span>
 
 
-
-
 </md-toolbar>
 
-
-<md-tab-group>
-
-  <md-tab label="Transactions&nbsp;({{count}})">
+<div class="content">
 
 
-    <button md-tooltip="Create a Transaction" tooltip-position="below" md-button color="primary"
-            (click)="editTransaction(null,true)">
-      <md-icon>create</md-icon>
-      &nbsp;Create
-    </button>
+  <md-tab-group>
 
-    <filters-cmp (change)="handleFiltersChange($event)"></filters-cmp>
+    <md-tab label="Transactions&nbsp;({{count}})">
+
+
+      <button md-tooltip="Create a Transaction" tooltip-position="below" md-button color="primary"
+              (click)="editTransaction(null,true)">
+        <md-icon>create</md-icon>
+        &nbsp;Create
+      </button>
+
+      <filters-cmp (change)="handleFiltersChange($event)"></filters-cmp>
 
       <table class="mdDataTable">
         <thead>
@@ -65,66 +65,67 @@
         </tr>
         </tbody>
       </table>
-  </md-tab>
+    </md-tab>
 
 
-  <md-tab label="Cash Flow">
-    <table class="mdDataTable">
-      <thead>
-      <tr>
-        <th>Month</th>
-        <th><span class="tag tag-default tag-pill payee-type-i">I</span>&nbsp;Income</th>
-        <th><span class="tag tag-default tag-pill payee-type-s">S</span>&nbsp;Static</th>
-        <th><span class="tag tag-default tag-pill payee-type-d">D</span>&nbsp;Discretionary</th>
-        <th><span class="tag tag-default tag-pill payee-type-f">F</span>&nbsp;Future</th>
-        <th><span class="tag tag-default tag-pill payee-type-o">O</span>&nbsp;Other</th>
-        <th>Cash Flow</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr *ngFor="let cf of cashFlow " [class.selected]="cf.thisMonth">
-        <td>{{cf.month}}</td>
-        <td>{{cf.income | currency:'USD':true }}</td>
-        <td>{{cf.static | currency:'USD':true }}</td>
-        <td>{{cf.discretionary | currency:'USD':true }}</td>
-        <td>{{cf.future | currency:'USD':true }}</td>
-        <td>{{cf.other | currency:'USD':true }}</td>
-        <td>{{cf.monthlyCashFlow | currency:'USD':true }}</td>
-      </tr>
-      </tbody>
-    </table>
-  </md-tab>
+    <md-tab label="Cash Flow">
+      <table class="mdDataTable">
+        <thead>
+        <tr>
+          <th>Month</th>
+          <th><span class="tag tag-default tag-pill payee-type-i">I</span>&nbsp;Income</th>
+          <th><span class="tag tag-default tag-pill payee-type-s">S</span>&nbsp;Static</th>
+          <th><span class="tag tag-default tag-pill payee-type-d">D</span>&nbsp;Discretionary</th>
+          <th><span class="tag tag-default tag-pill payee-type-f">F</span>&nbsp;Future</th>
+          <th><span class="tag tag-default tag-pill payee-type-o">O</span>&nbsp;Other</th>
+          <th>Cash Flow</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let cf of cashFlow " [class.selected]="cf.thisMonth">
+          <td>{{cf.month}}</td>
+          <td>{{cf.income | currency:'USD':true }}</td>
+          <td>{{cf.static | currency:'USD':true }}</td>
+          <td>{{cf.discretionary | currency:'USD':true }}</td>
+          <td>{{cf.future | currency:'USD':true }}</td>
+          <td>{{cf.other | currency:'USD':true }}</td>
+          <td>{{cf.monthlyCashFlow | currency:'USD':true }}</td>
+        </tr>
+        </tbody>
+      </table>
+    </md-tab>
 
-  <md-tab label="Payees&nbsp;({{payeeCount}})">
-    <button md-tooltip="Create a Payee" tooltip-position="below" md-button color="primary"
-            (click)="editPayee(null,true)">
-      <md-icon>create</md-icon>
-      &nbsp;Create
-    </button>
-    <table class="mdDataTable">
-      <thead>
-      <tr>
-        <th>Name</th>
-        <th>{{currentMonth}}</th>
-        <th>Total</th>
-        <th class="rightAlignedColumn">Action</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr *ngFor="let payee of payees | async; let i = index">
-        <td><span class="tag tag-default tag-pill payee-type-{{payee.type}}">{{payee.type | uppercase}}</span>&nbsp;{{payee.name}}
-        </td>
-        <td>{{payee.thisMonth | currency:'USD':true}}</td>
-        <td>{{payee.total | currency:'USD':true}}</td>
-        <td class="rightAlignedColumn">
-          <md-icon (click)="editPayee(payee)">edit</md-icon>
-          &nbsp;
-          <md-icon (click)="deletePayee(payee)">delete_forever</md-icon>
-        </td>
-      </tr>
-      </tbody>
-    </table>
-  </md-tab>
-</md-tab-group>
+    <md-tab label="Payees&nbsp;({{payeeCount}})">
+      <button md-tooltip="Create a Payee" tooltip-position="below" md-button color="primary"
+              (click)="editPayee(null,true)">
+        <md-icon>create</md-icon>
+        &nbsp;Create
+      </button>
+      <table class="mdDataTable">
+        <thead>
+        <tr>
+          <th>Name</th>
+          <th>{{currentMonth}}</th>
+          <th>Total</th>
+          <th class="rightAlignedColumn">Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let payee of payees | async; let i = index">
+          <td><span class="tag tag-default tag-pill payee-type-{{payee.type}}">{{payee.type | uppercase}}</span>&nbsp;{{payee.name}}
+          </td>
+          <td>{{payee.thisMonth | currency:'USD':true}}</td>
+          <td>{{payee.total | currency:'USD':true}}</td>
+          <td class="rightAlignedColumn">
+            <md-icon (click)="editPayee(payee)">edit</md-icon>
+            &nbsp;
+            <md-icon (click)="deletePayee(payee)">delete_forever</md-icon>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </md-tab>
+  </md-tab-group>
 
+</div>
 

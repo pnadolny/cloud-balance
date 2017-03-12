@@ -1,7 +1,7 @@
 import {Component, OnInit} from "@angular/core";
 import {AppService} from "./app.service";
 import {Transaction, Entity, Response, Repo, Payee, CashFlow, Filters, User} from "./app.model";
-import {BehaviorSubject, Subject} from "rxjs";
+import {BehaviorSubject} from "rxjs";
 import {asObservable} from "./asObservable";
 import {List} from "immutable";
 import * as moment from "moment";
@@ -68,34 +68,29 @@ export class AppComponent implements OnInit {
       }
 
 
-      let currentBalance;
       var dayOfYear = moment().dayOfYear();
       let year = moment().format('YYYY');
-      console.log(dayOfYear);
+
       for (let t of transactions.reverse().toArray()) {
         if (year == moment.utc(t.date, this.UTC).format('YYYY')) {
           if (moment.utc(t.date, this.UTC).dayOfYear() > dayOfYear) {
             break;
           }
         }
-        currentBalance = t.balance;
+        this.todaysBalance = t.balance;
       }
-      this.todaysBalance = currentBalance;
-      console.log(this.todaysBalance);
 
 
       for (let t of transactions.reverse().toArray()) {
         if (year == moment.utc(t.date, this.UTC).format('YYYY')) {
           if (moment.utc(t.date, this.UTC).dayOfYear() > dayOfYear) {
             if (t.type == 'i') {
-
               break;
             }
           }
         }
         this.balanceBeforeIncome = t.balance;
       }
-
 
 
     })

@@ -7,6 +7,19 @@
 
 /* Source for this Material Design table is: https://github.com/iamisti/md-data-table */
 
+md-toolbar {
+  margin:0px auto;
+  position:fixed;
+  top:0px;
+  z-index: 100;
+}
+
+.content {
+  margin-top: 60px;
+
+}
+
+
 .mdDataTable {
   font-size: 15px;
   width: 100%;
