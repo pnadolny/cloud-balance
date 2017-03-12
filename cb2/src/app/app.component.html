@@ -1,16 +1,17 @@
 <md-toolbar color="primary">
   <span>Cloud Balance<br><div style="font-weight: 300;
-    font-size: 12px;">{{emailAddress}}</div></span>
+    font-size: 12px;">{{emailAddress}}&nbsp;&nbsp; <a mdTooltip="Sign off" style="color:white" href="{{logoutURL}}">Sign out</a>
+</div></span>
 
 
   <span class="flex-right"></span>
 
-  <span>{{balanceBeforeIncome | currency:'USD':true}}<br><div style="font-weight: 300;
+  <span mdTooltip="Balance just before Income">{{balanceBeforeIncome | currency:'USD':true}}<br><div style="font-weight: 300;
     font-size: 12px;">Balance before <span class="tag tag-default tag-pill payee-type-i">I</span></div></span>
 
   <span class="flex-right"></span>
 
-  <span>{{todaysBalance | currency:'USD':true}}<br><div style="font-weight: 300;
+  <span mdTooltip="Today's balance">{{todaysBalance | currency:'USD':true}}<br><div style="font-weight: 300;
     font-size: 12px;">Balance</div></span>
 
 
@@ -26,7 +27,7 @@
 
       <button md-tooltip="Create a Transaction" tooltip-position="below" md-button color="primary"
               (click)="editTransaction(null,true)">
-        <md-icon>create</md-icon>
+        <md-icon mdTooltip="Create a new Transaction">create</md-icon>
         &nbsp;Create
       </button>
 
@@ -52,13 +53,13 @@
           <td class="column leftAlignedColumn">{{transaction.balance | currency:'USD':true}}</td>
           <td class="rightAlignedColumn">
             <div>
-              <md-icon (click)="editTransaction(transaction)">edit</md-icon>
+              <md-icon mdTooltip="Edit" (click)="editTransaction(transaction)">edit</md-icon>
               &nbsp;
-              <md-icon (click)="delete(transaction)">delete_forever</md-icon>
+              <md-icon mdTooltip="Delete" (click)="delete(transaction)">delete_forever</md-icon>
               &nbsp;
-              <md-icon (click)="copy(transaction)">content_copy</md-icon>
+              <md-icon mdTooltip="Copy" (click)="copy(transaction)">content_copy</md-icon>
               &nbsp;
-              <md-icon (click)="copy(transaction,true)">filter_1</md-icon>
+              <md-icon mdTooltip="Copy to next month" (click)="copy(transaction,true)">filter_1</md-icon>
               &nbsp;
             </div>
           </td>

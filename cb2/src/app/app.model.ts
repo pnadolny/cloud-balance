@@ -7,7 +7,7 @@ export interface Filters {
 export class User {
 
   email: string;
-  logoutUrl: string;
+  logoutURL: string;
 
 
 }

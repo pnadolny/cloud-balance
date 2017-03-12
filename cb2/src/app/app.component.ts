@@ -26,6 +26,7 @@ export class AppComponent implements OnInit {
 
   cashFlow: CashFlow[] = new Array<CashFlow>();
   email = new BehaviorSubject('Loading...');
+  logoutURL: string;
   todaysBalance: number = 0.00;
   balanceBeforeIncome: number = 0.00;
 
@@ -43,6 +44,8 @@ export class AppComponent implements OnInit {
     this.appService.getUser().subscribe(result => {
       let user = (result.json() as User[]);
       this.email.next(user[0].email);
+      this.logoutURL = user[0].logoutURL;
+      console.log(this.logoutURL)
     })
 
     this.appService.get().subscribe(result => {

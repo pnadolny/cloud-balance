@@ -19,6 +19,10 @@ md-toolbar {
 
 }
 
+.flex-right {
+  flex: 1 1 auto;
+}
+
 
 .mdDataTable {
   font-size: 15px;
