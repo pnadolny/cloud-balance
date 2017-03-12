@@ -1,6 +1,6 @@
 import {Component, OnInit} from "@angular/core";
 import {AppService} from "./app.service";
-import {Transaction, Entity, Response, Repo, Payee, CashFlow, Filters, User} from "./app.model";
+import {Transaction, Entity, Response, Repo, Payee, CashFlow, Filters, User, TransactionType} from "./app.model";
 import {BehaviorSubject} from "rxjs";
 import {asObservable} from "./asObservable";
 import {List} from "immutable";
@@ -191,17 +191,17 @@ export class AppComponent implements OnInit {
       let amount = Number(t.amount);
       cf.month = moment(t.date).format("MMM");
       cf.monthlyCashFlow = cf.monthlyCashFlow + amount;
-      switch (t.type) {
-        case "i":
+      switch (TransactionType[t.type]) {
+        case TransactionType.i:
           cf.income = cf.income + amount;
           break;
-        case "s":
+        case TransactionType.s:
           cf.static = cf.static + amount;
           break;
-        case "d":
+        case TransactionType.d:
           cf.discretionary = cf.discretionary + amount;
           break;
-        case "f":
+        case TransactionType.f:
           cf.future = cf.future + amount;
           break;
         default:

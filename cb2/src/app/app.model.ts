@@ -12,6 +12,12 @@ export class User {
 
 }
 
+export enum TransactionType {
+  i,s,d,f
+
+}
+
+
 export class Transaction {
   name: string;
   payee: string;
