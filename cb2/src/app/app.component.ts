@@ -61,8 +61,8 @@ export class AppComponent implements OnInit {
     }))
 
 
-    // Balance and set Today flag
     this._transactions.subscribe(transactions => {
+
       let balance = 0.00;
       for (let t of transactions.reverse().toArray()) {
         t.today = moment().dayOfYear() == moment.utc(t.date, this.UTC).dayOfYear();
@@ -70,33 +70,37 @@ export class AppComponent implements OnInit {
         t.balance = balance;
       }
 
+      const dayOfYear = moment().dayOfYear();
+      const year = moment().format('YYYY');
 
-      var dayOfYear = moment().dayOfYear();
-      let year = moment().format('YYYY');
-
-      for (let t of transactions.reverse().toArray()) {
-        if (year == moment.utc(t.date, this.UTC).format('YYYY')) {
-          if (moment.utc(t.date, this.UTC).dayOfYear() > dayOfYear) {
-            break;
-          }
-        }
-        this.todaysBalance = t.balance;
-      }
+      this.todaysBalance = transactions.reverse().toArray().filter(t => {
+        return (year == moment.utc(t.date, this.UTC).format('YYYY'));
+      }).filter(t => {
+        return (moment.utc(t.date, this.UTC).dayOfYear() < dayOfYear + 1);
+      }).map((t) => {
+        return t.balance
+      }).reduce((previousBalance, nextBalance) => {
+        return nextBalance;
+      }, 0);
 
 
-      for (let t of transactions.reverse().toArray()) {
-        if (year == moment.utc(t.date, this.UTC).format('YYYY')) {
-          if (moment.utc(t.date, this.UTC).dayOfYear() > dayOfYear) {
-            if (t.type == 'i') {
-              break;
-            }
-          }
-        }
-        this.balanceBeforeIncome = t.balance;
-      }
+      this.balanceBeforeIncome = transactions.reverse().toArray().filter(t => {
+        return (year == moment.utc(t.date, this.UTC).format('YYYY'));
+      }).filter(t => {
+        return (moment.utc(t.date, this.UTC).dayOfYear() > dayOfYear);
+      })
+        .filter(t => {
+          return (t.type != 'i')
+        })
+        .map((t) => {
+          return t.balance
+        }).reduce((previousBalance, nextBalance) => {
+          return nextBalance;
+        }, 0);
 
 
     })
+
 
     // Cash Flows
     this._transactions.subscribe(() => {
