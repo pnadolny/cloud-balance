@@ -29,6 +29,7 @@ export class AppComponent implements OnInit {
   logoutURL: string;
   todaysBalance: number = 0.00;
   balanceBeforeIncome: number = 0.00;
+  searching: boolean = false;
 
   dialogRef: MdDialogRef<TransactionDialog>;
   payeeDialog: MdDialogRef<PayeeDialog>;
@@ -110,7 +111,13 @@ export class AppComponent implements OnInit {
 
   }
 
-  editPayee(payee: Payee, isNew?: boolean) {
+  get todaysDate() {
+    return moment().format("MM/DD/YYYY")
+
+
+  }
+
+editPayee(payee: Payee, isNew?: boolean) {
 
     this.payeeDialog = this.dialog.open(PayeeDialog, {
       disableClose: false
@@ -293,20 +300,14 @@ export class AppComponent implements OnInit {
     this.appService.deletePayee(payee).subscribe(response => {
       let r = response.json() as Response;
       if (r.error) {
-        console.error(r.error.message);
         let config = new MdSnackBarConfig();
         this.snackBar.open('Crap..' + r.error.message, 'Ok', config);
       } else {
         let payees: List<Payee> = this._payees.getValue();
-        let index = payees.findIndex((p) => p.name == payee.name
-        );
+        let index = payees.findIndex((p) => p.name == payee.name);
         this._payees.next(payees.delete(index));
 
       }
-
-
-      console.log(r);
-
     })
 
   }

@@ -12,7 +12,7 @@
   <span class="flex-right"></span>
 
   <span mdTooltip="Today's balance">{{todaysBalance | currency:'USD':true}}<br><div style="font-weight: 300;
-    font-size: 12px;">Balance</div></span>
+    font-size: 12px;">{{todaysDate}}</div></span>
 
 
 </md-toolbar>
@@ -24,14 +24,38 @@
 
     <md-tab label="Transactions&nbsp;({{count}})">
 
+      <div *ngIf="!searching">
+        <button md-tooltip="Create a Transaction" tooltip-position="below" md-button color="primary"
+                (click)="editTransaction(null,true)">
+          <md-icon mdTooltip="Create a new Transaction">create</md-icon>
+          &nbsp;Create
+        </button>
 
-      <button md-tooltip="Create a Transaction" tooltip-position="below" md-button color="primary"
-              (click)="editTransaction(null,true)">
-        <md-icon mdTooltip="Create a new Transaction">create</md-icon>
-        &nbsp;Create
-      </button>
+        <button md-tooltip="Search" tooltip-position="below" md-button color="primary"
+                (click)="searching=true">
 
-      <filters-cmp (change)="handleFiltersChange($event)"></filters-cmp>
+          <md-icon>search</md-icon>
+          &nbsp;Search
+        </button>
+
+
+      </div>
+
+      <div *ngIf="searching" style="display: flex;flex-direction: column;flex-grow: 1;">
+
+          <button md-tooltip="Close" tooltip-position="below" md-button color="primary"
+                  (click)="searching=false">
+            <md-icon>close</md-icon>
+            &nbsp;Close
+
+          </button>
+          <filters-cmp (change)="handleFiltersChange($event)"></filters-cmp>
+
+
+
+      </div>
+
+
 
       <table class="mdDataTable">
         <thead>
