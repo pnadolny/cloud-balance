@@ -85,23 +85,44 @@ export class AppComponent implements OnInit {
       }, 0);
 
 
-      this.balanceBeforeIncome = transactions.reverse().toArray().filter(t => {
-        return (year == moment.utc(t.date, this.UTC).format('YYYY'));
-      }).filter(t => {
-        return (moment.utc(t.date, this.UTC).dayOfYear() > dayOfYear);
-      })
-        .filter(t => {
-          return (t.type != 'i')
-        })
-        .map((t) => {
-          return t.balance
-        }).reduce((previousBalance, nextBalance) => {
-          return nextBalance;
-        }, 0);
+      let initialTransaction = new Transaction();
+      initialTransaction.balance =0.00;
+
+
+      // Find the balance just before next income item
+
+
+      let nextPayDateTransaction = transactions.reverse().toArray()
+
+        .filter(transaction => {return (moment.utc(transaction.date, this.UTC).isAfter(moment()));})
+
+        // is an Income type
+        .filter(transaction => {return (TransactionType[transaction.type] == TransactionType.i)})
+        // reduce to earliest income item
+        .reduce((previousTransaction,nextTransaction) => {
+
+          return moment.utc(previousTransaction.date, this.UTC).isBefore(moment.utc(nextTransaction.date, this.UTC))
+          ? previousTransaction : nextTransaction
+
+        },initialTransaction);
+
+      this.balanceBeforeIncome = transactions.reverse().toArray()
+
+        .filter(transaction => {return (moment.utc(transaction.date, this.UTC).isAfter(moment()));})
+        .filter(transaction => {return (moment.utc(transaction.date, this.UTC).dayOfYear() < moment.utc(nextPayDateTransaction.date, this.UTC).dayOfYear());})
+        // is not an Income type
+        .filter(transaction => {return (TransactionType[transaction.type] != TransactionType.i)})
+        // reduce to lastest item
+        .reduce((previousTransaction,nextTransaction) => {
+
+          return moment.utc(previousTransaction.date, this.UTC).isAfter(moment.utc(nextTransaction.date, this.UTC))
+            ? previousTransaction : nextTransaction
+
+        },initialTransaction).balance;
+
 
 
     })
-
 
     // Cash Flows
     this._transactions.subscribe(() => {

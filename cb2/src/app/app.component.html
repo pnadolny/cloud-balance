@@ -4,9 +4,10 @@
 </div></span>
 
 
+
   <span class="flex-right"></span>
 
-  <span mdTooltip="Balance just before Income">{{balanceBeforeIncome | currency:'USD':true}}<br><div style="font-weight: 300;
+  <span *ngIf="balanceBeforeIncome!=0" mdTooltip="Balance just before Income">{{balanceBeforeIncome | currency:'USD':true}}<br><div style="font-weight: 300;
     font-size: 12px;">Balance before <span class="tag tag-default tag-pill payee-type-i">I</span></div></span>
 
   <span class="flex-right"></span>
