@@ -32,11 +32,12 @@ public class TransactionServlet {
     }
 
     @GET
-    public String doGet(@QueryParam("transaction-searchby") String searchBy,
-                        @QueryParam("q") String searchFor, @QueryParam("p") String searchParent) {
+    public String doGet(
+                        @QueryParam("month") Integer month, @QueryParam("year") Integer year) {
 
         Iterable<Entity> payees = Payee.getAllPayees();
-        Iterable<Entity> transactionEntities = Transaction.getAllTransactions(Query.SortDirection.ASCENDING);
+
+        Iterable<Entity> transactionEntities = Transaction.list(month,year);
         Map<String, String> m = new HashMap<>();
         for (Entity p : payees) {
             m.put(p.getKey().getName(), (String) p.getProperty("type"));
