@@ -278,9 +278,13 @@ editPayee(payee: Payee, isNew?: boolean) {
     const filters = this._filters;
     if (filters) {
       return new BehaviorSubject(this._transactions.getValue().filter(t => {
+
         const payeePass = filters.payee ? t.payee.toUpperCase().indexOf(filters.payee.toUpperCase()) > -1 : true;
         return payeePass;
-      }).toList());
+      }).toList().filter(t=> {
+        const monthPass = filters.month ? moment(t.date,'YYYY-MM').isSame(moment(filters.month,'YYYY-MM')) :true;
+
+        return  monthPass}).toList());
     } else {
       return asObservable(this._transactions);
     }

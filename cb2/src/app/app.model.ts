@@ -2,6 +2,7 @@ import {Injectable} from "@angular/core";
 
 export interface Filters {
   payee: string;
+  month: string;
 }
 
 export class User {

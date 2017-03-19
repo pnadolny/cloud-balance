@@ -45,7 +45,7 @@
       <div *ngIf="searching" style="display: flex;flex-direction: column;flex-grow: 1;">
 
           <button md-tooltip="Close" tooltip-position="below" md-button color="primary"
-                  (click)="searching=false">
+                  (click)="_filters.month=null;searching=false">
             <md-icon>close</md-icon>
             &nbsp;Close
 

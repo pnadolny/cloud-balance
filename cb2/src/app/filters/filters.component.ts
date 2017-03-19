@@ -11,11 +11,12 @@ export class FiltersCmp {
   @Output() change = new EventEmitter();
 
   filters = new FormGroup({
-    payee: new FormControl()
+    payee: new FormControl(),
+    month: new FormControl()
   });
 
   constructor(@Inject('createFiltersObject') createFilters: Function) {
-    this.filters.valueChanges.debounceTime(200).subscribe((value) => {
+    this.filters.valueChanges.distinctUntilChanged().debounceTime(200).subscribe((value) => {
       this.change.next(createFilters(value));
     });
   }
