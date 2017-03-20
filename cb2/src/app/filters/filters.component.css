@@ -1,6 +1,10 @@
 
 div {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   flex-grow: 1;
+}
+
+input {
+  height: 24px;
 }

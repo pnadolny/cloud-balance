@@ -167,6 +167,16 @@ editPayee(payee: Payee, isNew?: boolean) {
 
   }
 
+  clearSearch() {
+
+    if (this._filters && this._filters.hasOwnProperty("month")) {
+      this._filters.month = null;
+
+    }
+
+
+    this.searching=false;
+  }
   editTransaction(transaction: Transaction, isNew?: boolean) {
 
     this.dialogRef = this.dialog.open(TransactionDialog, {
