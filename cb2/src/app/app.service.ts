@@ -1,11 +1,9 @@
 import {Injectable} from "@angular/core";
-import {Http, Headers, Response, RequestOptions, URLSearchParams} from "@angular/http";
+import {Http, RequestOptions, URLSearchParams} from "@angular/http";
 import "rxjs/add/operator/toPromise";
 import {Observable} from "rxjs";
 import {Transaction, Payee} from "./app.model";
-
 import * as moment from "moment";
-import {OutOfBoundsError} from "@angular/core/src/di/reflective_errors";
 
 @Injectable()
 export class AppService {

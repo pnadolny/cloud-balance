@@ -13,6 +13,8 @@ import 'hammerjs';
 import { FiltersCmp } from './filters/filters.component';
 import {createFiltersObject} from "./create_filters_object";
 import {ConfirmationDialog} from "./confirmation";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+
 
 @NgModule({
   declarations: [
@@ -21,6 +23,7 @@ import {ConfirmationDialog} from "./confirmation";
   imports: [
     BrowserModule,
     ReactiveFormsModule,
+    BrowserAnimationsModule,
     FormsModule,
     HttpModule,MaterialModule
   ],
