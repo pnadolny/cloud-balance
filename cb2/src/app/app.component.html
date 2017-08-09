@@ -1,6 +1,7 @@
 <md-toolbar color="primary">
   <span>Cloud Balance<br><div style="font-weight: 300;
-    font-size: 12px;">{{emailAddress}}&nbsp;&nbsp; <a mdTooltip="Sign off" style="color:white" href="{{logoutURL}}">Sign out</a>
+    font-size: 12px;">{{emailAddress}}&nbsp;&nbsp; <a mdTooltip="Sign off"
+                                                      style="color:white" href="{{logoutURL}}">Sign out</a>
 </div></span>
 
 
@@ -78,13 +79,17 @@
           <td class="column leftAlignedColumn">{{transaction.balance | currency:'USD':true}}</td>
           <td class="rightAlignedColumn">
             <div>
-              <md-icon mdTooltip="Edit" (click)="editTransaction(transaction)">edit</md-icon>
+              <a href="javascript:void(0)" (click)="editTransaction(transaction)">Edit</a>
               &nbsp;
-              <md-icon mdTooltip="Delete" (click)="delete(transaction)">delete_forever</md-icon>
+
+              <a href="javascript:void(0)" (click)="delete(transaction)">Delete</a>
               &nbsp;
-              <md-icon mdTooltip="Copy" (click)="copy(transaction)">content_copy</md-icon>
+
+              <a href="javascript:void(0)" (click)="copy(transaction)">Copy</a>
               &nbsp;
-              <md-icon mdTooltip="Copy to next month" (click)="copy(transaction,true)">filter_1</md-icon>
+
+              <a href="javascript:void(0)" (click)="copy(transaction,true)">Next</a>
+
               &nbsp;
             </div>
           </td>
