@@ -3,7 +3,7 @@
 
 @import 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/css/bootstrap.min.css';
 
-@import '~@angular/material/core/theming/prebuilt/indigo-pink.css';
+@import '~@angular/material/prebuilt-themes/indigo-pink.css';
 
 /* Source for this Material Design table is: https://github.com/iamisti/md-data-table */
 

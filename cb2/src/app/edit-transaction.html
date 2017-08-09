@@ -1,10 +1,11 @@
 <span md-dialog-title>Transaction</span>
 
 <md-input-container>
-  <input mdTooltip="Enter negative value for withdrawal" mdInput placeholder="Amount"
+  <span mdPrefix>$ &nbsp;</span>
+  <input mdTooltip="Enter negative value for withdrawal" mdInput type="number" placeholder="Amount"
          [(ngModel)]="transaction.amount">
-  <span md-prefix>$&nbsp;</span>
 </md-input-container>
+
 <md-input-container>
   <input mdInput type="date" placeholder="Date" [(ngModel)]="transaction.date">
 </md-input-container>
