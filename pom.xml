@@ -135,7 +135,7 @@
         </plugins>
     </build>
     <name>Cloud Balance</name>
-    <description>An application buillt using Angular JS and Google App engine to
+    <description>An application built using Angular and Google App engine to
         manage a cash account and compute monthly cash flow.
     </description>
     <inceptionYear>2014</inceptionYear>
