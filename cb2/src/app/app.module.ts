@@ -5,7 +5,6 @@ import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
 import {AppService} from "./app.service";
-import { MaterialModule} from '@angular/material';
 import {Repo} from "./app.model";
 import {TransactionDialog} from "./edit-transaction";
 import {PayeeDialog} from "./edit-payee";
@@ -14,6 +13,10 @@ import { FiltersCmp } from './filters/filters.component';
 import {createFiltersObject} from "./create_filters_object";
 import {ConfirmationDialog} from "./confirmation";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {
+  MatDatepickerModule, MatDialogModule, MatInputModule, MatSnackBarModule, MatTabsModule,
+  MatToolbarModule, MatSelectModule, MatNativeDateModule, MatIconModule, MatButtonModule, MatTooltipModule
+} from "@angular/material";
 
 
 @NgModule({
@@ -24,8 +27,10 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
     BrowserModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
+    MatIconModule,
+    MatDatepickerModule,MatNativeDateModule,MatButtonModule,MatTooltipModule,MatToolbarModule,MatInputModule,MatDialogModule,MatSnackBarModule,MatTabsModule,MatSelectModule,
     FormsModule,
-    HttpModule,MaterialModule
+    HttpModule,
   ],
   providers: [AppService,Repo, {provide: 'createFiltersObject', useValue: createFiltersObject}],
   bootstrap: [AppComponent],

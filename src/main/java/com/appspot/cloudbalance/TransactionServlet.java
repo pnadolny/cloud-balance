@@ -1,7 +1,6 @@
 package com.appspot.cloudbalance;
 
 import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.datastore.Query;
 import com.google.gson.Gson;
 
 import javax.servlet.ServletException;

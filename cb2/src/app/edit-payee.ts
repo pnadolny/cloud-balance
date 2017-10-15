@@ -1,5 +1,5 @@
 import {Component} from "@angular/core";
-import {MdDialogRef} from "@angular/material";
+import {MatDialogRef} from "@angular/material";
 import {Payee, Repo} from "./app.model";
 
 
@@ -16,7 +16,7 @@ export class PayeeDialog {
   nameReadonly: boolean = false;
 
 
-  constructor(public dialogRef: MdDialogRef<PayeeDialog>, private repo: Repo) {
+  constructor(public dialogRef: MatDialogRef<PayeeDialog>, private repo: Repo) {
 
 
   }

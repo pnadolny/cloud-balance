@@ -1,4 +1,5 @@
 import {Injectable} from "@angular/core";
+import {NativeDateAdapter} from "@angular/material";
 
 export interface Filters {
   payee: string;
@@ -6,29 +7,24 @@ export interface Filters {
 }
 
 export class User {
-
   email: string;
   logoutURL: string;
-
-
 }
 
 export enum TransactionType {
   i,s,d,f
-
 }
-
 
 export class Transaction {
   name: string;
   payee: string;
-  date: string;
+  date: Date;
+
   amount: string;
   type: string;
   balance: number;
   memo: string;
   today: boolean;
-
 }
 
 export class Entity {
@@ -38,7 +34,6 @@ export class Entity {
 }
 export class Error {
   message: String;
-
 }
 
 export class CashFlow {
@@ -73,10 +68,8 @@ export class Key {
 }
 
 export class Response {
-
   success: Success;
   error: Error;
-
 }
 
 export class PropertyMap {
@@ -84,9 +77,7 @@ export class PropertyMap {
 }
 
 export class Success {
-
   message: string;
-
 }
 export interface Lookup {
   id: string;
@@ -98,7 +89,13 @@ export interface Lookup {
 @Injectable()
 export class Repo {
   types: Lookup[] = [
-    {id: "i", value: "Income"},{id: "s", value: "Static"},{id: "d", value: "Discretionary"},{id: "f", value: "Future"},{id: "o", value: "Other"}];
+    {id: "i", value: "Income"},
+    {id: "s", value: "Static"},
+    {id: "d", value: "Discretionary"},
+    {id: "f", value: "Future"},
+    {id: "o", value: "Other"}];
 
 
 }
+
+

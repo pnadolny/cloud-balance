@@ -1,5 +1,5 @@
 import {Component} from "@angular/core";
-import {MdDialogRef} from "@angular/material";
+import {MatDialogRef} from "@angular/material";
 import {Transaction, Payee} from "./app.model";
 import {List} from "immutable";
 
@@ -16,5 +16,5 @@ export class TransactionDialog {
   transaction: Transaction;
   payees: List<Payee>
 
-  constructor(public dialogRef: MdDialogRef<TransactionDialog>) { }
+  constructor(public dialogRef: MatDialogRef<TransactionDialog>) { }
 }

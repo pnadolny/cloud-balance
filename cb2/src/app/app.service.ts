@@ -2,7 +2,7 @@ import {Injectable} from "@angular/core";
 import {Http, RequestOptions, URLSearchParams} from "@angular/http";
 import "rxjs/add/operator/toPromise";
 import {Observable} from "rxjs";
-import {Transaction, Payee} from "./app.model";
+import {Transaction, Payee, User} from "./app.model";
 import * as moment from "moment";
 
 @Injectable()
@@ -11,9 +11,9 @@ export class AppService {
 
   constructor(private http: Http){}
 
-  private transactionUrl = '../ng/resources/transaction';
-  private payeeUrl = '../ng/resources/payee';
-  private userUrl = '/ng/resources/user';
+  readonly transactionUrl = '../ng/resources/transaction';
+  readonly payeeUrl = '../ng/resources/payee';
+  readonly userUrl = '/ng/resources/user';
 
   getUser(): Observable<any> {
 
@@ -41,7 +41,8 @@ export class AppService {
 
     });
 
-    return this.http.get( this.transactionUrl,options)
+
+    return this.http.get(this.transactionUrl,options);
   }
 
   delete(transaction: Transaction): Observable<any> {
@@ -62,10 +63,9 @@ export class AppService {
 
   }
   save(transaction: Transaction): Observable<any> {
-
-    let url = this.transactionUrl + '?name=' + `${transaction.name}` + '&memo=' + `${transaction.memo}` + '&payee=' + `${transaction.payee}` + '&amount=' + `${transaction.amount}` + '&date=' + `${transaction.date}` + '&transaction-type=' + `${transaction.type}`;
-
-
+    let ISO: string = "YYYY-MM-DDTHH:mm:ss.SSS";
+    let date = moment(transaction.date).format(ISO) + 'Z';
+    let url = this.transactionUrl + '?name=' + `${transaction.name}` + '&memo=' + `${transaction.memo}` + '&payee=' + `${transaction.payee}` + '&amount=' + `${transaction.amount}` + '&date=' + `${date}` + '&transaction-type=' + `${transaction.type}`;
     return this.http.put(url,null);
 
   }

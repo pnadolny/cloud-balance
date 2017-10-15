@@ -1,20 +1,32 @@
-<span md-dialog-title>Transaction</span>
+<span mat-dialog-title>Transaction</span>
 
-<md-input-container>
-  <span mdPrefix>$ &nbsp;</span>
-  <input mdTooltip="Enter negative value for withdrawal" mdInput type="number" placeholder="Amount"
+
+<mat-form-field>
+  <span matPrefix>$ &nbsp;</span>
+  <input mat-tooltip="Enter negative value for withdrawal" matInput type="number" placeholder="Amount"
          [(ngModel)]="transaction.amount">
-</md-input-container>
+</mat-form-field>
 
-<md-input-container>
-  <input mdInput type="date" placeholder="Date" [(ngModel)]="transaction.date">
-</md-input-container>
-<md-select placeholder="Payee" [(ngModel)]="transaction.payee" name="payee" [disabled]="transaction.name!=null">
-  <md-option *ngFor="let payee of payees" [value]="payee.name">
-    {{payee.name}}
-  </md-option>
-</md-select>
-<md-dialog-actions>
-  <button md-button [disabled]="transaction.payee==null" (click)="dialogRef.close(transaction)">Save</button>
-  <button md-button md-dialog-close>Cancel</button>
-</md-dialog-actions>
+
+<mat-form-field>
+  <input matInput [matDatepicker]="picker" [(ngModel)]="transaction.date" placeholder="Choose a date">
+  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+  <mat-datepicker #picker></mat-datepicker>
+
+</mat-form-field>
+
+
+<mat-form-field>
+  <mat-select placeholder="Payee" [(ngModel)]="transaction.payee" name="payee" [disabled]="transaction.name">
+    <mat-option *ngFor="let payee of payees" [value]="payee.name">
+      {{payee.name}}
+    </mat-option>
+  </mat-select>
+
+</mat-form-field>
+
+<mat-dialog-actions>
+
+  <button mat-button [disabled]="transaction.payee==null" (click)="dialogRef.close(transaction)">Save</button>
+  <button mat-button mat-dialog-close>Cancel</button>
+</mat-dialog-actions>

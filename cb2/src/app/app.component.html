@@ -1,42 +1,32 @@
-<md-toolbar color="primary">
+<mat-toolbar color="primary">
   <span>Cloud Balance<br><div style="font-weight: 300;
     font-size: 12px;">{{emailAddress}}&nbsp;&nbsp; <a mdTooltip="Sign off"
                                                       style="color:white" href="{{logoutURL}}">Sign out</a>
 </div></span>
-
-
-
   <span class="flex-right"></span>
-
   <span *ngIf="balanceBeforeIncome!=0" mdTooltip="Balance just before Income">{{balanceBeforeIncome | currency:'USD':true}}<br><div style="font-weight: 300;
     font-size: 12px;">Balance before <span class="tag tag-default tag-pill payee-type-i">I</span></div></span>
-
   <span class="flex-right"></span>
-
   <span mdTooltip="Today's balance">{{todaysBalance | currency:'USD':true}}<br><div style="font-weight: 300;
     font-size: 12px;">{{todaysDate}}</div></span>
+</mat-toolbar>
 
 
-</md-toolbar>
+  <mat-tab-group>
 
-<div class="content">
-
-
-  <md-tab-group>
-
-    <md-tab label="Transactions&nbsp;({{count}})">
+    <mat-tab label="Transactions&nbsp;({{count}})">
 
       <div *ngIf="!searching">
-        <button md-tooltip="Create a Transaction" tooltip-position="below" md-button color="primary"
+        <button matTooltip="Create a Transaction" tooltip-position="below" mat-button color="primary"
                 (click)="editTransaction(null,true)">
-          <md-icon mdTooltip="Create a new Transaction">create</md-icon>
+
+          <mat-icon mat-tooltip="Create a new Transaction">create</mat-icon>
           &nbsp;Create
         </button>
 
-        <button md-tooltip="Search" tooltip-position="below" md-button color="primary"
+        <button mat-button matTooltip="Search" tooltip-position="below" mat-button
                 (click)="searching=true">
-
-          <md-icon>search</md-icon>
+          <mat-icon>search</mat-icon>
           &nbsp;Search
         </button>
 
@@ -45,9 +35,9 @@
 
       <div *ngIf="searching" style="display: flex;flex-direction: column;flex-grow: 1;">
 
-          <button md-tooltip="Close" tooltip-position="below" md-button color="primary"
+          <button md-tooltip="Close" tooltip-position="below" mat-button color="primary"
                   (click)="clearSearch();">
-            <md-icon>close</md-icon>
+            <mat-icon>close</mat-icon>
             &nbsp;Close
 
           </button>
@@ -96,10 +86,10 @@
         </tr>
         </tbody>
       </table>
-    </md-tab>
+    </mat-tab>
 
 
-    <md-tab label="Cash Flow">
+    <mat-tab label="Cash Flow">
       <table class="mdDataTable">
         <thead>
         <tr>
@@ -124,12 +114,12 @@
         </tr>
         </tbody>
       </table>
-    </md-tab>
+    </mat-tab>
 
-    <md-tab label="Payees&nbsp;({{payeeCount}})">
-      <button md-tooltip="Create a Payee" tooltip-position="below" md-button color="primary"
+    <mat-tab label="Payees&nbsp;({{payeeCount}})">
+      <button mat-button matTooltip="Create a Payee" tooltip-position="below"
               (click)="editPayee(null,true)">
-        <md-icon>create</md-icon>
+        <mat-icon>create</mat-icon>
         &nbsp;Create
       </button>
       <table class="mdDataTable">
@@ -148,15 +138,13 @@
           <td>{{payee.thisMonth | currency:'USD':true}}</td>
           <td>{{payee.total | currency:'USD':true}}</td>
           <td class="rightAlignedColumn">
-            <md-icon (click)="editPayee(payee)">edit</md-icon>
-            &nbsp;
-            <md-icon (click)="deletePayee(payee)">delete_forever</md-icon>
+            <a href="javascript:void(0)" (click)="editPayee(payee)">Edit</a>
+            <a href="javascript:void(0)" (click)="deletePayee(payee)">Delete</a>
           </td>
         </tr>
         </tbody>
       </table>
-    </md-tab>
-  </md-tab-group>
+    </mat-tab>
+  </mat-tab-group>
 
-</div>
 

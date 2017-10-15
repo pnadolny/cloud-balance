@@ -1,15 +1,17 @@
 <span md-dialog-title>Payee</span>
 
-<md-input-container>
-  <input mdInput placeholder="Payee Name" [readonly]="nameReadonly" [(ngModel)]="payee.name" #payeeName>
-</md-input-container>
+<mat-form-field>
+  <input matInput placeholder="Payee Name" [readonly]="nameReadonly" [(ngModel)]="payee.name" #payeeName>
+</mat-form-field>
 
-<md-select placeholder="Type" id="payeetype" [(ngModel)]="payee.type">
-  <md-option *ngFor="let t of repo.types" [value]="t.id">{{t.value}}
-  </md-option>
-</md-select>
+<mat-form-field>
+  <mat-select placeholder="Type" id="payeetype" [(ngModel)]="payee.type">
+    <mat-option *ngFor="let t of repo.types" [value]="t.id">{{t.value}}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
 
 <md-dialog-actions>
-  <button md-button [disabled]="payee.name==null || payee.type==null" (click)="dialogRef.close(payee)">Save</button>
-  <button md-button md-dialog-close>Cancel</button>
+  <button mat-button [disabled]="payee.name==null || payee.type==null" (click)="dialogRef.close(payee)">Save</button>
+  <button mat-button mat-dialog-close>Cancel</button>
 </md-dialog-actions>

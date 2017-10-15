@@ -1,11 +1,11 @@
-import {Component, OnInit} from "@angular/core";
+import {Component, OnDestroy, OnInit} from "@angular/core";
 import {AppService} from "./app.service";
-import {Transaction, Entity, Response, Repo, Payee, CashFlow, Filters, User, TransactionType} from "./app.model";
+import {CashFlow, Entity, Filters, Payee, Repo, Response, Transaction, TransactionType, User} from "./app.model";
 import {BehaviorSubject} from "rxjs";
 import {asObservable} from "./asObservable";
 import {List} from "immutable";
 import * as moment from "moment";
-import {MdDialogRef, MdDialog, MdSnackBar, MdSnackBarConfig} from "@angular/material";
+import {MatDialog, MatDialogRef, MatSnackBar, MatSnackBarConfig} from "@angular/material";
 import {TransactionDialog} from "./edit-transaction";
 import {PayeeDialog} from "./edit-payee";
 import {ConfirmationDialog} from "./confirmation";
@@ -16,9 +16,9 @@ import {ConfirmationDialog} from "./confirmation";
   styleUrls: ['./app.component.css']
 
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
 
-  UTC: string = "YYYY-MM-DD HH:mm:ss.SSS-05:00";
+  readonly UTC: string = "YYYY-MM-DD HH:mm:ss.SSS-05:00";
 
   _transactions: BehaviorSubject<List<Transaction>> = new BehaviorSubject(List([]));
   _payees: BehaviorSubject<List<Payee>> = new BehaviorSubject(List([]));
@@ -31,16 +31,16 @@ export class AppComponent implements OnInit {
   balanceBeforeIncome: number = 0.00;
   searching: boolean = false;
 
-  dialogRef: MdDialogRef<TransactionDialog>;
-  payeeDialog: MdDialogRef<PayeeDialog>;
-  confirmationDialog: MdDialogRef<ConfirmationDialog>;
+  dialogRef: MatDialogRef<TransactionDialog>;
+  payeeDialog: MatDialogRef<PayeeDialog>;
+  confirmationDialog: MatDialogRef<ConfirmationDialog>;
 
 
-  constructor(private appService: AppService, private repo: Repo, public dialog: MdDialog, private snackBar: MdSnackBar) {
+  constructor(private appService: AppService, private repo: Repo, public dialog: MatDialog, private snackBar: MatSnackBar) {
   }
 
-  ngOnInit() {
 
+  ngOnInit(): void {
 
     this.appService.getUser().subscribe(result => {
       let user = (result.json() as User[]);
@@ -50,9 +50,7 @@ export class AppComponent implements OnInit {
     })
 
     this.appService.get().subscribe(result => {
-      let transactions = (result.json() as Transaction[]);
-      let t = List<Transaction>(transactions);
-      this._transactions.next(this.sort(t));
+      this._transactions.next(this.sort(List<Transaction>((result.json() as Transaction[]))));
     });
 
     this.appService.getPayees().subscribe((result => {
@@ -86,7 +84,7 @@ export class AppComponent implements OnInit {
 
 
       let initialTransaction = new Transaction();
-      initialTransaction.balance =0.00;
+      initialTransaction.balance = 0.00;
 
 
       // Find the balance just before next income item
@@ -94,32 +92,41 @@ export class AppComponent implements OnInit {
 
       let nextPayDateTransaction = transactions.reverse().toArray()
 
-        .filter(transaction => {return (moment.utc(transaction.date, this.UTC).isAfter(moment()));})
+        .filter(transaction => {
+          return (moment.utc(transaction.date, this.UTC).isAfter(moment()));
+        })
 
         // is an Income type
-        .filter(transaction => {return (TransactionType[transaction.type] == TransactionType.i)})
+        .filter(transaction => {
+          return (TransactionType[transaction.type] == TransactionType.i)
+        })
         // reduce to earliest income item
-        .reduce((previousTransaction,nextTransaction) => {
+        .reduce((previousTransaction, nextTransaction) => {
 
           return moment.utc(previousTransaction.date, this.UTC).isBefore(moment.utc(nextTransaction.date, this.UTC))
-          ? previousTransaction : nextTransaction
+            ? previousTransaction : nextTransaction
 
-        },initialTransaction);
+        }, initialTransaction);
 
       this.balanceBeforeIncome = transactions.reverse().toArray()
 
-        .filter(transaction => {return (moment.utc(transaction.date, this.UTC).isAfter(moment()));})
-        .filter(transaction => {return (moment.utc(transaction.date, this.UTC).dayOfYear() < moment.utc(nextPayDateTransaction.date, this.UTC).dayOfYear());})
+        .filter(transaction => {
+          return (moment.utc(transaction.date, this.UTC).isAfter(moment()));
+        })
+        .filter(transaction => {
+          return (moment.utc(transaction.date, this.UTC).dayOfYear() < moment.utc(nextPayDateTransaction.date, this.UTC).dayOfYear());
+        })
         // is not an Income type
-        .filter(transaction => {return (TransactionType[transaction.type] != TransactionType.i)})
+        .filter(transaction => {
+          return (TransactionType[transaction.type] != TransactionType.i)
+        })
         // reduce to lastest item
-        .reduce((previousTransaction,nextTransaction) => {
+        .reduce((previousTransaction, nextTransaction) => {
 
           return moment.utc(previousTransaction.date, this.UTC).isAfter(moment.utc(nextTransaction.date, this.UTC))
             ? previousTransaction : nextTransaction
 
-        },initialTransaction).balance;
-
+        }, initialTransaction).balance;
 
 
     })
@@ -132,13 +139,18 @@ export class AppComponent implements OnInit {
 
   }
 
-  get todaysDate() {
-    return moment().format("MM/DD/YYYY")
-
-
+  ngOnDestroy() {
+    this._transactions.unsubscribe();
+    this._payees.unsubscribe();
+    this.email.unsubscribe();
   }
 
-editPayee(payee: Payee, isNew?: boolean) {
+
+  get todaysDate() {
+    return moment().format("MM/DD/YYYY")
+  }
+
+  editPayee(payee: Payee, isNew?: boolean) {
 
     this.payeeDialog = this.dialog.open(PayeeDialog, {
       disableClose: false
@@ -175,8 +187,9 @@ editPayee(payee: Payee, isNew?: boolean) {
     }
 
 
-    this.searching=false;
+    this.searching = false;
   }
+
   editTransaction(transaction: Transaction, isNew?: boolean) {
 
     this.dialogRef = this.dialog.open(TransactionDialog, {
@@ -185,7 +198,7 @@ editPayee(payee: Payee, isNew?: boolean) {
 
     if (isNew) {
       transaction = new Transaction();
-      transaction.date = moment().format('YYYY-MM-DD');
+      transaction.date = moment().toDate();
       this.dialogRef.componentInstance.transaction = transaction;
 
     } else {
@@ -197,7 +210,7 @@ editPayee(payee: Payee, isNew?: boolean) {
 
     }
     this.dialogRef.componentInstance.payees = this._payees.getValue();
-    this.dialogRef.componentInstance.transaction.date = moment.utc(transaction.date, this.UTC).format('YYYY-MM-DD');
+    this.dialogRef.componentInstance.transaction.date = moment.utc(transaction.date, this.UTC).toDate();
     this.dialogRef.afterClosed().subscribe(result => {
 
       console.log('result: ' + result);
@@ -218,6 +231,7 @@ editPayee(payee: Payee, isNew?: boolean) {
     this.cashFlow = new Array<CashFlow>();
     let currentMonth: string = "x";
     let cf: CashFlow = new CashFlow();
+
     for (let t of this._transactions.getValue().toArray()) {
 
       if (currentMonth != moment(t.date).format("MMM")) {
@@ -291,10 +305,11 @@ editPayee(payee: Payee, isNew?: boolean) {
 
         const payeePass = filters.payee ? t.payee.toUpperCase().indexOf(filters.payee.toUpperCase()) > -1 : true;
         return payeePass;
-      }).toList().filter(t=> {
-        const monthPass = filters.month ? moment(t.date,'YYYY-MM').isSame(moment(filters.month,'YYYY-MM')) :true;
+      }).toList().filter(t => {
+        const monthPass = filters.month ? moment(t.date, 'YYYY-MM').isSame(moment(filters.month, 'YYYY-MM')) : true;
 
-        return  monthPass}).toList());
+        return monthPass
+      }).toList());
     } else {
       return asObservable(this._transactions);
     }
@@ -335,7 +350,7 @@ editPayee(payee: Payee, isNew?: boolean) {
     this.appService.deletePayee(payee).subscribe(response => {
       let r = response.json() as Response;
       if (r.error) {
-        let config = new MdSnackBarConfig();
+        let config = new MatSnackBarConfig();
         this.snackBar.open('Crap..' + r.error.message, 'Ok', config);
       } else {
         let payees: List<Payee> = this._payees.getValue();
@@ -368,7 +383,7 @@ editPayee(payee: Payee, isNew?: boolean) {
     copy.type = transaction.type;
     copy.date = transaction.date;
     if (nextMonth) {
-      copy.date = moment.utc(copy.date, this.UTC).add(1, 'month').toISOString();
+      copy.date = moment.utc(copy.date, this.UTC).add(1, 'month').toDate();
     }
     copy.amount = transaction.amount;
     copy.memo = transaction.memo;
@@ -393,7 +408,7 @@ editPayee(payee: Payee, isNew?: boolean) {
   }
 
   save(transaction: Transaction) {
-    transaction.date = moment.utc(transaction.date, this.UTC).add(6, 'hour').toISOString();
+    transaction.date = moment.utc(transaction.date, this.UTC).add(6, 'hour').toDate();
     if (transaction.name == null) {
       transaction.name = "";
     }

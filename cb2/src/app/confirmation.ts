@@ -1,5 +1,5 @@
 import {Component} from "@angular/core";
-import {MdDialogRef} from "@angular/material";
+import {MatDialogRef} from "@angular/material";
 
 
 @Component({
@@ -12,8 +12,8 @@ import {MdDialogRef} from "@angular/material";
   </div>
   
   <md-dialog-actions>
-  <button md-button (click)="dialogRef.close('yes')">Yes</button>
-  <button md-button (click)="dialogRef.close(null)">No</button>
+  <button mat-button (click)="dialogRef.close('yes')">Yes</button>
+  <button mat-button (click)="dialogRef.close(null)">No</button>
 
   </md-dialog-actions>
   
@@ -24,5 +24,5 @@ import {MdDialogRef} from "@angular/material";
 export class ConfirmationDialog {
 
 
-  constructor(public dialogRef: MdDialogRef<ConfirmationDialog>) { }
+  constructor(public dialogRef: MatDialogRef<ConfirmationDialog>) { }
 }

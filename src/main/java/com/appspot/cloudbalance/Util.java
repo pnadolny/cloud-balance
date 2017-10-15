@@ -6,17 +6,11 @@ import com.google.appengine.api.datastore.Query.Filter;
 import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.Query.FilterPredicate;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 public class Util {
 
-	private static final Logger logger = Logger.getLogger(Util.class
-			.getCanonicalName());
+
 	private static DatastoreService datastore = DatastoreServiceFactory
 			.getDatastoreService();
 
@@ -66,130 +60,10 @@ public class Util {
 
 	}
 
-	public static Iterable<Entity> listChildren(String kind, Key ancestor) {
-		Query q = new Query(kind);
-		Filter searchFilter = new FilterPredicate(Entity.KEY_RESERVED_PROPERTY,
-				FilterOperator.GREATER_THAN, ancestor);
-		q.setFilter(searchFilter);
-		q.setAncestor(ancestor);
-		return datastore.prepare(q).asIterable();
-	}
 
-	public static Iterable<Entity> listChildKeys(String kind, Key ancestor) {
-		logger.log(Level.INFO, "Search entities based on parent");
-		Query q = new Query(kind);
-		q.setAncestor(ancestor).setKeysOnly();
-		q.setFilter(new FilterPredicate(Entity.KEY_RESERVED_PROPERTY,
-				FilterOperator.GREATER_THAN, ancestor));
-		return datastore.prepare(q).asIterable();
-	}
 
-	public static String writeJSON(Entity e) {
-		List<Entity> entities = new ArrayList<Entity>();
-		entities.add(e);
-		return writeJSON(entities, null);
 
-	}
 
-	public static String writeJSON(Entity e, Map<String, String> moreValues) {
-		List<Entity> entities = new ArrayList<Entity>();
-		entities.add(e);
-		return writeJSON(entities, moreValues);
-
-	}
-
-	/**
-	 * List the entities in JSON format
-	 * 
-	 * @param entities
-	 *            entities to return as JSON strings
-	 */
-	public static String writeJSON(Iterable<Entity> entities,
-			Map<String, String> moreValues) {
-		logger.log(Level.INFO, "creating JSON format object");
-		StringBuilder sb = new StringBuilder();
-
-		int i = 0;
-		sb.append("{\"data\": [");
-		for (Entity result : entities) {
-			Map<String, Object> properties = result.getProperties();
-			sb.append("{");
-			if (result.getKey().getName() == null)
-				sb.append("\"name\" : \"" + result.getKey().getId() + "\",");
-			else
-				sb.append("\"name\" : \"" + result.getKey().getName() + "\",");
-
-			for (String key : properties.keySet()) {
-				if ("java.util.Date".equals(properties.get(key).getClass()
-						.getCanonicalName())) {
-
-					SimpleDateFormat formatShort = new SimpleDateFormat(
-							Constants.DATE_FORMAT);
-
-					sb.append("\"" + key + "\" : \""
-							+ formatShort.format(properties.get(key)) + "\",");
-				} else {
-					sb.append("\"" + key + "\" : \"" + properties.get(key)
-							+ "\",");
-				}
-
-			}
-			if (moreValues != null) {
-				for (String key : moreValues.keySet()) {
-					sb.append("\"" + key + "\" : \"" + moreValues.get(key)
-							+ "\",");
-				}
-			}
-
-			sb.deleteCharAt(sb.lastIndexOf(","));
-			sb.append("},");
-			i++;
-		}
-		if (i > 0) {
-			sb.deleteCharAt(sb.lastIndexOf(","));
-		}
-		sb.append("]}");
-		logger.log(Level.INFO, sb.toString());
-		return sb.toString();
-	}
-
-	
-	public static String writeJSON(Iterable<Entity> entities, String childKind,
-			String fkName, int offset) {
-		logger.log(Level.INFO,
-				"creating JSON format object for parent child relation");
-		StringBuilder sb = new StringBuilder();
-		int i = 0;
-		sb.append("{\"data\": [");
-		for (Entity result : entities) {
-			Map<String, Object> properties = result.getProperties();
-			sb.append("{");
-			if (result.getKey().getName() == null)
-				sb.append("\"name\" : \"" + result.getKey().getId() + "\",");
-			else
-				sb.append("\"name\" : \"" + result.getKey().getName() + "\",");
-			for (String key : properties.keySet()) {
-				sb.append("\"" + key + "\" : \"" + properties.get(key) + "\",");
-			}
-			Iterable<Entity> child = listEntities(childKind, fkName,
-					String.valueOf(result.getKey().getName()),
-					Query.SortDirection.DESCENDING,  null, null);
-			for (Entity en : child) {
-				for (String key : en.getProperties().keySet()) {
-					sb.append("\"" + key + "\" : \""
-							+ en.getProperties().get(key) + "\",");
-				}
-			}
-			sb.deleteCharAt(sb.lastIndexOf(","));
-			sb.append("},");
-			i++;
-		}
-		if (i > 0) {
-			sb.deleteCharAt(sb.lastIndexOf(","));
-		}
-		sb.append("]}");
-		return sb.toString();
-	}
 
 	
 	public static String getErrorMessage(Exception ex)  {
@@ -258,24 +132,6 @@ public class Util {
 		return datastore;
 	}
 
-	public static String writeJSON(Map<String, String> m) {
-		logger.log(Level.INFO, "creating JSON format object");
-		StringBuilder sb = new StringBuilder();
-		int i = 0;
-		sb.append("[");
-		for (Map.Entry<String, String> e : m.entrySet()) {
-			sb.append("{");
-			sb.append("\"" + e.getKey() + "\" : \"" + e.getValue() + "\",");
-			sb.deleteCharAt(sb.lastIndexOf(","));
-			sb.append("},");
-			i++;
-		}
-		if (i > 0) {
-			sb.deleteCharAt(sb.lastIndexOf(","));
-		}
-		sb.append("]");
-		logger.log(Level.INFO, sb.toString());
-		return sb.toString();
-	}
+
 
 }
