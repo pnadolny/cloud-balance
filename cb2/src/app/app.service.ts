@@ -26,8 +26,8 @@ export class AppService {
   }
   save(transaction: Transaction): Observable<any> {
     const ISO: string = "YYYY-MM-DDTHH:mm:ss.SSS";
-    const date = moment(transaction.date).format(ISO) + 'Z';
-
+    const d = moment(transaction.date).hour(6);
+    const date = d.format(ISO) + 'Z';
     const urlSearchParams = new URLSearchParams();
     urlSearchParams.append('name',`${transaction.name}`);
     urlSearchParams.append('memo',`${transaction.memo}`);
@@ -39,7 +39,6 @@ export class AppService {
       search: urlSearchParams
     });
     return this.http.put(this.transactionUrl,null,requestOptions);
-
   }
 
   getPayees(): Observable<any> {
