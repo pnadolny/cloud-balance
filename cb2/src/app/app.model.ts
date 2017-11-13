@@ -19,7 +19,6 @@ export class Transaction {
   name: string;
   payee: string;
   date: Date;
-
   amount: string;
   type: string;
   balance: number;

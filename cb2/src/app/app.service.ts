@@ -8,7 +8,6 @@ import * as moment from "moment";
 @Injectable()
 export class AppService {
 
-
   constructor(private http: Http){}
 
   readonly transactionUrl = '../ng/resources/transaction';
@@ -16,39 +15,40 @@ export class AppService {
   readonly userUrl = '/ng/resources/user';
 
   getUser(): Observable<any> {
-
     return this.http.get(this.userUrl);
   }
 
-  getPayees(): Observable<any> {
-
-
-    let year = moment().format('YYYY');
-
-    let options = new RequestOptions({
-      search: new URLSearchParams('year='+year)
-
-    });
-
-
-    return this.http.get( this.payeeUrl,options)
-  }
-
   get(): Observable<any> {
+    return this.http.get(this.transactionUrl);
+  }
+  delete(transaction: Transaction): Observable<any> {
+    return this.http.delete(this.transactionUrl + '?id=' +  `${transaction.name}` + '&parentid=' + `${transaction.payee}` );
+  }
+  save(transaction: Transaction): Observable<any> {
+    const ISO: string = "YYYY-MM-DDTHH:mm:ss.SSS";
+    const date = moment(transaction.date).format(ISO) + 'Z';
 
-    let options = new RequestOptions({
-      search: new URLSearchParams()
-
+    const urlSearchParams = new URLSearchParams();
+    urlSearchParams.append('name',`${transaction.name}`);
+    urlSearchParams.append('memo',`${transaction.memo}`);
+    urlSearchParams.append('payee',`${transaction.payee}`);
+    urlSearchParams.append('amount',`${transaction.amount}`);
+    urlSearchParams.append('date',`${date}`);
+    urlSearchParams.append('transaction-type',`${transaction.type}`);
+    const requestOptions = new RequestOptions({
+      search: urlSearchParams
     });
+    return this.http.put(this.transactionUrl,null,requestOptions);
 
-
-    return this.http.get(this.transactionUrl,options);
   }
 
-  delete(transaction: Transaction): Observable<any> {
-
-    return this.http.delete(this.transactionUrl + '?id=' +  `${transaction.name}` + '&parentid=' + `${transaction.payee}` );
-
+  getPayees(): Observable<any> {
+    const urlSearchParams = new URLSearchParams();
+    urlSearchParams.append('year',moment().format('YYYY'));
+    const requestOptions = new RequestOptions({
+      search: urlSearchParams
+    });
+    return this.http.get( this.payeeUrl,requestOptions)
   }
 
   deletePayee(payee: Payee): Observable<any> {
@@ -56,18 +56,9 @@ export class AppService {
 
   }
   savePayee(payee: Payee): Observable<any> {
-
-    let url = this.payeeUrl + '?name=' + `${payee.name}` + '&type=' + `${payee.type}`;
-
+    const url = this.payeeUrl + '?name=' + `${payee.name}` + '&type=' + `${payee.type}`;
     return this.http.put(url,null);
-
   }
-  save(transaction: Transaction): Observable<any> {
-    let ISO: string = "YYYY-MM-DDTHH:mm:ss.SSS";
-    let date = moment(transaction.date).format(ISO) + 'Z';
-    let url = this.transactionUrl + '?name=' + `${transaction.name}` + '&memo=' + `${transaction.memo}` + '&payee=' + `${transaction.payee}` + '&amount=' + `${transaction.amount}` + '&date=' + `${date}` + '&transaction-type=' + `${transaction.type}`;
-    return this.http.put(url,null);
 
-  }
 
 }

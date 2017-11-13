@@ -1,7 +1,8 @@
-import {Component} from "@angular/core";
+import {Component, Inject} from "@angular/core";
 import {MatDialogRef} from "@angular/material";
 import {Transaction, Payee} from "./app.model";
 import {List} from "immutable";
+
 
 
 @Component({

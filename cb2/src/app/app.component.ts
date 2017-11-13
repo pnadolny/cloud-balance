@@ -88,8 +88,6 @@ export class AppComponent implements OnInit, OnDestroy {
 
 
       // Find the balance just before next income item
-
-
       let nextPayDateTransaction = transactions.reverse().toArray()
 
         .filter(transaction => {
@@ -102,6 +100,7 @@ export class AppComponent implements OnInit, OnDestroy {
         })
         // reduce to earliest income item
         .reduce((previousTransaction, nextTransaction) => {
+
 
           return moment.utc(previousTransaction.date, this.UTC).isBefore(moment.utc(nextTransaction.date, this.UTC))
             ? previousTransaction : nextTransaction
@@ -163,16 +162,12 @@ export class AppComponent implements OnInit, OnDestroy {
     this.payeeDialog.componentInstance.payee = payee;
     this.payeeDialog.componentInstance.nameReadonly = !isNew;
     this.payeeDialog.afterClosed().subscribe(result => {
-      console.log('result: ' + result);
       if (result) {
-
         this.appService.savePayee(result as Payee).subscribe(res => {
           if (isNew) {
             this._payees.next(this._payees.getValue().push(payee));
           }
-
         })
-
       }
       this.payeeDialog = null;
     });
@@ -408,7 +403,6 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   save(transaction: Transaction) {
-    transaction.date = moment.utc(transaction.date, this.UTC).add(6, 'hour').toDate();
     if (transaction.name == null) {
       transaction.name = "";
     }
@@ -428,7 +422,7 @@ export class AppComponent implements OnInit, OnDestroy {
       },
 
       () => {
-        this.snackBar.open('Done saving..', 'Ok');
+        this.snackBar.open('Done saving..', 'Ok', {duration: 500});
 
 
       })
