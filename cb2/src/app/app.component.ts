@@ -110,23 +110,15 @@ export class AppComponent implements OnInit, OnDestroy {
       this.balanceBeforeIncome = transactions.reverse().toArray()
 
         .filter(transaction => {
-          return (moment.utc(transaction.date, this.UTC).isAfter(moment()));
-        })
-        .filter(transaction => {
-          return (moment.utc(transaction.date, this.UTC).dayOfYear() < moment.utc(nextPayDateTransaction.date, this.UTC).dayOfYear());
+          return (moment.utc(transaction.date, this.UTC).isBefore(moment.utc(nextPayDateTransaction.date, this.UTC)));
         })
         // is not an Income type
         .filter(transaction => {
           return (TransactionType[transaction.type] != TransactionType.i)
         })
-        // reduce to lastest item
         .reduce((previousTransaction, nextTransaction) => {
-
-          return moment.utc(previousTransaction.date, this.UTC).isAfter(moment.utc(nextTransaction.date, this.UTC))
-            ? previousTransaction : nextTransaction
-
+          return nextTransaction;
         }, initialTransaction).balance;
-
 
     })
 
