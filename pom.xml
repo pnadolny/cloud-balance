@@ -13,7 +13,7 @@
     <properties>
         <appengine.app.version>1</appengine.app.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <appengine.target.version>1.9.54</appengine.target.version>
+        <appengine.target.version>1.9.59</appengine.target.version>
     </properties>
 
     <prerequisites>
@@ -107,8 +107,8 @@
                 <version>3.1</version>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                 </configuration>
             </plugin>
             <plugin>
@@ -116,6 +116,7 @@
                 <artifactId>maven-war-plugin</artifactId>
                 <version>2.4</version>
             </plugin>
+
 
             <plugin>
                 <groupId>com.google.appengine</groupId>
