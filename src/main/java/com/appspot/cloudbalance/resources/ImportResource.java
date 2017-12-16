@@ -1,4 +1,4 @@
-package com.appspot.cloudbalance;
+package com.appspot.cloudbalance.resources;
 
 import java.io.BufferedReader;
 import java.util.Iterator;
@@ -11,6 +11,8 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
 
+import com.appspot.cloudbalance.Payee;
+import com.appspot.cloudbalance.Transaction;
 import com.google.appengine.api.datastore.Entity;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -18,10 +20,10 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 @Path("import")
-public class ImportServlet {
+public class ImportResource {
 
 
-    private static final Logger logger = Logger.getLogger(ImportServlet.class
+    private static final Logger logger = Logger.getLogger(ImportResource.class
             .getCanonicalName());
 
 

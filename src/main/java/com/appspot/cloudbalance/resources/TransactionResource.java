@@ -1,11 +1,13 @@
-package com.appspot.cloudbalance;
+package com.appspot.cloudbalance.resources;
 
+import com.appspot.cloudbalance.Constants;
+import com.appspot.cloudbalance.Payee;
+import com.appspot.cloudbalance.Transaction;
+import com.appspot.cloudbalance.Util;
 import com.google.appengine.api.datastore.Entity;
 import com.google.gson.Gson;
 
-import javax.servlet.ServletException;
 import javax.ws.rs.*;
-import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -16,9 +18,9 @@ import static com.appspot.cloudbalance.Payee.DEFAULT_ACCOUNT;
 
 @Path("transaction")
 @Produces("application/json")
-public class TransactionServlet {
+public class TransactionResource {
 
-    private static final Logger logger = Logger.getLogger(TransactionServlet.class
+    private static final Logger logger = Logger.getLogger(TransactionResource.class
             .getCanonicalName());
 
 
@@ -28,38 +30,29 @@ public class TransactionServlet {
         Double amount;
         String type;
         String date;
+        String marked;
     }
+
+
 
     @GET
     public String doGet(
                         @QueryParam("month") Integer month, @QueryParam("year") Integer year) {
 
-        Iterable<Entity> payees = Payee.getAllPayees();
-
-        Iterable<Entity> transactionEntities = Transaction.list(month,year);
         Map<String, String> m = new HashMap<>();
-        for (Entity p : payees) {
-            m.put(p.getKey().getName(), (String) p.getProperty("type"));
-        }
-        List<Tx> transactions = new ArrayList<Tx>();
-        for (Entity e : transactionEntities) {
-            if (e.getParent()==null) {
-                continue;
-            }
-            if (e.getParent().getParent()==null) {
-                continue;
-            }
-            if (!DEFAULT_ACCOUNT.equals(e.getParent().getParent().getName())) {
-                continue;
-            }
+        Payee.getAllPayees().forEach(p->  m.put(p.getKey().getName(), (String) p.getProperty("type")));
+        List<Entity> entities = Util.getEntitiesWithPredicate(Transaction.list(month,year), e-> DEFAULT_ACCOUNT.equals(e.getParent().getParent().getName()));
+        List<Tx> transactions = new ArrayList<>();
+        entities.forEach(e -> {
             Tx tx = new Tx();
             tx.name = e.getKey().getId();
             tx.date = formatDate((Date) e.getProperty("date"));
             tx.amount = (Double) e.getProperty("amount");
             tx.payee = (String) e.getProperty("payee");
             tx.type = m.get(tx.payee);
+            tx.marked= (String)e.getProperty("marked");
             transactions.add(tx);
-        }
+        });
         return new Gson().toJson(transactions);
     }
 
@@ -79,7 +72,7 @@ public class TransactionServlet {
 
     @DELETE
     public String doDelete(@QueryParam("id") String itemKey, @QueryParam("parentid") String payeeName)
-            throws ServletException, IOException {
+             {
         try {
             return Transaction.deleteItem(payeeName, itemKey);
         } catch (Exception e) {

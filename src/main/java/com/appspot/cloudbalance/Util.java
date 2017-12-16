@@ -6,6 +6,7 @@ import com.google.appengine.api.datastore.Query.Filter;
 import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.Query.FilterPredicate;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 public class Util {
@@ -61,6 +62,17 @@ public class Util {
 	}
 
 
+	public static List<Entity> getEntitiesWithPredicate(Iterable<Entity> entities,
+														Predicate<Entity> predicate) {
+		List<Entity> txArrayList = new ArrayList<>();
+
+		for (Entity e: entities) {
+			if (predicate.test(e)) {
+				txArrayList.add(e);
+			}
+		}
+		return txArrayList;
+	}
 
 
 

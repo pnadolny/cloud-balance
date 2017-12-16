@@ -57,7 +57,7 @@
 	<!-- Configure the namespace filter. -->
 	<filter>
 		<filter-name>NamespaceFilter</filter-name>
-		<filter-class>com.appspot.cloudbalance.NamespaceFilter</filter-class>
+		<filter-class>com.appspot.cloudbalance.filters.NamespaceFilter</filter-class>
 		<init-param>
 			<param-name>namespace-strategy</param-name>
 			<!-- Change this to the desired strategy, see NamespaceFilter.NamespaceStrategy -->

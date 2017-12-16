@@ -1,4 +1,4 @@
-package com.appspot.cloudbalance;
+package com.appspot.cloudbalance.filters;
 
 import java.io.IOException;
 import java.util.Arrays;

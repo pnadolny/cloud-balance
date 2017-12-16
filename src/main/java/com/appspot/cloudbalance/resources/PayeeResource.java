@@ -1,4 +1,4 @@
-package com.appspot.cloudbalance;
+package com.appspot.cloudbalance.resources;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -16,6 +16,9 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 
+import com.appspot.cloudbalance.Payee;
+import com.appspot.cloudbalance.Transaction;
+import com.appspot.cloudbalance.Util;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.Query;
@@ -23,9 +26,9 @@ import com.google.gson.Gson;
 
 @Path("payee")
 @Produces("application/json")
-public class PayeeServlet {
+public class PayeeResource {
 
-    private static final Logger logger = Logger.getLogger(PayeeServlet.class
+    private static final Logger logger = Logger.getLogger(PayeeResource.class
             .getCanonicalName());
 
     @GET

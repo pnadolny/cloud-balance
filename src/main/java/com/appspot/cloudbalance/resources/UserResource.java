@@ -1,4 +1,4 @@
-package com.appspot.cloudbalance;
+package com.appspot.cloudbalance.resources;
 
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
@@ -12,7 +12,7 @@ import java.util.List;
 
 @Path("user")
 @Produces("application/json")
-public class UserServlet {
+public class UserResource {
 
 	private static final UserService userService = UserServiceFactory.getUserService();
 
