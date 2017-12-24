@@ -1,10 +1,14 @@
-<mat-toolbar color="primary">
-  <span>Cloud Balance<br><div style="font-weight: 300;
+<mat-toolbar color="primary" style="overflow-y: scroll;position: fixed;
+  top: 0;">
+  <span>Cloud Balance<br>
+    <div style="font-weight: 300;
     font-size: 12px;">{{emailAddress}}&nbsp;&nbsp; <a mdTooltip="Sign off"
                                                       style="color:white" href="{{logoutURL}}">Sign out</a>
-</div></span>
+   </div>
+  </span>
   <span class="flex-right"></span>
-  <span *ngIf="balanceBeforeIncome!=0" mdTooltip="Balance just before Income">{{balanceBeforeIncome | currency:'USD':true}}<br><div style="font-weight: 300;
+  <span *ngIf="balanceBeforeIncome!=0" mdTooltip="Balance just before Income">{{balanceBeforeIncome | currency:'USD':true}}<br><div
+    style="font-weight: 300;
     font-size: 12px;">Balance before <span class="tag tag-default tag-pill payee-type-i">I</span></div></span>
   <span class="flex-right"></span>
   <span mdTooltip="Today's balance">{{todaysBalance | currency:'USD':true}}<br><div style="font-weight: 300;
@@ -12,137 +16,135 @@
 </mat-toolbar>
 
 
-  <mat-tab-group>
-
-    <mat-tab label="Transactions&nbsp;({{count}})">
-
-      <div *ngIf="!searching">
-        <button matTooltip="Create a Transaction" tooltip-position="below" mat-button color="primary"
-                (click)="editTransaction(null,true)">
-
-          <mat-icon mat-tooltip="Create a new Transaction">create</mat-icon>
-          &nbsp;Create
-        </button>
-
-        <button mat-button matTooltip="Search" tooltip-position="below" mat-button
-                (click)="searching=true">
-          <mat-icon>search</mat-icon>
-          &nbsp;Search
-        </button>
+<div style="padding-top: 68px;">
 
 
-      </div>
+<mat-tab-group>
 
-      <div *ngIf="searching" style="display: flex;flex-direction: column;flex-grow: 1;">
+  <mat-tab label="Transactions&nbsp;({{count}})">
 
-          <button md-tooltip="Close" tooltip-position="below" mat-button color="primary"
-                  (click)="clearSearch();">
-            <mat-icon>close</mat-icon>
-            &nbsp;Close
+    <div *ngIf="!searching">
+      <button matTooltip="Create a Transaction" tooltip-position="below" mat-button color="primary"
+              (click)="editTransaction(null,true)">
 
-          </button>
-          <filters-cmp (change)="handleFiltersChange($event)"></filters-cmp>
-
-
-
-      </div>
-
-      <table class="mdDataTable">
-        <thead>
-        <tr>
-          <th class="leftAlignedColumn">Date</th>
-          <th class="leftAlignedColumn">Payee</th>
-          <th class="leftAlignedColumn">Amount</th>
-          <th class="leftAlignedColumn">Balance</th>
-          <th class="rightAlignedColumn">Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr *ngFor="let transaction of transactions | async; let i = index" [class.selected]="transaction.today">
-          <td class="column leftAlignedColumn">{{transaction.date | date:'shortDate'}}</td>
-          <td><span
-            class="tag tag-default tag-pill payee-type-{{transaction.type}}">{{transaction.type | uppercase}}</span>&nbsp;{{transaction.payee}}
-          </td>
-          <td class="column leftAlignedColumn">{{transaction.amount | currency:'USD':true}}</td>
-          <td class="column leftAlignedColumn">{{transaction.balance | currency:'USD':true}}</td>
-          <td class="rightAlignedColumn">
-            <div>
-              <a href="javascript:void(0)" (click)="editTransaction(transaction)">Edit</a>
-              &nbsp;
-
-              <a href="javascript:void(0)" (click)="delete(transaction)">Delete</a>
-              &nbsp;
-
-              <a href="javascript:void(0)" (click)="copy(transaction)">Copy</a>
-              &nbsp;
-
-              <a href="javascript:void(0)" (click)="copy(transaction,true)">Next</a>
-
-              &nbsp;
-            </div>
-          </td>
-        </tr>
-        </tbody>
-      </table>
-    </mat-tab>
-
-
-    <mat-tab label="Cash Flow">
-      <table class="mdDataTable">
-        <thead>
-        <tr>
-          <th>Month</th>
-          <th><span class="tag tag-default tag-pill payee-type-i">I</span>&nbsp;Income</th>
-          <th><span class="tag tag-default tag-pill payee-type-s">S</span>&nbsp;Static</th>
-          <th><span class="tag tag-default tag-pill payee-type-d">D</span>&nbsp;Discretionary</th>
-          <th><span class="tag tag-default tag-pill payee-type-f">F</span>&nbsp;Future</th>
-          <th><span class="tag tag-default tag-pill payee-type-o">O</span>&nbsp;Other</th>
-          <th>Cash Flow</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr *ngFor="let cf of cashFlow " [class.selected]="cf.thisMonth">
-          <td>{{cf.month}}</td>
-          <td>{{cf.income | currency:'USD':true }}</td>
-          <td>{{cf.static | currency:'USD':true }}</td>
-          <td>{{cf.discretionary | currency:'USD':true }}</td>
-          <td>{{cf.future | currency:'USD':true }}</td>
-          <td>{{cf.other | currency:'USD':true }}</td>
-          <td>{{cf.monthlyCashFlow | currency:'USD':true }}</td>
-        </tr>
-        </tbody>
-      </table>
-    </mat-tab>
-
-    <mat-tab label="Payees&nbsp;({{payeeCount}})">
-      <button mat-button matTooltip="Create a Payee" tooltip-position="below"
-              (click)="editPayee(null,true)">
-        <mat-icon>create</mat-icon>
+        <mat-icon mat-tooltip="Create a new Transaction">create</mat-icon>
         &nbsp;Create
       </button>
-      <table class="mdDataTable">
-        <thead>
-        <tr>
-          <th>Name</th>
-          <th>{{currentMonth}}</th>
-          <th>Total</th>
-          <th class="rightAlignedColumn">Action</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr *ngFor="let payee of payees | async; let i = index">
-          <td><span class="tag tag-default tag-pill payee-type-{{payee.type}}">{{payee.type | uppercase}}</span>&nbsp;{{payee.name}}
-          </td>
-          <td>{{payee.thisMonth | currency:'USD':true}}</td>
-          <td>{{payee.total | currency:'USD':true}}</td>
-          <td class="rightAlignedColumn">
-            <a href="javascript:void(0)" (click)="editPayee(payee)">Edit</a>
-            <a href="javascript:void(0)" (click)="deletePayee(payee)">Delete</a>
-          </td>
-        </tr>
-        </tbody>
-      </table>
-    </mat-tab>
-  </mat-tab-group>
 
+      <button mat-button matTooltip="Search" tooltip-position="below" mat-button
+              (click)="searching=true">
+        <mat-icon>search</mat-icon>
+        &nbsp;Search
+      </button>
+
+
+    </div>
+
+    <div *ngIf="searching" style="display: flex;flex-direction: column;flex-grow: 1;">
+
+      <button md-tooltip="Close" tooltip-position="below" mat-button color="primary"
+              (click)="clearSearch();">
+        <mat-icon>close</mat-icon>
+        &nbsp;Close
+
+      </button>
+      <filters-cmp (change)="handleFiltersChange($event)"></filters-cmp>
+
+
+    </div>
+
+    <table class="mdDataTable">
+      <thead>
+      <tr>
+        <th class="leftAlignedColumn">Date</th>
+        <th class="leftAlignedColumn">Payee</th>
+        <th class="leftAlignedColumn">Amount</th>
+        <th class="leftAlignedColumn">Balance</th>
+        <th class="rightAlignedColumn">Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let transaction of transactions | async; let i = index" [class.selected]="transaction.today">
+        <td class="column leftAlignedColumn">
+          {{transaction.date | date:'shortDate'}}
+        </td>
+        <td><span
+          class="tag tag-default tag-pill payee-type-{{transaction.type}}">{{transaction.type | uppercase}}</span>&nbsp;{{transaction.payee}}
+        </td>
+        <td class="column leftAlignedColumn">{{transaction.amount | currency:'USD':true}}</td>
+        <td class="column leftAlignedColumn">{{transaction.balance | currency:'USD':true}}</td>
+        <td class="rightAlignedColumn">
+          <div>
+            <a href="javascript:void(0)" (click)="editTransaction(transaction)">Edit</a>
+            <a href="javascript:void(0)" (click)="delete(transaction)">Delete</a>
+            <a href="javascript:void(0)" (click)="copy(transaction)">Copy</a>
+            <a href="javascript:void(0)" (click)="copy(transaction,true)">+1</a>
+          </div>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </mat-tab>
+
+
+  <mat-tab label="Cash Flow">
+    <table class="mdDataTable">
+      <thead>
+      <tr>
+        <th>Month</th>
+        <th><span class="tag tag-default tag-pill payee-type-i">I</span>&nbsp;Income</th>
+        <th><span class="tag tag-default tag-pill payee-type-s">S</span>&nbsp;Static</th>
+        <th><span class="tag tag-default tag-pill payee-type-d">D</span>&nbsp;Discretionary</th>
+        <th><span class="tag tag-default tag-pill payee-type-f">F</span>&nbsp;Future</th>
+        <th><span class="tag tag-default tag-pill payee-type-o">O</span>&nbsp;Other</th>
+        <th>Cash Flow</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let cf of cashFlow " [class.selected]="cf.thisMonth">
+        <td>{{cf.month}}</td>
+        <td>{{cf.income | currency:'USD':true }}</td>
+        <td>{{cf.static | currency:'USD':true }}</td>
+        <td>{{cf.discretionary | currency:'USD':true }}</td>
+        <td>{{cf.future | currency:'USD':true }}</td>
+        <td>{{cf.other | currency:'USD':true }}</td>
+        <td>{{cf.monthlyCashFlow | currency:'USD':true }}</td>
+      </tr>
+      </tbody>
+    </table>
+  </mat-tab>
+
+  <mat-tab label="Payees&nbsp;({{payeeCount}})">
+    <button mat-button matTooltip="Create a Payee" tooltip-position="below"
+            (click)="editPayee(null,true)">
+      <mat-icon>create</mat-icon>
+      &nbsp;Create
+    </button>
+    <table class="mdDataTable">
+      <thead>
+      <tr>
+        <th>Name</th>
+        <th>{{currentMonth}}</th>
+        <th>Total</th>
+        <th class="rightAlignedColumn">Action</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let payee of payees | async; let i = index">
+        <td><span class="tag tag-default tag-pill payee-type-{{payee.type}}">{{payee.type | uppercase}}</span>&nbsp;{{payee.name}}
+        </td>
+        <td>{{payee.thisMonth | currency:'USD':true}}</td>
+        <td>{{payee.total | currency:'USD':true}}</td>
+        <td class="rightAlignedColumn">
+          <a href="javascript:void(0)" (click)="editPayee(payee)">Edit</a>
+          <a href="javascript:void(0)" (click)="deletePayee(payee)">Delete</a>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </mat-tab>
+</mat-tab-group>
+
+
+</div>
 
