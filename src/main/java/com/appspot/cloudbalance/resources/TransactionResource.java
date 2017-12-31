@@ -41,7 +41,8 @@ public class TransactionResource {
 
         Map<String, String> m = new HashMap<>();
         Payee.getAllPayees().forEach(p->  m.put(p.getKey().getName(), (String) p.getProperty("type")));
-        List<Entity> entities = Util.getEntitiesWithPredicate(Transaction.list(month,year), e-> DEFAULT_ACCOUNT.equals(e.getParent().getParent().getName()));
+
+        List<Entity> entities = Util.getEntitiesWithPredicate(Transaction.list(month,year), e-> (e.getParent()!=null &&  e.getParent().getParent()!=null && DEFAULT_ACCOUNT.equals(e.getParent().getParent().getName())));
         List<Tx> transactions = new ArrayList<>();
         entities.forEach(e -> {
             Tx tx = new Tx();
