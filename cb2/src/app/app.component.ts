@@ -69,13 +69,25 @@ export class AppComponent implements OnInit, OnDestroy {
         t.balance = balance;
       }
 
+
+
       const dayOfYear = moment().dayOfYear();
       const year = moment().format('YYYY');
+
+      // Find the first transaction date of the year.
+      let firstTransactionDayOfYear = 0;
+      for (let t of transactions.reverse().toArray()) {
+        if (year == moment.utc(t.date, this.UTC).format('YYYY')) {
+          firstTransactionDayOfYear = moment.utc(t.date, this.UTC).dayOfYear();
+          console.log(firstTransactionDayOfYear);
+          break;
+        }
+      }
 
       this.todaysBalance = transactions.reverse().toArray().filter(t => {
         return (year == moment.utc(t.date, this.UTC).format('YYYY'));
       }).filter(t => {
-        return (moment.utc(t.date, this.UTC).dayOfYear() < dayOfYear + 1);
+        return (moment.utc(t.date, this.UTC).dayOfYear() <= Math.max(dayOfYear,firstTransactionDayOfYear));
       }).map((t) => {
         return t.balance
       }).reduce((previousBalance, nextBalance) => {
