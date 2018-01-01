@@ -138,6 +138,41 @@ export class AppComponent implements OnInit, OnDestroy {
     return moment().format("MM/DD/YYYY")
   }
 
+
+  batchCopyStaticTransactionsFoward(transactionType: String) {
+
+
+    let l = this._transactions.getValue().asImmutable().toArray().filter(transaction=> {
+      return moment.utc(transaction.date, this.UTC).year() == moment().year();
+    }).filter(transaction => {
+      return moment.utc(transaction.date, this.UTC).month() == moment().add(1,'M').month();
+    }).filter(transaction => {
+      return transaction.type == transactionType;
+    }).length;
+
+    if (l>0) {
+      this.snackBar.open(l + ' static transactions already exist next month', '', {duration: 500});
+      return;
+    }
+
+
+    this._transactions.getValue().asImmutable().toArray().filter(transaction=> {
+     return moment.utc(transaction.date, this.UTC).year() == moment().year();
+    }).filter(transaction => {
+      return moment.utc(transaction.date, this.UTC).month() == moment().month();
+
+    }).filter(transaction => {
+      return transaction.type == 's';
+
+    }).forEach(transaction => {
+       this.copy(transaction,true);
+    });
+
+
+
+
+
+  }
   editPayee(payee: Payee, isNew?: boolean) {
 
     this.payeeDialog = this.dialog.open(PayeeDialog, {
@@ -254,6 +289,10 @@ export class AppComponent implements OnInit, OnDestroy {
 
   get currentMonth() {
     return moment().format('MMMM');
+  }
+
+  get nextMonth() {
+    return moment().add(1,'M').format('MMMM');
   }
 
   get lastMonth() {

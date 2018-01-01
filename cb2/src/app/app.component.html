@@ -37,6 +37,14 @@
         &nbsp;Search
       </button>
 
+      <button mat-button matTooltip="Copy Static +1" tooltip-position="below" mat-button
+              (click)="batchCopyStaticTransactionsFoward('s')">
+        <mat-icon>copy</mat-icon>
+
+        Copy <span class="tag tag-default tag-pill payee-type-s">S</span> to {{nextMonth}}
+
+
+      </button>
 
     </div>
 
