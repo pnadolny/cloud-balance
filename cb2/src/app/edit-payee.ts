@@ -16,7 +16,7 @@ export class PayeeDialog {
   nameReadonly: boolean = false;
 
 
-  constructor(public dialogRef: MatDialogRef<PayeeDialog>, private repo: Repo) {
+  constructor(public dialogRef: MatDialogRef<PayeeDialog>, public repo: Repo) {
 
 
   }
