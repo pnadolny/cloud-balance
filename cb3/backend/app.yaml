@@ -1,0 +1,21 @@
+runtime: go122
+service: default
+
+env_variables:
+  GOOGLE_CLOUD_PROJECT: "mycloudbalance"
+
+handlers:
+# Serve the Angular app from /cb3
+- url: /cb3
+  static_dir: ../frontend/dist
+  secure: always
+
+# API endpoints
+- url: /ng/.*
+  script: auto
+  secure: always
+
+# Health check
+- url: /health
+  script: auto
+  secure: always
