@@ -1,0 +1,151 @@
+<mat-toolbar color="primary">
+  <span>Cloud Balance v3</span>
+  <span class="spacer"></span>
+  <span>{{ email() }}</span>
+  <button mat-icon-button [attr.href]="logoutURL()">
+    <mat-icon>logout</mat-icon>
+  </button>
+</mat-toolbar>
+
+<div class="container">
+  <!-- Summary Cards -->
+  <div class="summary-cards">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Today's Balance</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <h2 [class.negative]="todaysBalance() < 0">
+          {{ todaysBalance() | currency }}
+        </h2>
+        <p class="date">{{ todaysDate }}</p>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Balance Before Income</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <h2 [class.negative]="balanceBeforeIncome() < 0">
+          {{ balanceBeforeIncome() | currency }}
+        </h2>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Statistics</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p>{{ transactionCount }} transactions</p>
+        <p>{{ payeeCount }} payees</p>
+        <p>Current month: {{ currentMonth }}</p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Cash Flow Table -->
+  <mat-card class="cash-flow-card">
+    <mat-card-header>
+      <mat-card-title>Monthly Cash Flow</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <table mat-table [dataSource]="cashFlow()" class="cash-flow-table">
+        <ng-container matColumnDef="month">
+          <th mat-header-cell *matHeaderCellDef>Month</th>
+          <td mat-cell *matCellDef="let flow" [class.current-month]="flow.thisMonth">
+            {{ flow.month }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="income">
+          <th mat-header-cell *matHeaderCellDef>Income</th>
+          <td mat-cell *matCellDef="let flow">{{ flow.income | currency }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="static">
+          <th mat-header-cell *matHeaderCellDef>Static</th>
+          <td mat-cell *matCellDef="let flow">{{ flow.static | currency }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="discretionary">
+          <th mat-header-cell *matHeaderCellDef>Discretionary</th>
+          <td mat-cell *matCellDef="let flow">{{ flow.discretionary | currency }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="future">
+          <th mat-header-cell *matHeaderCellDef>Future</th>
+          <td mat-cell *matCellDef="let flow">{{ flow.future | currency }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="total">
+          <th mat-header-cell *matHeaderCellDef>Total</th>
+          <td mat-cell *matCellDef="let flow" [class.negative]="flow.monthlyCashFlow < 0">
+            {{ flow.monthlyCashFlow | currency }}
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="['month', 'income', 'static', 'discretionary', 'future', 'total']"></tr>
+        <tr mat-row *matRowDef="let row; columns: ['month', 'income', 'static', 'discretionary', 'future', 'total']"></tr>
+      </table>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Transactions Table -->
+  <mat-card class="transactions-card">
+    <mat-card-header>
+      <mat-card-title>Transactions</mat-card-title>
+      <button mat-raised-button color="primary">
+        <mat-icon>add</mat-icon>
+        New Transaction
+      </button>
+    </mat-card-header>
+    <mat-card-content>
+      <table mat-table [dataSource]="transactions()" class="transactions-table">
+        <ng-container matColumnDef="date">
+          <th mat-header-cell *matHeaderCellDef>Date</th>
+          <td mat-cell *matCellDef="let tx" [class.today]="tx.today">
+            {{ tx.date | date:'MM/dd/yyyy' }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="payee">
+          <th mat-header-cell *matHeaderCellDef>Payee</th>
+          <td mat-cell *matCellDef="let tx">{{ tx.payee }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="amount">
+          <th mat-header-cell *matHeaderCellDef>Amount</th>
+          <td mat-cell *matCellDef="let tx" [class.negative]="tx.amount < 0">
+            {{ tx.amount | currency }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="memo">
+          <th mat-header-cell *matHeaderCellDef>Memo</th>
+          <td mat-cell *matCellDef="let tx">{{ tx.memo }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="balance">
+          <th mat-header-cell *matHeaderCellDef>Balance</th>
+          <td mat-cell *matCellDef="let tx" [class.negative]="tx.balance && tx.balance < 0">
+            {{ tx.balance | currency }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td mat-cell *matCellDef="let tx">
+            <button mat-icon-button color="warn" (click)="deleteTransaction(tx)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+    </mat-card-content>
+  </mat-card>
+</div>
